@@ -126,12 +126,12 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
           <DialogContent
             className={
               window.innerWidth < 768 
-                ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4 shadow-none border-none bg-[#FAFAFA] edit-lancamento-modal" 
-                : "sm:max-w-[415px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px] sm:!px-[19px] shadow-none border-none bg-[#FAFAFA] edit-lancamento-modal"
+                ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4 shadow-sm border-none bg-[#F4F8FF] edit-lancamento-modal" 
+                : "sm:max-w-[415px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px] sm:!px-[19px] shadow-sm border-none bg-[#F4F8FF] edit-lancamento-modal"
             }
             style={{
               border: window.innerWidth < 768 ? "2px solid #FFFFFF" : "none",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+              boxShadow: "0 8px 30px rgba(0, 0, 0, 0.08)"
             }}
           >
             <div className={
@@ -142,7 +142,7 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
             >
               <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
                 <div className="flex flex-row items-center justify-start gap-2 w-full">
-                  <h2 className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</h2>
+                  <h2 className="text-[19px] md:text-[21px] font-extrabold text-[#1765D8] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</h2>
                   {linkedNfceId && (
                     <Button 
                       variant="outline" 
@@ -156,7 +156,7 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
                   )}
                 </div>
                 {editingTransaction.created_at && (
-                  <span className="text-[11px] font-medium text-gray-500 tracking-tight leading-none mt-1">
+                  <span className="text-[11px] font-medium text-[#718096] tracking-tight leading-none mt-1">
                     Registrado em: {format(new Date(editingTransaction.created_at), "ddMMMMyyyy 'as' HH:mm", { locale: ptBR })
                       .replace('janeiro', 'jan')
                       .replace('fevereiro', 'fev')

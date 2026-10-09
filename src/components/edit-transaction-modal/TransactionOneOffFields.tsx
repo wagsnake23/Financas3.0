@@ -96,13 +96,13 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   return (
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}> {/* Removido max-w-[280px] mx-auto */}
       {/* Subcategoria */}
-      <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Removido mt-[-1rem] para mobile */}
-        <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
+      <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}> {/* Removido mt-[-1rem] para mobile */}
+        <Label htmlFor="category" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-2xl border-none shadow-xl">
             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
             {filteredCategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
@@ -122,29 +122,29 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       {/* Valor e Parcela (lado a lado) */}
-      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
+      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2 pb-[3px]" : "grid-cols-2")}>
         {/* Valor */}
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="amount" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Valor (R$)</Label>
           <CurrencyBR
             value={amount}
             onChange={(v) => {
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
         {/* Parcela (condicional) */}
         {isExpenseInstallment && (
           <div className={cn("space-y-2", isMobile && "space-y-1")}>
-            <Label className={cn(isMobile && "text-xs")}>Parcela</Label>
+            <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Parcela</Label>
             <Input
               value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
               readOnly
               disabled
-              className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "!h-[39px] !min-h-[39px] !max-h-[39px] text-sm")}
+              className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] opacity-80 !h-[40px] box-border")}
             />
           </div>
         )}
@@ -152,8 +152,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
 
       {/* NOVO: Forma de Pagamento */}
       {transactionType === "expense" && ( // Apenas para despesas
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
+        <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}>
+          <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Forma de Pagamento</Label>
           <Select
             value={formaPagamento}
             onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => {
@@ -164,10 +164,10 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               setValidationErrors(prev => ({ ...prev, formaPagamento: false }));
             }}
           >
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-2xl border-none shadow-xl">
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a forma de pagamento</SelectItem>
               <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
@@ -188,8 +188,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
 
       {/* NOVO: Seleção de Cartão de Crédito (condicional) */}
       {transactionType === "expense" && formaPagamento === "cartao" && (
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
+        <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}>
+          <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}
@@ -198,10 +198,10 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-2xl border-none shadow-xl">
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o cartão</SelectItem>
                 {cartoes.map((card) => (
                   <SelectItem key={card.id} value={card.id} className={cn(isMobile && "text-sm")}>
@@ -217,16 +217,15 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       )}
 
       {/* Data (abaixo de Valor e Parcela) */}
-      <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label>
+      <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}>
+        <Label htmlFor="date" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Data</Label>
           <Button
             type="button"
             variant={"outline"}
             onClick={() => setIsCalendarOpen(true)}
             className={cn(
-              "w-full justify-start text-left font-normal h-10 rounded-xl",
+              "w-full justify-start pl-3 text-left font-normal input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border",
               !date && "text-muted-foreground",
-              isMobile && "h-9 text-sm",
               getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
             )}
           >
@@ -243,25 +242,41 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => {
-            let val = e.target.value;
-            if (val.length > 0) {
-              val = val.charAt(0).toUpperCase() + val.slice(1);
-            }
-            setDescription(val);
-          }}
-          placeholder="Adicione uma descrição..."
-          rows={3}
-          className={cn("rounded-xl", isMobile && "text-sm")}
-        />
+        <Label htmlFor="description" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Descrição</Label>
+        <div className="relative w-full">
+          <Textarea
+            id="description"
+            value={description}
+            onChange={(e) => {
+              let val = e.target.value;
+              if (val.length > 100) val = val.slice(0, 100);
+              if (val.length > 0) {
+                val = val.charAt(0).toUpperCase() + val.slice(1);
+              }
+              setDescription(val);
+            }}
+            onPaste={(e) => {
+              const text = e.clipboardData.getData('text');
+              if (description.length + text.length > 100) {
+                e.preventDefault();
+                const remaining = 100 - description.length;
+                const newText = text.slice(0, remaining);
+                setDescription(description + newText);
+              }
+            }}
+            placeholder="Adicione uma descrição..."
+            rows={3}
+            maxLength={100}
+            className={cn("resize-y input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !pb-6")}
+          />
+          <div className="absolute bottom-1.5 right-2 text-[11px] font-medium text-[#64748B] pointer-events-none">
+            {description.length}/100
+          </div>
+        </div>
       </div>
 
       <div className={cn("flex flex-col items-start space-y-2", isMobile && "space-y-1")}>
-        <Label className={cn(isMobile && "text-xs")}>Status</Label>
+        <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs")}>Status</Label>
         <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
@@ -286,7 +301,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 }
                 readOnly
                 disabled
-                className={cn("rounded-xl bg-muted/40 text-gray-900 font-bold", isMobile && "h-9 text-sm")}
+                className={cn("input-3d-premium opacity-70 !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449]")}
               />
             </div>
           )}

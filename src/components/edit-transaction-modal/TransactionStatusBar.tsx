@@ -50,7 +50,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
 
     return (
         <div className={cn(
-            "flex items-center justify-between transition-all duration-200 text-gray-800 border-b border-slate-200",
+            "flex items-center justify-between transition-all duration-200 text-gray-800 border-b border-[#E2EAF5]",
             "h-[35px]",
             isMobile ? "-mt-[4px] mb-[10px]" : "-mt-[8px] mb-[14px]"
         )}>
@@ -62,7 +62,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                         "w-[16px] h-[16px] rounded-full border",
                         isPaid
                             ? "bg-[#25D366] border-[#25D366]"
-                            : "bg-[#FEF3C7] border-[#FEF3C7]"
+                            : "bg-orange-50 border-orange-100"
                     )}>
                         {isPaid ? (
                             <Check
@@ -71,14 +71,14 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                             />
                         ) : (
                             <Clock
-                                className="absolute text-[#D97706] w-[12px] h-[12px]"
+                                className="absolute text-[#E58A16] w-[12px] h-[12px]"
                                 strokeWidth={4}
                             />
                         )}
                     </div>
                     <span className={cn(
                         "text-[13.5px] font-semibold leading-none",
-                        isPaid ? "text-[#1DA554]" : "text-[#D97706]"
+                        isPaid ? "text-[#1DA554]" : "text-[#E58A16]"
                     )}>
                         {statusLabel}
                     </span>
