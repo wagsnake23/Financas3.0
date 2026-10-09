@@ -145,8 +145,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const addCategoryMutation = useMutation({
     mutationFn: async (newCategory: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
       if (!user?.id) throw new Error("User not authenticated.");
+      const { tipo_tributacao, ...rest } = newCategory;
       const categoryToInsert = {
-        ...newCategory,
+        ...rest,
         id: crypto.randomUUID(),
         user_id: user.id,
         forma_pagamento: null,

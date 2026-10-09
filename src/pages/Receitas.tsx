@@ -84,8 +84,9 @@ export default function Receitas() {
   const addCategoryMutation = useMutation({
     mutationFn: async (newCategory: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
       if (!user?.id) throw new Error("User not authenticated.");
+      const { tipo_tributacao, ...rest } = newCategory;
       const categoryToInsert = {
-        ...newCategory,
+        ...rest,
         id: crypto.randomUUID(),
         user_id: user.id,
         forma_pagamento: null,
@@ -409,7 +410,7 @@ export default function Receitas() {
                   aria-expanded={isSubcategoryOpen}
                   type="button"
                   className={cn(
-                    "flex-1 min-w-0 justify-between font-medium transition-all duration-200 input-3d-premium rounded-xl text-left border-slate-200 border",
+                    "flex-1 min-w-0 justify-between font-medium transition-all duration-200 input-3d-premium input-white rounded-xl text-left border-slate-200 border",
                     isMobile ? "!h-[39px] text-sm px-3" : "h-10 px-3",
                     getBorderClass({
                       isInvalid: validationErrors.tipoReceitaId,
@@ -515,7 +516,7 @@ export default function Receitas() {
             }}
             className={cn(
               isMobile ? "!h-[39px] text-sm" : "h-10",
-              "w-full text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl input-3d-premium",
+              "w-full text-gray-800 font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl input-3d-premium input-white",
               getBorderClass({
                 isInvalid: validationErrors.valor,
                 isValid: validationErrors.valor === false,
@@ -533,7 +534,7 @@ export default function Receitas() {
             variant={"outline"}
             onClick={() => setIsCalendarOpen(true)}
             className={cn(
-              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
+              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium input-white",
               isMobile ? "!h-[39px] text-sm" : "h-10",
               !data && "text-muted-foreground",
               getBorderClass({
@@ -574,7 +575,7 @@ export default function Receitas() {
             rows={2}
             maxLength={45}
             className={cn(
-              "input-3d-premium resize-none py-1.5 px-3",
+              "input-3d-premium input-white resize-none py-1.5 px-3",
               isMobile ? "min-h-[61px] h-[61px] text-sm" : "min-h-[51px] h-[51px]",
               getBorderClass({})
             )}
