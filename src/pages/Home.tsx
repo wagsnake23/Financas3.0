@@ -725,8 +725,8 @@ export default function Home() {
                                                 </p>
                                             </div>
                                             <Button
-                                                className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                                style={{ marginTop: isMobile ? "3px" : undefined, height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
+                                                className="btn-3d px-4 rounded-[11px] font-bold border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", borderBottom: "1px solid rgba(0,0,0,0.12)", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)", height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", color: "#ef4444" } as any}
                                                 onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                             >
                                                 Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -810,8 +810,8 @@ export default function Home() {
                                                 </p>
                                             </div>
                                             <Button
-                                                className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                                style={{ marginTop: isMobile ? "3px" : undefined, height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: "#15803d", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
+                                                className="btn-3d px-4 rounded-[11px] font-bold border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", borderBottom: "1px solid rgba(0,0,0,0.12)", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)", height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", color: "#15803d" } as any}
                                                 onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                             >
                                                 Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -1077,16 +1077,14 @@ export default function Home() {
                                     </div>
                                     <div className="shrink-0 flex items-start">
                                         <Button
-                                            className="h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] whitespace-nowrap w-[150px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+                                            className="btn-3d h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] whitespace-nowrap w-[150px] transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none"
                                             style={{ 
-                                                background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
-                                                border: "1px solid rgba(0,0,0,0.08)",
-                                                borderBottom: "2px solid rgba(0,0,0,0.12)", 
-                                                filter: "saturate(0.85)",
-                                                boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)",
-                                                color: "#b91c1c",
-                                                textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
-                                            }}
+                                                "--cor-topo": "#FFFFFF", 
+                                                "--cor-base": "#F1F5F9", 
+                                                borderBottom: "1px solid rgba(0,0,0,0.12)",
+                                                boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)",
+                                                color: "#ef4444"
+                                            } as any}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -1168,16 +1166,14 @@ export default function Home() {
                                     </div>
                                     <div className="shrink-0 flex items-start">
                                         <Button
-                                            className="h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] whitespace-nowrap w-[150px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+                                            className="btn-3d h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] whitespace-nowrap w-[150px] transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none"
                                             style={{ 
-                                                background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
-                                                border: "1px solid rgba(0,0,0,0.08)",
-                                                borderBottom: "2px solid rgba(0,0,0,0.12)", 
-                                                color: "#15803d",
-                                                filter: "saturate(0.85)",
-                                                boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)",
-                                                textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
-                                            }}
+                                                "--cor-topo": "#FFFFFF", 
+                                                "--cor-base": "#F1F5F9", 
+                                                borderBottom: "1px solid rgba(0,0,0,0.12)",
+                                                boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)",
+                                                color: "#15803d"
+                                            } as any}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />

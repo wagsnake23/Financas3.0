@@ -1133,19 +1133,7 @@ body {
     height: calc(var(--home-btn-h, 36px) + 2px) !important;
   }
   
-  /* Botão Ver Gastos: Borda refinada temática (vermelha) e fundo branco */
-  .home-mobile-card.card-despesas button.w-\[135px\]:not(.text-white) {
-    background-color: #FFFFFF !important;
-    border: 1px solid rgba(239, 68, 68, 0.25) !important;
-    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-  }
-  
-  /* Botão Ver Receitas: Borda refinada temática (verde) e fundo branco */
-  .home-mobile-card.card-receitas button.w-\[135px\]:not(.text-white) {
-    background-color: #FFFFFF !important;
-    border: 1px solid rgba(34, 197, 94, 0.28) !important;
-    box-shadow: 0 2px 4px rgba(34, 197, 94, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-  }
+  /* Botões removidos para usarem o btn-3d nativo diretamente */
   
   /* Card Cartões: Ajuste de agrupamento visual e espaçamento vertical do mês/ano */
   .home-mobile-card.card-cartoes .w-\[135px\].flex-col > span.text-\[12px\] {
