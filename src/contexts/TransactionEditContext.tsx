@@ -122,6 +122,12 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
             .edit-lancamento-modal > button {
               transform: translate(3px, -3px) !important;
             }
+            @media (max-width: 767px) {
+              .edit-lancamento-modal,
+              .dialog-mobile.edit-lancamento-modal {
+                top: calc(53% - 10px) !important;
+              }
+            }
           `}</style>
           <DialogContent
             className={

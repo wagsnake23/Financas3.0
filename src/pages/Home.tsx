@@ -1226,6 +1226,10 @@ export default function Home() {
                     userId={user.id}
                     onAjusteSalvo={refetchProfile}
                     isMobile={!!isMobile}
+                    allExpenseInstallments={allExpenseInstallments}
+                    allRevenues={allRevenues}
+                    categories={allSubcategories}
+                    profile={profile}
                 />
             )}
             <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>

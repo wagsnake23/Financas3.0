@@ -307,6 +307,33 @@ export type Database = {
           },
         ]
       }
+      historico_ajustes_saldo: {
+        Row: {
+          created_at: string
+          id: string
+          saldo_anterior: number
+          saldo_informado: number
+          user_id: string
+          valor_ajuste: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          saldo_anterior: number
+          saldo_informado: number
+          user_id: string
+          valor_ajuste: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          saldo_anterior?: number
+          saldo_informado?: number
+          user_id?: string
+          valor_ajuste?: number
+        }
+        Relationships: []
+      }
       investimentos: {
         Row: {
           created_at: string
@@ -705,6 +732,12 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      registrar_ajuste_saldo: {
+        Args: {
+          p_saldo_informado: number
+        }
+        Returns: Json
       }
     }
     Enums: {

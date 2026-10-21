@@ -165,11 +165,6 @@ export const Navigation = () => {
     if (metaThemeColor) {
       metaThemeColor.setAttribute("content", pageTopColor);
     }
-
-    // Garante que o body tenha a mesma cor (elimina flash branco e vaz. de cor)
-    document.body.style.backgroundColor = pageTopColor;
-
-    // DEBUG TEMPORÁRIO — remover após confirmar funcionamento
   }, [isMobile, pageTopColor, location.pathname]);
 
   return (
