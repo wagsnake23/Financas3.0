@@ -15,7 +15,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI, formatVencimentoDate } from "@/lib/utils";
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI, formatVencimentoDate, calcularIPCA12M, getLatestIPCAMensal, calcularRentabilidadeIPCAPlus } from "@/lib/utils";
 import { format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon, Lock } from "lucide-react"; // Importar CalendarIcon e Lock
@@ -188,19 +188,12 @@ export default function Investments() { // Alterado para export default function
     return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_diaria;
   }, [indexadores]);
 
-  const ipca = useMemo(() => {
-    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
-    if (ipcas.length === 0) return 4.5; // Fallback aprox
-    const latest = [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0];
-    const mensal = latest.taxa_mensal || 0;
-    // Anualizar IPCA mensal: (1 + ipcaMensal)^12 - 1
-    return (Math.pow(1 + mensal, 12) - 1) * 100;
+  const ipca12M = useMemo(() => {
+    return calcularIPCA12M(indexadores);
   }, [indexadores]);
 
-  const ipcaAnualReal = useMemo(() => {
-    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
-    if (ipcas.length === 0) return 4.5;
-    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual || 4.5;
+  const ipcaUltimoMensal = useMemo(() => {
+    return getLatestIPCAMensal(indexadores);
   }, [indexadores]);
 
   const indexadorMapCDI = useMemo(() => {
@@ -218,11 +211,9 @@ export default function Investments() { // Alterado para export default function
     if (indexador === "CDI") {
       return (cdi * (percentualIndexador || 100) / 100);
     }
-    // IPCA+ (composta conforme instrução): (1 + ipcaAnual) * (1 + taxaReal) - 1
-    const ipcaAnualDec = ipca / 100;
-    const taxaRealDec = (percentualIndexador || 0) / 100;
-    return ((1 + ipcaAnualDec) * (1 + taxaRealDec) - 1) * 100;
-  }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca]);
+    // IPCA+ (composição anual com o IPCA acumulado dos últimos 12 meses)
+    return calcularRentabilidadeIPCAPlus(ipca12M, percentualIndexador || 0);
+  }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca12M]);
 
   const metricsNewForm = useMemo(() => {
     const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
@@ -238,62 +229,87 @@ export default function Investments() { // Alterado para export default function
 
     const aliquota = getAliquotaIR(date || new Date(), endDate, tipoTributacao);
 
-    // Usar IPCA anual real se o período for anual, caso contrário usar IPCA projetado (global)
-    const ipcaUtilizado = simulationPeriod === "anual" ? ipcaAnualReal : ipca;
-
-    // Taxa Estimada Bruta (sem arredondamento)
-    let taxaBrutaSimulacao = 0;
-    if (tipoRentabilidade === "fixo") {
-      taxaBrutaSimulacao = (profitability || 0) / 100;
-    } else if (indexador === "CDI") {
-      taxaBrutaSimulacao = (cdi / 100) * (percentualIndexador || 100) / 100;
-    } else {
-      // IPCA+
-      const ipcaDec = ipcaUtilizado / 100;
-      const realDec = (percentualIndexador || 0) / 100;
-      taxaBrutaSimulacao = (1 + ipcaDec) * (1 + realDec) - 1;
-    }
-
-    // Taxa Diária Exata (Conforme solicitado para CDI ou Juros Compostos para os demais)
-    let taxaDiaria = 0;
-    if (indexador === "CDI" && tipoRentabilidade === "indexado") {
-      taxaDiaria = (cdiDiario || (Math.pow(1 + cdi / 100, 1 / 252) - 1)) * (percentualIndexador || 100) / 100;
-    } else {
-      taxaDiaria = Math.pow(1 + taxaBrutaSimulacao, 1 / 252) - 1;
-    }
-
+    // Indicadores dinâmicos para exibição no card
+    let cdiLabel = "";
+    let ipcaLabel = "";
     let rendimentoBrutoPeriodo = 0;
+
     if (simulationPeriod === "diário") {
+      const cdiDia = (Math.pow(1 + (cdi / 100), 1 / 252) - 1) * 100;
+      cdiLabel = `CDI: ${cdiDia.toFixed(4).replace('.', ',')}% a.d.`;
+
+      if (ipcaUltimoMensal !== null) {
+        const ipcaDia = (Math.pow(1 + ipcaUltimoMensal, 1 / 30) - 1) * 100;
+        ipcaLabel = `IPCA: ${ipcaDia.toFixed(4).replace('.', ',')}% a.d.`;
+      } else {
+        ipcaLabel = "IPCA: N/D";
+      }
+
+      let taxaDiaria = 0;
+      if (tipoRentabilidade === "fixo") {
+        taxaDiaria = Math.pow(1 + (profitability || 0) / 100, 1 / 252) - 1;
+      } else if (indexador === "CDI") {
+        taxaDiaria = (cdiDiario || (Math.pow(1 + cdi / 100, 1 / 252) - 1)) * (percentualIndexador || 100) / 100;
+      } else {
+        // IPCA+: decomposição pro-rata mensal + taxa real diária (base 365)
+        const ipcaMensalDec = ipcaUltimoMensal !== null ? ipcaUltimoMensal : 0;
+        const ipcaDiario = Math.pow(1 + ipcaMensalDec, 1 / 30) - 1;
+        const taxaRealDiaria = Math.pow(1 + (percentualIndexador || 0) / 100, 1 / 365) - 1;
+        taxaDiaria = (1 + ipcaDiario) * (1 + taxaRealDiaria) - 1;
+      }
+
       rendimentoBrutoPeriodo = (amount || 0) * taxaDiaria;
     } else if (simulationPeriod === "mensal") {
-      const taxaMensal = Math.pow(1 + taxaBrutaSimulacao, 1 / 12) - 1;
+      const cdiMes = (Math.pow(1 + (cdi / 100), 1 / 12) - 1) * 100;
+      cdiLabel = `CDI: ${cdiMes.toFixed(2).replace('.', ',')}% a.m.`;
+
+      if (ipcaUltimoMensal !== null) {
+        const ipcaMes = ipcaUltimoMensal * 100;
+        ipcaLabel = `IPCA: ${ipcaMes.toFixed(2).replace('.', ',')}% a.m.`;
+      } else {
+        ipcaLabel = "IPCA: N/D";
+      }
+
+      let taxaMensal = 0;
+      if (tipoRentabilidade === "fixo") {
+        taxaMensal = Math.pow(1 + (profitability || 0) / 100, 1 / 12) - 1;
+      } else if (indexador === "CDI") {
+        const taxaBrutaAnual = (cdi / 100) * (percentualIndexador || 100) / 100;
+        taxaMensal = Math.pow(1 + taxaBrutaAnual, 1 / 12) - 1;
+      } else {
+        // IPCA+: competência mensal mais recente composta com spread real mensal
+        const ipcaMensalDec = ipcaUltimoMensal !== null ? ipcaUltimoMensal : 0;
+        const taxaRealMensal = Math.pow(1 + (percentualIndexador || 0) / 100, 1 / 12) - 1;
+        taxaMensal = (1 + ipcaMensalDec) * (1 + taxaRealMensal) - 1;
+      }
+
       rendimentoBrutoPeriodo = (amount || 0) * taxaMensal;
-    } else if (simulationPeriod === "anual") {
-      rendimentoBrutoPeriodo = (amount || 0) * taxaBrutaSimulacao;
+    } else {
+      // Anual
+      cdiLabel = `CDI: ${cdi.toFixed(2).replace('.', ',')}% a.a.`;
+
+      if (ipca12M !== null) {
+        ipcaLabel = `IPCA: ${ipca12M.toFixed(2).replace('.', ',')}% a.a.`;
+      } else {
+        ipcaLabel = "IPCA: Histórico insuficiente";
+      }
+
+      let taxaAnual = 0;
+      if (tipoRentabilidade === "fixo") {
+        taxaAnual = (profitability || 0) / 100;
+      } else if (indexador === "CDI") {
+        taxaAnual = (cdi / 100) * (percentualIndexador || 100) / 100;
+      } else {
+        // IPCA+: composição anual com IPCA acumulado de 12 meses
+        taxaAnual = calcularRentabilidadeIPCAPlus(ipca12M, percentualIndexador || 0) / 100;
+      }
+
+      rendimentoBrutoPeriodo = (amount || 0) * taxaAnual;
     }
 
     const rendimentoLiquidoPeriodo = rendimentoBrutoPeriodo * (1 - aliquota / 100);
     const valorIR = rendimentoBrutoPeriodo - rendimentoLiquidoPeriodo;
-    const taxaLiquida = (taxaBrutaSimulacao * 100) * (1 - aliquota / 100);
-
-    // Indicadores dinâmicos para exibição no card
-    let cdiLabel = "";
-    let ipcaLabel = "";
-
-    if (simulationPeriod === "diário") {
-      const cdiDia = (Math.pow(1 + (cdi / 100), 1 / 252) - 1) * 100;
-      const ipcaDia = (Math.pow(1 + (ipcaUtilizado / 100), 1 / 365) - 1) * 100;
-      cdiLabel = `CDI: ${cdiDia.toFixed(4).replace('.', ',')}% a.d.`;
-      ipcaLabel = `IPCA: ${ipcaDia.toFixed(4).replace('.', ',')}% a.d.`;
-    } else if (simulationPeriod === "mensal") {
-      const cdiMes = (Math.pow(1 + (cdi / 100), 1 / 12) - 1) * 100;
-      const ipcaMes = (Math.pow(1 + (ipca / 100), 1 / 12) - 1) * 100;
-      cdiLabel = `CDI: ${cdiMes.toFixed(2).replace('.', ',')}% a.m.`;
-      ipcaLabel = `IPCA: ${ipcaMes.toFixed(2).replace('.', ',')}% a.m.`;
-    } else {
-      cdiLabel = `CDI: ${cdi.toFixed(2).replace('.', ',')}% a.a.`;
-      ipcaLabel = `IPCA: ${ipcaAnualReal.toFixed(2).replace('.', ',')}% a.a.`;
-    }
+    const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
 
     return {
       tipoTributacao,
@@ -306,7 +322,22 @@ export default function Investments() { // Alterado para export default function
       cdiLabel,
       ipcaLabel
     };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador, cdi, cdiDiario, ipca, ipcaAnualReal]);
+  }, [
+    amount,
+    taxaEstimada,
+    date,
+    allSubcategories,
+    selectedInvestmentCategoryId,
+    simulationPeriod,
+    indexador,
+    tipoRentabilidade,
+    profitability,
+    percentualIndexador,
+    cdi,
+    cdiDiario,
+    ipca12M,
+    ipcaUltimoMensal
+  ]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -594,7 +625,7 @@ export default function Investments() { // Alterado para export default function
       const rentabilidadeBruta = inv.tipo_rentabilidade === "indexado"
         ? (inv.indexador === "CDI"
           ? (cdi * (inv.percentual_indexador || 100) / 100)
-          : (((1 + (ipca / 100)) * (1 + ((inv.percentual_indexador || 0) / 100)) - 1) * 100))
+          : calcularRentabilidadeIPCAPlus(ipca12M, inv.percentual_indexador || 0))
         : (inv.taxa_fixa || 0);
 
       const rentabilidadeLiquida = rentabilidadeBruta * (1 - aliquotaIR / 100);
@@ -619,7 +650,7 @@ export default function Investments() { // Alterado para export default function
         dueDateStr
       };
     });
-  }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
+  }, [investments, cdi, ipca12M, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
 
   const totalProjectedAnnualYield = useMemo(() => {
     const rawTotal = calculatedInvestments.filter(i => i.status !== 'resgatado').reduce((sum, inv) => {

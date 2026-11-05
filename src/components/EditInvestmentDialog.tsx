@@ -15,6 +15,8 @@ import {
   getTipoTributacao,
   IndexadorHistorico,
   formatVencimentoDate,
+  calcularIPCA12M,
+  calcularRentabilidadeIPCAPlus,
 } from "@/lib/utils";
 
 interface EditInvestmentDialogProps {
@@ -58,12 +60,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
   }, [indexadores]);
 
-  const ipca = useMemo(() => {
-    const ipcas = indexadores.filter((i) => i.tipo === "IPCA");
-    if (ipcas.length === 0) return 4.5;
-    const latest = [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0];
-    const mensal = latest.taxa_mensal || 0;
-    return (Math.pow(1 + mensal, 12) - 1) * 100;
+  const ipca12M = useMemo(() => {
+    return calcularIPCA12M(indexadores);
   }, [indexadores]);
 
   const taxaEstimada = useMemo(() => {
@@ -71,10 +69,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     if (investmentToEdit.indexador === "CDI") {
       return (cdi * (investmentToEdit.percentual_indexador || 100)) / 100;
     }
-    const ipcaAnualDec = ipca / 100;
-    const taxaRealDec = (investmentToEdit.percentual_indexador || 0) / 100;
-    return ((1 + ipcaAnualDec) * (1 + taxaRealDec) - 1) * 100;
-  }, [investmentToEdit, cdi, ipca]);
+    return calcularRentabilidadeIPCAPlus(ipca12M, investmentToEdit.percentual_indexador || 0);
+  }, [investmentToEdit, cdi, ipca12M]);
 
   const metrics = useMemo(() => {
     let idxMap: Map<string, number> | undefined;

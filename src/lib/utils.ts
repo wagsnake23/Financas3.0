@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
 import { AppCategory, Investment } from "@/types/finance";
@@ -123,6 +123,86 @@ export function getIPCAKey(date: Date): string {
   const ano = d.getFullYear();
   const mes = String(d.getMonth() + 1).padStart(2, "0");
   return `${ano}-${mes}`;
+}
+
+/**
+ * Retorna as competências de IPCA válidas ordenadas por data_inicio crescente,
+ * garantindo uma entrada por competência (mês).
+ */
+export function getIPCACompetencias(indexadores: IndexadorHistorico[]): IndexadorHistorico[] {
+  const map = new Map<string, IndexadorHistorico>();
+  const ipcas = (indexadores || [])
+    .filter(
+      (i) =>
+        i.tipo === "IPCA" &&
+        i.taxa_mensal !== undefined &&
+        i.taxa_mensal !== null &&
+        !isNaN(Number(i.taxa_mensal)) &&
+        i.data_inicio
+    )
+    .sort((a, b) => a.data_inicio.localeCompare(b.data_inicio));
+
+  for (const item of ipcas) {
+    const key = item.data_inicio.slice(0, 7); // YYYY-MM
+    map.set(key, item);
+  }
+
+  return Array.from(map.values()).sort((a, b) => a.data_inicio.localeCompare(b.data_inicio));
+}
+
+/**
+ * Calcula o IPCA acumulado composto dos últimos 12 meses:
+ * IPCA_12M = [(1 + taxa_1) * (1 + taxa_2) * ... * (1 + taxa_12) - 1] * 100
+ * Retorna null se não houver pelo menos 12 competências consecutivas disponíveis.
+ */
+export function calcularIPCA12M(indexadores: IndexadorHistorico[]): number | null {
+  const competencias = getIPCACompetencias(indexadores);
+  if (competencias.length < 12) {
+    return null;
+  }
+
+  const ultimas12 = competencias.slice(-12);
+
+  // Confirmação de 12 meses estritamente consecutivos (sem competências ausentes/lacunas)
+  for (let i = 1; i < ultimas12.length; i++) {
+    const [prevY, prevM] = ultimas12[i - 1].data_inicio.slice(0, 7).split("-").map(Number);
+    const [currY, currM] = ultimas12[i].data_inicio.slice(0, 7).split("-").map(Number);
+    const expectedY = prevM === 12 ? prevY + 1 : prevY;
+    const expectedM = prevM === 12 ? 1 : prevM + 1;
+    if (currY !== expectedY || currM !== expectedM) {
+      return null;
+    }
+  }
+
+  let fator = 1;
+  for (const comp of ultimas12) {
+    fator *= (1 + Number(comp.taxa_mensal));
+  }
+  return (fator - 1) * 100;
+}
+
+/**
+ * Retorna a taxa mensal do IPCA mais recente (em formato decimal).
+ */
+export function getLatestIPCAMensal(indexadores: IndexadorHistorico[]): number | null {
+  const competencias = getIPCACompetencias(indexadores);
+  if (competencias.length === 0) {
+    return null;
+  }
+  return Number(competencias[competencias.length - 1].taxa_mensal);
+}
+
+/**
+ * Calcula a rentabilidade bruta de investimentos IPCA+:
+ * Rentabilidade = [(1 + IPCA_12M) * (1 + taxa_real) - 1] * 100
+ */
+export function calcularRentabilidadeIPCAPlus(ipca12M: number | null, taxaRealPercent: number): number {
+  const realDec = (taxaRealPercent || 0) / 100;
+  if (ipca12M === null) {
+    return taxaRealPercent || 0;
+  }
+  const ipcaDec = ipca12M / 100;
+  return ((1 + ipcaDec) * (1 + realDec) - 1) * 100;
 }
 
 /**
@@ -297,41 +377,24 @@ export function calcularRendimentoComCDI({
     if (indexador !== "IPCA" && !isDiaUtil(d)) continue;
 
     if (indexador === "IPCA") {
-      // IPCA usa defasagem variável (Padrão Tesouro/Mercado): 
-      // Até dia 15 (M-2), Após dia 15 (M-1)
-      const dRef = new Date(d);
-      if (d.getDate() <= 15) {
-        dRef.setMonth(dRef.getMonth() - 2);
-      } else {
-        dRef.setMonth(dRef.getMonth() - 1);
-      }
+      // Defasagem variável de mercado (Padrão Tesouro Direto / Anbima): 
+      // Até dia 15: competência M-2
+      // Após dia 15: competência M-1
+      // Uso de subMonths previne overflow de dias em meses de 31 dias (ex: 31/10 - 1m = 30/09)
+      const dRef = d.getDate() <= 15 ? subMonths(d, 2) : subMonths(d, 1);
       const year = dRef.getFullYear();
       const month = String(dRef.getMonth() + 1).padStart(2, "0");
       const chaveMes = `${year}-${month}`;
       let ipcaMensal = indexadorMap.get(chaveMes);
 
-      // Fallback robusto: buscar meses anteriores se não houver IPCA no mês de referência (M-1)
-      if (ipcaMensal === undefined || ipcaMensal === null) {
-        let dataBusca = new Date(dRef);
-        for (let i = 0; i < 12; i++) {
-          dataBusca.setMonth(dataBusca.getMonth() - 1);
-          const partsAnterior = [dataBusca.getFullYear(), String(dataBusca.getMonth() + 1).padStart(2, "0")];
-          const chaveAnterior = `${partsAnterior[0]}-${partsAnterior[1]}`;
-          const ipcaAnterior = indexadorMap.get(chaveAnterior);
-          if (ipcaAnterior !== undefined && ipcaAnterior !== null) {
-            ipcaMensal = ipcaAnterior;
-            break;
-          }
-        }
-      }
-
-      // Fallback final: se ainda for nulo, usa zero
+      // Períodos sem divulgação oficial ou lacunas:
+      // Não inventar taxas futuras nem reaplicar meses antigos como se fossem taxa oficial
       if (ipcaMensal === undefined || ipcaMensal === null) {
         ipcaMensal = 0;
       }
 
-      // 1. Converter IPCA mensal para diário (Decomposição exponencial pro-rata)
-      const diasNoMes = new Date(dRef.getFullYear(), dRef.getMonth() + 1, 0).getDate();
+      // 1. Converter IPCA mensal para diário (Decomposição exponencial pro-rata com dias reais do mês)
+      const diasNoMes = new Date(year, dRef.getMonth() + 1, 0).getDate();
       const ipcaDiario = Math.pow(1 + ipcaMensal, 1 / diasNoMes) - 1;
 
       // 2. Aplicação da Taxa Real (Juros Spread) - Diariamente
@@ -342,7 +405,7 @@ export function calcularRendimentoComCDI({
       // Taxa fixa diária (Base 365 dias calendarizados)
       const taxaFixaDiaria = Math.pow(1 + taxaFixaAnualDecimal, 1 / 365) - 1;
       
-      // Composição diária: IPCA (M-1) + Spread Fixa
+      // Composição diária: IPCA + Spread Fixa
       const taxaDia = (1 + ipcaDiario) * (1 + taxaFixaDiaria) - 1;
 
       valorBruto *= (1 + taxaDia);
