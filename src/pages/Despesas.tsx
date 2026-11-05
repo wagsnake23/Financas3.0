@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useExpenseData } from "@/hooks/useExpenseData";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { Footer } from "@/components/Footer";
-import { BarcodeScannerModal } from "@/components/expense-form/BarcodeScannerModal";
+import { BarcodeScannerModal, isValidNfceUrl } from "@/components/expense-form/BarcodeScannerModal";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
@@ -248,6 +248,14 @@ export default function Despesas() {
   const handleScan = async (barcode: string) => {
     setIsScannerOpen(false);
 
+    if (!isValidNfceUrl(barcode)) {
+      showErrorToast(
+        "Atenção",
+        "QR Code não identificado como nota fiscal. Aponte a câmera para o QR Code fiscal da NFC-e."
+      );
+      return;
+    }
+
     const { data, error } = await supabase.functions.invoke(
       'importar-nfce',
       {
@@ -257,9 +265,6 @@ export default function Despesas() {
 
     if (error) {
       console.error("ERRO INVOKE:", error);
-    }
-
-    if (data) {
     }
 
     if (!data) {
@@ -280,6 +285,10 @@ export default function Despesas() {
     }
 
     const compra = data.compra;
+    if (!compra) {
+        showErrorToast("Erro", "❌ Dados da compra não foram retornados pela importação");
+        return;
+    }
     
     // Delegação do preenchimento para a função compartilhada
     preencherFormularioNfce(compra, data.categoria_id);

@@ -4,6 +4,64 @@ import { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } from "@zxing/
 
 import { Button } from "@/components/ui/button";
 
+export function isValidNfceUrl(candidate: string): boolean {
+  if (!candidate || typeof candidate !== "string") return false;
+  const trimmed = candidate.trim();
+
+  // Apenas conexões HTTPS são aceitas para consulta fiscal oficial
+  if (!trimmed.startsWith("https://")) {
+    return false;
+  }
+
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol !== "https:") {
+      return false;
+    }
+
+    // Não autorizar portas HTTPS não padrão
+    if (parsed.port && parsed.port !== "443") {
+      return false;
+    }
+
+    const hostname = parsed.hostname.toLowerCase();
+
+    // Domínios oficiais autorizados para consulta de NFC-e / SAT da SEFAZ-SP
+    const allowedHosts = new Set([
+      "www.nfce.fazenda.sp.gov.br",
+      "nfce.fazenda.sp.gov.br",
+      "www.fazenda.sp.gov.br",
+      "fazenda.sp.gov.br",
+      "satsp.fazenda.sp.gov.br"
+    ]);
+
+    if (!allowedHosts.has(hostname)) {
+      return false;
+    }
+
+    const pathname = parsed.pathname.toLowerCase();
+    const isAllowedPath =
+      pathname.startsWith('/qrcode') ||
+      pathname.startsWith('/nfce/qrcode') ||
+      pathname.startsWith('/nfceconsultapublica') ||
+      pathname.includes('consultapublicasat') ||
+      pathname === '/consulta';
+
+    if (!isAllowedPath) {
+      return false;
+    }
+
+    // Deve conter o parâmetro fiscal 'p' da NFC-e, chave de 44 dígitos ou rota SAT
+    const pParam = parsed.searchParams.get("p");
+    const has44Digits = (pParam && /\d{44}/.test(pParam)) || /\d{44}/.test(parsed.pathname) || /\d{44}/.test(parsed.search);
+    const isSatPath = pathname.includes("consultapublicasat");
+
+    return has44Digits || isSatPath || (!!pParam && pParam.length >= 20);
+  } catch {
+    return false;
+  }
+}
+
 interface BarcodeScannerModalProps {
   onScan: (barcode: string) => void;
   onClose: () => void;
@@ -22,10 +80,50 @@ export function BarcodeScannerModal({ onScan, onClose }: BarcodeScannerModalProp
   const [showDebug, setShowDebug] = useState(false);
 
   const streamRef = useRef<MediaStream | null>(null);
+  const isHandlingRef = useRef(false);
 
   useEffect(() => {
     let reader: BrowserMultiFormatReader | null = null;
     let isMounted = true;
+    let scanLoopRunning = true;
+
+    const handleDetection = (resultStr: string, format: string) => {
+      if (!isMounted || scanState === "found" || isHandlingRef.current) return;
+      
+      const fmtLower = (format || "").toLowerCase();
+      const isQrCode = fmtLower.includes('qr');
+      const isEan13 = fmtLower.includes('ean_13') || fmtLower.includes('ean-13');
+
+      // Basic EAN-13 validation if format is explicitly EAN-13
+      if (isEan13) {
+         if (!/^\d{13}$/.test(resultStr)) {
+            console.warn("Detected EAN-13 but failed validation (not 13 digits):", resultStr);
+            return;
+         }
+      }
+
+      // QR Code validation for NFC-e: ignore non-fiscal QR codes (marketing, growp, wifi, etc.)
+      if (isQrCode) {
+        if (!isValidNfceUrl(resultStr)) {
+          return;
+        }
+      }
+
+      // Lock to avoid multiple simultaneous detections/calls
+      isHandlingRef.current = true;
+      scanLoopRunning = false;
+      setScanState("found");
+      setDebugInfo((prev: any) => ({ ...prev, lastDetectedFormat: format, lastDetectedValue: resultStr }));
+
+      if (navigator.vibrate) navigator.vibrate(100);
+      
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(t => t.stop());
+      }
+      if (reader) reader.reset();
+      
+      setTimeout(() => onScan(resultStr), 400);
+    };
 
     async function startScanner() {
       try {
@@ -121,33 +219,7 @@ export function BarcodeScannerModal({ onScan, onClose }: BarcodeScannerModalProp
             setDebugInfo((prev: any) => ({ ...prev, detector: "ZXing (Native Not Supported)" }));
           }
 
-          let scanLoopRunning = true;
           let isProcessingFrame = false;
-
-          const handleDetection = (resultStr: string, format: string) => {
-            if (!isMounted || scanState === "found") return;
-            
-            // Basic EAN-13 validation if format is explicitly EAN-13
-            if (format.toLowerCase().includes('ean_13') || format.toLowerCase().includes('ean-13')) {
-               if (!/^\d{13}$/.test(resultStr)) {
-                  console.warn("Detected EAN-13 but failed validation (not 13 digits):", resultStr);
-                  return;
-               }
-            }
-
-            scanLoopRunning = false;
-            setScanState("found");
-            setDebugInfo((prev: any) => ({ ...prev, lastDetectedFormat: format, lastDetectedValue: resultStr }));
-
-            if (navigator.vibrate) navigator.vibrate(100);
-            
-            if (streamRef.current) {
-              streamRef.current.getTracks().forEach(t => t.stop());
-            }
-            if (reader) reader.reset();
-            
-            setTimeout(() => onScan(resultStr), 400);
-          };
 
           const scanLoop = async () => {
             if (!isMounted || !scanLoopRunning || !videoRef.current) return;
@@ -193,8 +265,6 @@ export function BarcodeScannerModal({ onScan, onClose }: BarcodeScannerModalProp
           };
 
           requestAnimationFrame(scanLoop);
-
-          // Cleanup ZXing continuous if it was running (we aren't using decodeFromVideoElementContinuously anymore)
         }
 
       } catch (err: any) {
@@ -226,13 +296,8 @@ export function BarcodeScannerModal({ onScan, onClose }: BarcodeScannerModalProp
                
                if (reader) {
                  reader.decodeFromVideoElementContinuously(videoRef.current, (result, err) => {
-                   if (result && isMounted && scanState === "scanning") {
-                     setScanState("found");
-                     setDebugInfo((prev: any) => ({ ...prev, lastDetectedFormat: "ZXing (Fallback)", lastDetectedValue: result.getText() }));
-                     if (navigator.vibrate) navigator.vibrate(100);
-                     fallbackStream.getTracks().forEach(t => t.stop());
-                     reader?.reset();
-                     setTimeout(() => onScan(result.getText()), 400);
+                   if (result && isMounted && scanState === "scanning" && !isHandlingRef.current) {
+                     handleDetection(result.getText(), result.getBarcodeFormat().toString());
                    }
                  });
                }
@@ -250,6 +315,8 @@ export function BarcodeScannerModal({ onScan, onClose }: BarcodeScannerModalProp
 
     return () => {
       isMounted = false;
+      scanLoopRunning = false;
+      isHandlingRef.current = false;
       if (reader && videoRef.current) {
         reader.reset();
       }

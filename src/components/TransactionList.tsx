@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+﻿import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -476,6 +476,8 @@ export const TransactionList = ({
   // o layout flex antes de calcular a posição de scroll.
   const todayMarkerRef = useRef<HTMLDivElement>(null);
   const scrolledMonthRef = useRef<string | null>(null);
+  // Ref para o scroll container da lista — permite scroll programático sem vazar para window
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Reset da chave quando inicia nova carga, para reativar o scroll quando dados chegarem
@@ -497,7 +499,13 @@ export const TransactionList = ({
     // rAF garante execução após o browser completar o layout flex
     const rafId = requestAnimationFrame(() => {
       if (todayMarkerRef.current) {
-        todayMarkerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+        // Rola o container interno diretamente: equivalente a block:'start'
+        // mas sem vazar o scroll para o documento raiz (que causava deslocamento do rodapé).
+        const container = scrollContainerRef.current;
+        const marker = todayMarkerRef.current;
+        if (container && marker) {
+          container.scrollTop = marker.offsetTop - container.offsetTop;
+        }
       }
     });
 
@@ -713,6 +721,7 @@ export const TransactionList = ({
       )}
 
         <div 
+          ref={scrollContainerRef}
           className={cn(
             isMobile ? "mt-0 bg-[#FFFFFF] flex-1 overflow-y-auto no-scrollbar" : "mt-1 w-full max-h-[68vh] overflow-y-auto no-scrollbar"
           )}
@@ -722,7 +731,7 @@ export const TransactionList = ({
           } : undefined}
         >
         {isMobile ? (
-          <div className="flex flex-col gap-0 pb-4">
+          <div className="flex flex-col gap-0 pb-[96px]">
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-3 py-3 bg-white border-b border-slate-100" style={{ paddingLeft: "clamp(18px, 4vw, 32px)", paddingRight: "clamp(18px, 4vw, 32px)" }}>
@@ -840,7 +849,7 @@ export const TransactionList = ({
 
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
-        "mt-auto relative z-20",
+        "relative z-20",
         isMobile ? "w-full shrink-0" : "hidden"
       )}>
         {isMobile && (

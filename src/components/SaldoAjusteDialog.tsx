@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, calcularRendimentoComCDI, getTipoTributacao, IndexadorHistorico } from "@/lib/utils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { useCategories } from "@/hooks/useCategories";
 import { useProfile } from "@/hooks/useProfile";
 import { AppCategory } from "@/types/finance";
+import { categories as defaultCategories } from "@/data/categories";
 
 interface SaldoAjusteDialogProps {
   isOpen: boolean;
@@ -26,11 +27,12 @@ interface SaldoAjusteDialogProps {
   allRevenues?: any[];
   categories?: AppCategory[];
   profile?: any;
+  investimentos?: any[];
 }
 
 interface ExtratoItem {
   id: string;
-  type: "expense" | "income" | "adjustment";
+  type: "expense" | "income" | "adjustment" | "rescue" | "application";
   effectiveDate: Date;
   dateOnlyStr: string;
   secondaryTimestamp?: number;
@@ -103,6 +105,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
   allRevenues: propsRevenues,
   categories: propsCategories,
   profile: propsProfile,
+  investimentos: propsInvestments,
 }) => {
   const [saldoInformadoStr, setSaldoInformadoStr] = useState("");
   const [loading, setLoading] = useState(false);
@@ -170,29 +173,141 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
     enabled: isOpen && !propsRevenues && !!userId,
   });
 
+  // Indexadores para cálculo preciso do valor líquido do resgate
+  const { data: indexadores = [] } = useQuery({
+    queryKey: ["indexadores"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("indexadores")
+        .select("tipo, taxa_anual, data_inicio, taxa_diaria, taxa_mensal");
+      if (error) throw error;
+      return data as IndexadorHistorico[];
+    },
+    enabled: isOpen,
+    staleTime: 1000 * 60 * 60,
+  });
+
+  const indexadorMapCDI = useMemo(() => {
+    const map = new Map<string, number>();
+    (indexadores || [])
+      .filter((i) => i.tipo === "CDI" && i.taxa_diaria !== null)
+      .forEach((i) => map.set(i.data_inicio, i.taxa_diaria!));
+    return map;
+  }, [indexadores]);
+
+  const indexadorMapIPCA = useMemo(() => {
+    const map = new Map<string, number>();
+    (indexadores || [])
+      .filter((i) => i.tipo === "IPCA" && i.taxa_mensal !== null)
+      .forEach((i) => map.set(i.data_inicio, i.taxa_mensal!));
+    return map;
+  }, [indexadores]);
+
+  // Consulta de investimentos como fallback se não fornecido via props
+  const { data: queryInvestments = [] } = useQuery({
+    queryKey: ["investments", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("investimentos")
+        .select("*")
+        .eq("user_id", userId);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: isOpen && !propsInvestments && !!userId,
+  });
+
   const { data: queryCategories = [] } = useCategories(propsCategories ? undefined : userId);
   const { data: queryProfile } = useProfile(propsProfile ? undefined : userId);
 
   const effectiveExpenses = propsExpenses || queryExpenses;
   const effectiveRevenues = propsRevenues || queryRevenues;
+  const effectiveInvestments = propsInvestments || queryInvestments;
   const effectiveCategories = propsCategories || queryCategories;
   const effectiveProfile = propsProfile || queryProfile;
 
   const categoriesMap = useMemo(() => {
     const map = new Map<string, { nome: string; icone?: string; cor?: string }>();
+
+    // 1. Iniciar com categorias padrão do sistema
+    defaultCategories.forEach((cat) => {
+      if (cat) {
+        const entry = {
+          nome: cat.nome,
+          icone: cat.icone,
+          cor: cat.cor,
+        };
+        if (cat.id) map.set(cat.id, entry);
+        if (cat.nome) {
+          map.set(cat.nome, entry);
+          if (cat.nome.endsWith(" (rendimentos, resgates)")) {
+            map.set(cat.nome.slice(0, -" (rendimentos, resgates)".length), entry);
+          }
+        }
+      }
+    });
+
+    // 2. Mesclar/sobrescrever com categorias do usuário / banco
     if (Array.isArray(effectiveCategories)) {
       effectiveCategories.forEach((cat) => {
-        if (cat?.id) {
-          map.set(cat.id, {
+        if (cat) {
+          const entry = {
             nome: cat.nome,
             icone: cat.icone,
             cor: cat.cor,
-          });
+          };
+          if (cat.id) map.set(cat.id, entry);
+          if (cat.nome) {
+            map.set(cat.nome, entry);
+            if (cat.nome.endsWith(" (rendimentos, resgates)")) {
+              map.set(cat.nome.slice(0, -" (rendimentos, resgates)".length), entry);
+            }
+          }
         }
       });
     }
     return map;
   }, [effectiveCategories]);
+
+  const getCategoryInfo = useMemo(() => {
+    return (invNome?: string): { nome: string; icone?: string; cor?: string } | undefined => {
+      if (!invNome) return undefined;
+
+      // 1. Busca direta por ID ou nome no Map
+      if (categoriesMap.has(invNome)) return categoriesMap.get(invNome);
+
+      // 2. Busca sem sufixo descritivo
+      if (invNome.endsWith(" (rendimentos, resgates)")) {
+        const clean = invNome.slice(0, -" (rendimentos, resgates)".length);
+        if (categoriesMap.has(clean)) return categoriesMap.get(clean);
+      }
+
+      // 3. Busca insensível a maiúsculas/minúsculas no Map
+      const lower = invNome.toLowerCase();
+      for (const [key, val] of categoriesMap.entries()) {
+        if (key.toLowerCase() === lower || val.nome.toLowerCase() === lower) {
+          return val;
+        }
+      }
+
+      // 4. Busca direta na lista de categorias
+      if (Array.isArray(effectiveCategories)) {
+        const found = effectiveCategories.find(
+          (c) =>
+            c.id === invNome ||
+            c.nome === invNome ||
+            c.id.toLowerCase() === lower ||
+            c.nome.toLowerCase() === lower
+        );
+        if (found) {
+          return { nome: found.nome, icone: found.icone, cor: found.cor };
+        }
+      }
+
+      return undefined;
+    };
+  }, [categoriesMap, effectiveCategories]);
 
   const ultimasMovimentacoes = useMemo(() => {
     const today = new Date();
@@ -313,6 +428,116 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
       }
     }
 
+    // 4. Resgates de investimentos (origem saldo_atual)
+    if (Array.isArray(effectiveInvestments)) {
+      for (const inv of effectiveInvestments) {
+        if (inv.status !== "resgatado" || !inv.data_resgate) continue;
+        if (inv.origem_investimento && inv.origem_investimento !== "saldo_atual") continue;
+
+        const dateRaw = inv.data_resgate;
+        const { date, dateOnlyStr, timestamp } = parseDateParts(dateRaw);
+        if (dateOnlyStr > todayStr) continue; // Não incluir registros futuros
+
+        let idxMap: Map<string, number> | undefined;
+        if (inv.tipo_rentabilidade === "indexado") {
+          if (inv.indexador === "CDI") idxMap = indexadorMapCDI;
+          else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
+        }
+
+        const tipoTributacao = getTipoTributacao({ nome: inv.nome }, effectiveCategories);
+        const pIndexador = inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100;
+
+        let valorLiquido = inv.valor || 0;
+        try {
+          const res = calcularRendimentoComCDI({
+            valorInicial: inv.valor || 0,
+            dataInicio: inv.data,
+            dataFim: inv.data_resgate,
+            dataVencimento: inv.data_vencimento || null,
+            indexadorMap: idxMap || new Map<string, number>(),
+            indexador: inv.indexador ?? "CDI",
+            percentualIndexador: pIndexador,
+            taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
+            tipoTributacao,
+          });
+          if (res && res.valorAtual > 0) {
+            valorLiquido = res.valorAtual;
+          }
+        } catch (e) {
+          console.warn("Erro ao calcular rendimento do resgate:", e);
+        }
+
+        const category = getCategoryInfo(inv.nome);
+        let title = category?.nome || inv.nome || "Investimento";
+        if (title.endsWith(" (rendimentos, resgates)")) {
+          title = title.slice(0, -" (rendimentos, resgates)".length);
+        }
+        const icon = (inv as any).icone || category?.icone || "PiggyBank";
+        const iconColor = category?.cor || "#059669";
+        const formattedDate = formatExtratoDate(date);
+        const formattedAmount = `+ ${formatCurrency(valorLiquido)}`;
+
+        items.push({
+          id: `rescue-${inv.id}`,
+          type: "rescue",
+          effectiveDate: date,
+          dateOnlyStr,
+          secondaryTimestamp: timestamp,
+          title,
+          secondary: "Resgate de investimento",
+          amount: valorLiquido,
+          isPositive: true,
+          icon,
+          iconColor,
+          formattedDate,
+          formattedAmount,
+        });
+      }
+    }
+
+    // 5. Aplicações de novos investimentos (origem saldo_atual)
+    if (Array.isArray(effectiveInvestments)) {
+      for (const inv of effectiveInvestments) {
+        if (!inv.valor || Number(inv.valor) <= 0) continue;
+        if (!inv.data) continue;
+        if (inv.origem_investimento && inv.origem_investimento !== "saldo_atual") continue;
+
+        const dateRaw = inv.data;
+        const { date, dateOnlyStr, timestamp } = parseDateParts(dateRaw);
+        if (dateOnlyStr > todayStr) continue; // Não incluir registros futuros
+
+        const category = getCategoryInfo(inv.nome);
+        let title = category?.nome || inv.nome || "Investimento";
+        if (title.endsWith(" (rendimentos, resgates)")) {
+          title = title.slice(0, -" (rendimentos, resgates)".length);
+        }
+        const icon = (inv as any).icone || category?.icone || "PiggyBank";
+        const iconColor = category?.cor || "#0556C3";
+        const formattedDate = formatExtratoDate(date);
+        const formattedAmount = `− ${formatCurrency(inv.valor)}`;
+
+        const secTimestamp = inv.created_at
+          ? new Date(inv.created_at).getTime()
+          : timestamp;
+
+        items.push({
+          id: `application-${inv.id}`,
+          type: "application",
+          effectiveDate: date,
+          dateOnlyStr,
+          secondaryTimestamp: secTimestamp,
+          title,
+          secondary: "Aplicação em investimento",
+          amount: inv.valor,
+          isPositive: false,
+          icon,
+          iconColor,
+          formattedDate,
+          formattedAmount,
+        });
+      }
+    }
+
     // 1. Ordenação decrescente para selecionar as movimentações elegíveis mais recentes
     items.sort((a, b) => {
       if (a.dateOnlyStr !== b.dateOnlyStr) {
@@ -331,7 +556,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
 
     // 3. Inverter para apresentar em ordem cronológica crescente (da mais antiga para a mais recente)
     return top5MaisRecentes.reverse();
-  }, [effectiveExpenses, effectiveRevenues, historicoAjustes, categoriesMap]);
+  }, [effectiveExpenses, effectiveRevenues, historicoAjustes, effectiveInvestments, categoriesMap, getCategoryInfo, effectiveCategories, indexadorMapCDI, indexadorMapIPCA]);
 
   // Clear state when opened
   useEffect(() => {

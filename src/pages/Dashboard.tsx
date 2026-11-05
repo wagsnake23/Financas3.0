@@ -282,10 +282,13 @@ export default function Dashboard() {
         valorAtual: valorLiquido, 
         ultimaTaxaAplicada: taxaDiaria,
         rendimentoBrutoAcumulado: rendimentoBruto,
-        irProvisionado: valorIR
+        irProvisionado: valorIR,
+        aliquotaAplicada
       } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
+        dataFim: inv.data_resgate || null,
+        dataVencimento: inv.data_vencimento || null,
         indexadorMap: idxMap || new Map<string, number>(),
         percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
         taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
@@ -293,8 +296,7 @@ export default function Dashboard() {
       });
       
       const rendimentoLiquido = valorLiquido - inv.valor;
-      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T12:00:00`) : new Date(inv.data);
-      const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
+      const aliquotaIR = aliquotaAplicada;
 
       const rendimentoBrutoDia = valorLiquido * taxaDiaria;
       const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);

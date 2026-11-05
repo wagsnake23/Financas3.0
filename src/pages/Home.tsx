@@ -184,7 +184,12 @@ export default function Home() {
     });
 
     // Fetch investimentos to subtract from Caixa Atual
-    const { data: investimentos = EMPTY_ARRAY, isLoading: isLoadingInvestments } = useQuery<Tables<"investimentos">[]>({
+    const { 
+        data: investimentos, 
+        isLoading: isLoadingInvestments,
+        isSuccess: isSuccessInvestments,
+        isError: isErrorInvestments,
+    } = useQuery<Tables<"investimentos">[]>({
         queryKey: ["investments", user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
@@ -199,7 +204,12 @@ export default function Home() {
     });
 
     // Global Balance Queries for "Saldo Atual"
-    const { data: globalReceivedIncome = 0 } = useQuery({
+    const { 
+        data: globalReceivedIncome,
+        isLoading: isLoadingGlobalIncome,
+        isSuccess: isSuccessGlobalIncome,
+        isError: isErrorGlobalIncome,
+    } = useQuery({
         queryKey: ["globalReceivedIncome", user?.id],
         queryFn: async () => {
             if (!user?.id) return 0;
@@ -214,7 +224,12 @@ export default function Home() {
         enabled: !!user,
     });
 
-    const { data: globalPaidExpenses = 0 } = useQuery({
+    const { 
+        data: globalPaidExpenses,
+        isLoading: isLoadingGlobalExpenses,
+        isSuccess: isSuccessGlobalExpenses,
+        isError: isErrorGlobalExpenses,
+    } = useQuery({
         queryKey: ["globalPaidExpenses", user?.id],
         queryFn: async () => {
             if (!user?.id) return 0;
@@ -232,7 +247,41 @@ export default function Home() {
     // Fetch categories via SSOT
     const { data: allSubcategories = EMPTY_ARRAY } = useCategories(user?.id);
 
-    const { data: profile, refetch: refetchProfile } = useProfile(user?.id);
+    const { 
+        data: profile, 
+        isLoading: isLoadingProfile,
+        isSuccess: isSuccessProfile,
+        isError: isErrorProfile,
+        refetch: refetchProfile 
+    } = useProfile(user?.id);
+
+    // Estado e prontidão do Saldo em Conta: apenas pronto quando TODAS as 4 fontes obrigatórias tiverem sido carregadas com sucesso
+    const isSaldoError = !!(isErrorGlobalIncome || isErrorGlobalExpenses || isErrorInvestments || isErrorProfile);
+
+    const isSaldoReady = useMemo(() => {
+        if (authLoading || !user) return false;
+        if (isSaldoError) return false;
+        const incomeReady = isSuccessGlobalIncome && globalReceivedIncome !== undefined;
+        const expensesReady = isSuccessGlobalExpenses && globalPaidExpenses !== undefined;
+        const investmentsReady = isSuccessInvestments && investimentos !== undefined;
+        const profileReady = isSuccessProfile && profile !== undefined;
+
+        return incomeReady && expensesReady && investmentsReady && profileReady;
+    }, [
+        authLoading,
+        user,
+        isSaldoError,
+        isSuccessGlobalIncome,
+        globalReceivedIncome,
+        isSuccessGlobalExpenses,
+        globalPaidExpenses,
+        isSuccessInvestments,
+        investimentos,
+        isSuccessProfile,
+        profile,
+    ]);
+
+    const isSaldoLoading = !isSaldoReady && !isSaldoError;
 
     // ── Centralized Financial Projection ─────────────────────────────────────
     const {
@@ -264,15 +313,20 @@ export default function Home() {
             .reduce((sum, p) => sum + p.valor_parcela, 0);
         
         // Subtract Active Investments (originated from saldo_atual)
-        const currentActiveInvestments = investimentos
+        const currentActiveInvestments = (investimentos || [])
             .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
             .reduce((sum, inv) => sum + (inv.valor || 0), 0);
 
         // Raw calculated system balance WITHOUT manual adjustment
-        const saldoCalculadoSistema = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
+        // Apenas calcula o saldo quando todas as fontes estiverem confirmadas, impedindo valor negativo temporário
+        const saldoCalculadoSistema = isSaldoReady
+            ? (globalReceivedIncome ?? 0) - (globalPaidExpenses ?? 0) - currentActiveInvestments
+            : 0;
 
         // Caixa Atual represents the GLOBAL actual balance PLUS manual adjustment
-        const currentCaixaAtual = saldoCalculadoSistema + (profile?.saldo_ajuste || 0);
+        const currentCaixaAtual = isSaldoReady
+            ? saldoCalculadoSistema + (profile?.saldo_ajuste || 0)
+            : 0;
         
         const currentBalance = currentIncome - currentExpenses;
 
@@ -299,26 +353,44 @@ export default function Home() {
             expenseVar: calculateVar(currentExpenses, previousExpenses),
             balanceVar: calculateVar(currentBalance, previousBalance),
         };
-    }, [getMonthlyRevenues, getMonthlyExpenses, getMonthlyTrends, selectedMonthStr, prevMonthStr, allRevenues, allExpenseInstallments, investimentos, globalReceivedIncome, globalPaidExpenses, profile?.saldo_ajuste]);
+    }, [
+        getMonthlyRevenues, 
+        getMonthlyExpenses, 
+        getMonthlyTrends, 
+        selectedMonthStr, 
+        prevMonthStr, 
+        allRevenues, 
+        allExpenseInstallments, 
+        investimentos, 
+        globalReceivedIncome, 
+        globalPaidExpenses, 
+        profile?.saldo_ajuste,
+        isSaldoReady
+    ]);
 
     // Snapshot mechanism to avoid flickering to R$ 0,00 during month transitions
     const lastStableData = React.useRef({
         stats,
         allExpenseInstallments,
         selectedMonth,
+        isSaldoReady,
     });
 
     const isPlaceholder = isPlaceholderRevenues || isPlaceholderExpenses;
 
     if (!isPlaceholder && !isLoadingRevenues && !isLoadingExpenses) {
-        lastStableData.current = {
-            stats,
-            allExpenseInstallments,
-            selectedMonth,
-        };
+        if (isSaldoReady || !lastStableData.current.isSaldoReady) {
+            lastStableData.current = {
+                stats,
+                allExpenseInstallments,
+                selectedMonth,
+                isSaldoReady,
+            };
+        }
     }
 
     const dStats = lastStableData.current.stats;
+    const displayedCaixaAtual = isSaldoReady ? stats.currentCaixaAtual : dStats.currentCaixaAtual;
     const dExpenses = lastStableData.current.allExpenseInstallments;
     const dMonth = lastStableData.current.selectedMonth;
 
@@ -449,7 +521,7 @@ export default function Home() {
                 <div
                     className="absolute inset-0 z-10 pointer-events-none"
                     style={{
-                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
+                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FAFAFA 100%)"
                     }}
                 />
             )}
@@ -577,7 +649,7 @@ export default function Home() {
                                         <div className="flex justify-between items-start w-full mb-2">
                                             <div 
                                                 className="flex flex-col cursor-pointer group transition-all active:opacity-70 md:mt-3"
-                                                onClick={() => setIsAjusteModalOpen(true)}
+                                                onClick={() => { if (!isSaldoLoading) setIsAjusteModalOpen(true); }}
                                             >
                                                 <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
                                                     <h2 className="leading-none tracking-[0.5px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Saldo em conta</h2>
@@ -585,14 +657,21 @@ export default function Home() {
                                                         className="btn-3d w-7 h-7 flex items-center justify-center rounded-full border border-blue-200/50 transition-all active:scale-95 shadow-[0_2px_5px_rgba(37,99,235,0.15)]"
                                                         aria-label="Ajustar saldo"
                                                         type="button"
+                                                        disabled={isSaldoLoading}
                                                         style={{ "--cor-topo": "#ffffff", "--cor-base": "#eff6ff" } as any}
                                                     >
                                                         <DynamicIcon name="Wallet" className="h-4 w-4 text-[#2563EB]" style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.05))" }} />
                                                     </button>
                                                 </div>
-                                                <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "22px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
-                                                    <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
-                                                </p>
+                                                {isSaldoLoading ? (
+                                                    <div className="h-[22px] w-[130px] rounded-[6px] bg-slate-200/70 animate-pulse mt-0.5" />
+                                                ) : isSaldoError ? (
+                                                    <span className="text-[13px] font-bold text-red-500 leading-none">Erro ao carregar</span>
+                                                ) : (
+                                                    <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "22px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: displayedCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
+                                                        <FormatCurrencyStyled value={displayedCaixaAtual} prefixColor={displayedCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
 
@@ -903,7 +982,7 @@ export default function Home() {
                                 <div className="flex justify-between items-start w-full">
                                     <div 
                                         className="flex flex-col cursor-pointer group transition-all active:opacity-70"
-                                        onClick={() => setIsAjusteModalOpen(true)}
+                                        onClick={() => { if (!isSaldoLoading) setIsAjusteModalOpen(true); }}
                                     >
                                         <div className="flex items-center gap-2 mb-1">
                                             <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Saldo em conta</h2>
@@ -911,14 +990,21 @@ export default function Home() {
                                                 className="btn-3d w-7 h-7 flex items-center justify-center rounded-full border border-blue-200/50 transition-all active:scale-95 shadow-[0_2px_5px_rgba(37,99,235,0.15)]"
                                                 aria-label="Ajustar saldo"
                                                 type="button"
+                                                disabled={isSaldoLoading}
                                                 style={{ "--cor-topo": "#ffffff", "--cor-base": "#eff6ff" } as any}
                                             >
                                                 <DynamicIcon name="Wallet" className="h-4 w-4 text-[#2563EB]" style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.05))" }} />
                                             </button>
                                         </div>
-                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
-                                            <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
-                                        </p>
+                                        {isSaldoLoading ? (
+                                            <div className="h-[28px] w-[160px] rounded-[8px] bg-slate-200/70 animate-pulse mt-0.5" />
+                                        ) : isSaldoError ? (
+                                            <span className="text-[14px] font-bold text-red-500 leading-none">Erro ao carregar</span>
+                                        ) : (
+                                            <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: displayedCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
+                                                <FormatCurrencyStyled value={displayedCaixaAtual} prefixColor={displayedCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5 shrink-0">
                                         <div
@@ -1221,8 +1307,8 @@ export default function Home() {
                 <SaldoAjusteDialog
                     isOpen={isAjusteModalOpen}
                     onOpenChange={setIsAjusteModalOpen}
-                    saldoCalculadoSistema={dStats.saldoCalculadoSistema}
-                    saldoAtualComAjuste={dStats.currentCaixaAtual}
+                    saldoCalculadoSistema={isSaldoReady ? stats.saldoCalculadoSistema : dStats.saldoCalculadoSistema}
+                    saldoAtualComAjuste={displayedCaixaAtual}
                     userId={user.id}
                     onAjusteSalvo={refetchProfile}
                     isMobile={!!isMobile}
@@ -1230,6 +1316,7 @@ export default function Home() {
                     allRevenues={allRevenues}
                     categories={allSubcategories}
                     profile={profile}
+                    investimentos={investimentos || EMPTY_ARRAY}
                 />
             )}
             <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>

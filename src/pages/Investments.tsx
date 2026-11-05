@@ -15,7 +15,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI, formatVencimentoDate } from "@/lib/utils";
 import { format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon, Lock } from "lucide-react"; // Importar CalendarIcon e Lock
@@ -149,9 +149,11 @@ export default function Investments() { // Alterado para export default function
   const [type, setType] = useState("fixed");
   const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [date, setDate] = useState<Date | undefined>(new Date()); // Alterado para Date | undefined
+  const [dueDate, setDueDate] = useState<Date | undefined>(undefined); // Data de vencimento opcional
   const [profitability, setProfitability] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
+  const [isDueDateCalendarOpen, setIsDueDateCalendarOpen] = useState(false); // Calendário de vencimento
   const [yieldViewMode, setYieldViewMode] = useState<"daily" | "monthly">("daily");
   const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
@@ -360,6 +362,7 @@ export default function Investments() { // Alterado para export default function
       setPercentualIndexador(undefined); // Reset percentual indexador
       setTipoRentabilidade("indexado"); // Reinicia como indexado
       setDate(new Date()); // Reset para Date
+      setDueDate(undefined); // Reset vencimento
       setType("fixed");
       setValidationErrors({}); // Clear errors on success
     },
@@ -458,14 +461,27 @@ export default function Investments() { // Alterado para export default function
       hasError = true;
     }
 
+    if (date && dueDate) {
+      const dateFormatted = formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd');
+      const dueDateFormatted = formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd');
+      if (dueDateFormatted < dateFormatted) {
+        newErrors.dueDate = true;
+        hasError = true;
+      }
+    }
+
     setValidationErrors(newErrors);
     if (hasError) {
-      if (newErrors.selectedInvestmentCategoryId) {
-        setTimeout(() => {
-          document.getElementById("investment-category")?.focus();
-        }, 10);
+      if (newErrors.dueDate) {
+        showErrorToast("A data de vencimento não pode ser anterior à data do investimento.");
+      } else {
+        if (newErrors.selectedInvestmentCategoryId) {
+          setTimeout(() => {
+            document.getElementById("investment-category")?.focus();
+          }, 10);
+        }
+        showErrorToast("Preencha todos os campos obrigatórios");
       }
-      showErrorToast("Preencha todos os campos obrigatórios");
       setLoadingForm(false);
       return;
     }
@@ -475,12 +491,17 @@ export default function Investments() { // Alterado para export default function
       ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
       : "";
 
+    const formattedDueDate = dueDate
+      ? formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd')
+      : null;
+
     const newInvestmentData: TablesInsert<'investimentos'> = {
       user_id: user.id,
       nome: selectedInvestmentCategoryId, // Store category ID
       tipo: type,
       valor: amount, // Usar o valor como number
       data: formattedDate, // Usar a data formatada
+      data_vencimento: formattedDueDate,
       tipo_rentabilidade: tipoRentabilidade,
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
@@ -549,11 +570,13 @@ export default function Investments() { // Alterado para export default function
         valorAtual: valorLiquido,
         ultimaTaxaAplicada: taxaDiaria,
         rendimentoBrutoAcumulado: rendimentoBruto,
-        irProvisionado: valorIR
+        irProvisionado: valorIR,
+        aliquotaAplicada
       } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
         dataFim: inv.data_resgate || null,
+        dataVencimento: inv.data_vencimento || null,
         indexadorMap: idxMap || new Map<string, number>(),
         indexador: inv.indexador ?? "CDI",
         percentualIndexador: pIndexador,
@@ -562,8 +585,11 @@ export default function Investments() { // Alterado para export default function
       });
 
       const rendimentoLiquido = valorLiquido - inv.valor;
-      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T12:00:00`) : new Date(inv.data);
-      const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
+      const aliquotaIR = aliquotaAplicada;
+
+      const todayStr = formatInTimeZone(new Date(), TARGET_TIMEZONE, 'yyyy-MM-dd');
+      const dueDateStr = inv.data_vencimento ? inv.data_vencimento.split('T')[0] : null;
+      const isVencido = Boolean(dueDateStr && todayStr >= dueDateStr && inv.status !== 'resgatado');
 
       const rentabilidadeBruta = inv.tipo_rentabilidade === "indexado"
         ? (inv.indexador === "CDI"
@@ -573,8 +599,8 @@ export default function Investments() { // Alterado para export default function
 
       const rentabilidadeLiquida = rentabilidadeBruta * (1 - aliquotaIR / 100);
 
-      const rendimentoBrutoDia = valorLiquido * taxaDiaria;
-      const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
+      const rendimentoBrutoDia = isVencido ? 0 : valorLiquido * taxaDiaria;
+      const rendimentoHojeLiquido = isVencido ? 0 : rendimentoBrutoDia * (1 - aliquotaIR / 100);
 
       return {
         ...inv,
@@ -583,18 +609,20 @@ export default function Investments() { // Alterado para export default function
         rentabilidadeLiquida,
         valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto para fins informativos
         rendimentoHojeVirtual: rendimentoHojeLiquido,
-        taxaDiaria,
+        taxaDiaria: isVencido ? 0 : taxaDiaria,
         aliquotaIR,
         rendimentoBruto,
         imposto: valorIR,
         rendimentoLiquido,
-        valorLiquido
+        valorLiquido,
+        isVencido,
+        dueDateStr
       };
     });
   }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
 
   const totalProjectedAnnualYield = useMemo(() => {
-    const rawTotal = calculatedInvestments.reduce((sum, inv) => {
+    const rawTotal = calculatedInvestments.filter(i => i.status !== 'resgatado').reduce((sum, inv) => {
       const annualRateDecimal = inv.rentabilidade / 100; // already derived in calculatedInvestments
       const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
       const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
@@ -613,21 +641,23 @@ export default function Investments() { // Alterado para export default function
       : Math.round(n);
 
     return rounded / m;
-  }, [investments]);
+  }, [investments, calculatedInvestments]);
 
   const stats = useMemo(() => {
-    const totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
-    const totalCurrentBalance = calculatedInvestments.reduce((sum, inv) => sum + inv.valorLiquido, 0);
+    const activeInvestments = investments.filter(i => i.status !== 'resgatado');
+    const activeCalculated = calculatedInvestments.filter(i => i.status !== 'resgatado');
+    const totalInvested = activeInvestments.reduce((sum, inv) => sum + inv.valor, 0);
+    const totalCurrentBalance = activeCalculated.reduce((sum, inv) => sum + inv.valorLiquido, 0);
 
     if (totalInvested === 0) return { totalInvested: 0, totalCurrentBalance: 0, avgProfitability: 0, totalDailyYieldRS: 0, totalMonthlyYieldRS: 0 };
 
     // taxa_anual_ponderada = Σ (valor_atual × (rentabilidade / 100)) ÷ Σ valor_atual
-    const weightedSum = calculatedInvestments.reduce((sum, inv) => sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100)), 0);
+    const weightedSum = activeCalculated.reduce((sum, inv) => sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100)), 0);
     const taxaAnualPonderada = weightedSum / totalCurrentBalance;
     const avgProfitability = taxaAnualPonderada * 100;
 
     // Rendimento Diário Total (R$) - Sum of virtual daily yields
-    const totalDailyYieldRS = calculatedInvestments.reduce((sum, inv) => sum + inv.rendimentoHojeVirtual, 0);
+    const totalDailyYieldRS = activeCalculated.reduce((sum, inv) => sum + inv.rendimentoHojeVirtual, 0);
 
     // Rendimento Mensal: juros compostos com base em 21 dias úteis
     // Para simplificar o rendimento mensal do portfólio, usamos a taxa média ponderada
@@ -992,33 +1022,93 @@ export default function Investments() { // Alterado para export default function
                 )}
 
 
-                <div className="space-y-[6px]">
-                  <Label htmlFor="date" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Data do Investimento</Label>
-                  <Button
-                    type="button"
-                    variant={"outline"}
-                    onClick={() => setIsCalendarOpen(true)}
-                    className={cn(
-                      "w-full justify-start text-left font-bold h-10 rounded-xl",
-                      "input-3d-premium px-3 transition-all duration-200",
-                      !date && "text-gray-400",
-                      isMobile && "h-9 text-sm",
-                      getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
-                    )}
-                    disabled={loadingForm}
-                  >
-                    <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-                    {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                  </Button>
-                  <DatePickerModal 
-                    isOpen={isCalendarOpen}
-                    setIsOpen={setIsCalendarOpen}
-                    date={date}
-                    onSelect={(selectedDate) => {
-                      setDate(selectedDate);
-                      setValidationErrors(prev => ({ ...prev, date: false }));
-                    }}
-                  />
+                <div className="grid grid-cols-2 gap-2">
+                  {/* Data do Investimento */}
+                  <div className="space-y-[6px]">
+                    <div className="flex items-center justify-between h-4">
+                      <Label htmlFor="date" className="text-[#283c5a] text-xs font-semibold leading-none">
+                        Data Início <span className="text-red-500 font-bold">*</span>
+                      </Label>
+                    </div>
+                    <Button
+                      type="button"
+                      variant={"outline"}
+                      onClick={() => setIsCalendarOpen(true)}
+                      className={cn(
+                        "w-full justify-start text-left font-bold h-9 text-xs rounded-xl",
+                        "input-3d-premium px-2 transition-all duration-200 truncate",
+                        !date && "text-gray-400",
+                        getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
+                      )}
+                      disabled={loadingForm}
+                    >
+                      <DynamicIcon name="📅" className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
+                      <span className="truncate">{date ? formatVencimentoDate(date) : "Selecione"}</span>
+                    </Button>
+                    <DatePickerModal 
+                      isOpen={isCalendarOpen}
+                      setIsOpen={setIsCalendarOpen}
+                      date={date}
+                      onSelect={(selectedDate) => {
+                        setDate(selectedDate);
+                        if (dueDate && selectedDate && formatInTimeZone(selectedDate, TARGET_TIMEZONE, 'yyyy-MM-dd') > formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd')) {
+                          setValidationErrors(prev => ({ ...prev, dueDate: true, date: false }));
+                          showErrorToast("A data do investimento não pode ser posterior ao vencimento.");
+                        } else {
+                          setValidationErrors(prev => ({ ...prev, date: false, dueDate: false }));
+                        }
+                      }}
+                    />
+                  </div>
+
+                  {/* Data de Vencimento */}
+                  <div className="space-y-[6px]">
+                    <div className="flex items-center justify-between h-4">
+                      <Label htmlFor="due-date" className="text-[#283c5a] text-xs font-semibold leading-none">Vencimento</Label>
+                      {dueDate && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDueDate(undefined);
+                            setValidationErrors(prev => ({ ...prev, dueDate: false }));
+                          }}
+                          className="text-[10px] text-slate-400 hover:text-red-500 transition-colors font-semibold leading-none"
+                        >
+                          Limpar
+                        </button>
+                      )}
+                    </div>
+                    <Button
+                      type="button"
+                      variant={"outline"}
+                      onClick={() => setIsDueDateCalendarOpen(true)}
+                      className={cn(
+                        "w-full justify-start text-left font-bold h-9 text-xs rounded-xl",
+                        "input-3d-premium px-2 transition-all duration-200 truncate",
+                        !dueDate && "text-gray-400 font-normal",
+                        getBorderClass({ isInvalid: validationErrors.dueDate, isValid: validationErrors.dueDate === false, variant: "green" })
+                      )}
+                      disabled={loadingForm}
+                    >
+                      <DynamicIcon name="📅" className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
+                      <span className="truncate">{dueDate ? formatVencimentoDate(dueDate) : "Opcional"}</span>
+                    </Button>
+                    <DatePickerModal 
+                      isOpen={isDueDateCalendarOpen}
+                      setIsOpen={setIsDueDateCalendarOpen}
+                      date={dueDate}
+                      onSelect={(selectedDate) => {
+                        if (date && selectedDate && formatInTimeZone(selectedDate, TARGET_TIMEZONE, 'yyyy-MM-dd') < formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd')) {
+                          setValidationErrors(prev => ({ ...prev, dueDate: true }));
+                          showErrorToast("A data de vencimento não pode ser anterior à data do investimento.");
+                          return;
+                        }
+                        setDueDate(selectedDate);
+                        setValidationErrors(prev => ({ ...prev, dueDate: false }));
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <Button
@@ -1075,12 +1165,12 @@ export default function Investments() { // Alterado para export default function
                   </ToggleGroup>
                 </div>
                 <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
-                  {calculatedInvestments.length === 0 ? (
+                  {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
                     </p>
                   ) : (
-                    calculatedInvestments.map((investment) => {
+                    calculatedInvestments.filter(i => i.status !== 'resgatado').map((investment) => {
                       const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                       const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                       const investmentNameDisplay = investmentCategory?.nome || investment.nome;
@@ -1119,17 +1209,9 @@ export default function Investments() { // Alterado para export default function
                                 size="icon"
                                 onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
                                 className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                title="Ver Detalhes"
                               >
-                                <span>✏️</span>
-                              </Button>
-
-                              <Button
-                                type="button"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
-                              >
-                                <DynamicIcon name="Trash2" className="text-red-500 h-[18px] w-[18px]" />
+                                <DynamicIcon name="Eye" className="text-slate-600 h-[18px] w-[18px]" />
                               </Button>
 
                               {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
@@ -1156,14 +1238,21 @@ export default function Investments() { // Alterado para export default function
                                 <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "leading-tight text-base")}>
                                   {investmentNameDisplay}
                                 </h3>
-                                <p className={cn("text-gray-600 font-bold flex items-center gap-2", isMobile ? "text-[11px] leading-none" : "text-xs")}>
-                                  {typeLabel}
+                                <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                  <span className={cn("text-gray-600 font-bold", isMobile ? "text-[11px] leading-none" : "text-xs")}>
+                                    {typeLabel}
+                                  </span>
                                   {investment.status === 'resgatado' && (
                                     <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md border border-slate-200">
                                       Resgatado {investment.data_resgate && `em ${format(new Date(investment.data_resgate), "dd/MM/yyyy")}`}
                                     </span>
                                   )}
-                                </p>
+                                  {!investment.isVencido && investment.data_vencimento && investment.status !== 'resgatado' && (
+                                    <span className="text-slate-400 font-medium text-[10px]">
+                                      • Vence em {formatVencimentoDate(investment.data_vencimento)}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1180,12 +1269,16 @@ export default function Investments() { // Alterado para export default function
 
                               {/* Rendimento Diário / Mensal + Badge */}
                               <div className="flex items-center justify-between w-full">
-                                <div className={cn("flex items-center gap-1 font-bold text-success/90", isMobile ? "text-[12px]" : "text-[12px] ml-0.5 gap-1.5")}>
-                                  <span className={cn(isMobile ? "text-[13px]" : "text-sm")}>🔥</span>
-                                  <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
+                                <div className={cn("flex items-center gap-1 font-bold", investment.isVencido ? "text-amber-600/90" : "text-success/90", isMobile ? "text-[12px]" : "text-[12px] ml-0.5 gap-1.5")}>
+                                  <span className={cn(isMobile ? "text-[13px]" : "text-sm")}>{investment.isVencido ? "⏸️" : "🔥"}</span>
+                                  <span>
+                                    {investment.isVencido
+                                      ? "+ R$ 0,00 / dia (vencido)"
+                                      : `+ ${formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / ${yieldViewMode === "daily" ? "dia" : "mês"}`}
+                                  </span>
                                 </div>
                                 
-                                {/* Profitability Badge movido para cá */}
+                                {/* Profitability Badge */}
                                 <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
                                   <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
                                   <span className="font-black text-[13px] leading-none">
@@ -1474,27 +1567,30 @@ export default function Investments() { // Alterado para export default function
                     </div>
                   )}
 
-                  {/* Grupo Compacto: Origem e Data */}
-                  <div className="flex flex-col w-full gap-0 md:gap-3">
-
+                  {/* Grupo de Datas Lado a Lado (Desktop) */}
+                  <div className="grid grid-cols-2 gap-3 w-full md:-mt-1">
                     {/* Data do Investimento */}
-                    <div className="space-y-0.5 md:space-y-2 md:-mt-1">
-                      <Label htmlFor="date" className="block text-xs md:text-sm leading-none md:leading-normal">Data do Investimento</Label>
+                    <div className="space-y-1 md:space-y-2">
+                      <div className="flex items-center justify-between h-5">
+                        <Label htmlFor="date-desktop" className="text-xs md:text-sm font-semibold text-[#283c5a] leading-none">
+                          Data do Investimento <span className="text-red-500 font-bold">*</span>
+                        </Label>
+                      </div>
                       <Button
+                        id="date-desktop"
                         type="button"
                         variant={"outline"}
                         onClick={() => setIsCalendarOpen(true)}
                         className={cn(
-                          "w-full justify-start text-left font-medium h-10 rounded-xl",
-                          "input-3d-premium transition-all duration-200",
+                          "w-full justify-start text-left font-medium h-[42px] rounded-xl",
+                          "input-3d-premium transition-all duration-200 truncate",
                           !date && "text-muted-foreground",
-                          isMobile ? "h-9 text-sm" : "h-[42px]",
-                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
                         )}
                         disabled={loadingForm}
                       >
-                        <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-[#1e3a8a]/70", isMobile && "h-3.5 w-3.5")} />
-                        {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+                        <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-[#1e3a8a]/70 shrink-0" />
+                        <span className="truncate">{date ? format(date, "PPP", { locale: ptBR }) : "Selecione uma data"}</span>
                       </Button>
                       <DatePickerModal 
                         isOpen={isCalendarOpen}
@@ -1502,7 +1598,64 @@ export default function Investments() { // Alterado para export default function
                         date={date}
                         onSelect={(selectedDate) => {
                           setDate(selectedDate);
-                          setValidationErrors(prev => ({ ...prev, date: false }));
+                          if (dueDate && selectedDate && formatInTimeZone(selectedDate, TARGET_TIMEZONE, 'yyyy-MM-dd') > formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd')) {
+                            setValidationErrors(prev => ({ ...prev, dueDate: true, date: false }));
+                            showErrorToast("A data do investimento não pode ser posterior ao vencimento.");
+                          } else {
+                            setValidationErrors(prev => ({ ...prev, date: false, dueDate: false }));
+                          }
+                        }}
+                      />
+                    </div>
+
+                    {/* Data de Vencimento */}
+                    <div className="space-y-1 md:space-y-2">
+                      <div className="flex items-center justify-between h-5">
+                        <Label htmlFor="due-date-desktop" className="text-xs md:text-sm font-semibold text-[#283c5a] leading-none">
+                          Data de Vencimento
+                        </Label>
+                        {dueDate && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDueDate(undefined);
+                              setValidationErrors(prev => ({ ...prev, dueDate: false }));
+                            }}
+                            className="text-xs text-slate-400 hover:text-red-500 transition-colors font-semibold leading-none"
+                          >
+                            Limpar
+                          </button>
+                        )}
+                      </div>
+                      <Button
+                        id="due-date-desktop"
+                        type="button"
+                        variant={"outline"}
+                        onClick={() => setIsDueDateCalendarOpen(true)}
+                        className={cn(
+                          "w-full justify-start text-left font-medium h-[42px] rounded-xl",
+                          "input-3d-premium transition-all duration-200 truncate",
+                          !dueDate && "text-muted-foreground font-normal",
+                          getBorderClass({ isInvalid: validationErrors.dueDate, isValid: validationErrors.dueDate === false, variant: "green" })
+                        )}
+                        disabled={loadingForm}
+                      >
+                        <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-[#1e3a8a]/70 shrink-0" />
+                        <span className="truncate">{dueDate ? format(dueDate, "PPP", { locale: ptBR }) : "Opcional"}</span>
+                      </Button>
+                      <DatePickerModal 
+                        isOpen={isDueDateCalendarOpen}
+                        setIsOpen={setIsDueDateCalendarOpen}
+                        date={dueDate}
+                        onSelect={(selectedDate) => {
+                          if (date && selectedDate && formatInTimeZone(selectedDate, TARGET_TIMEZONE, 'yyyy-MM-dd') < formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd')) {
+                            setValidationErrors(prev => ({ ...prev, dueDate: true }));
+                            showErrorToast("A data de vencimento não pode ser anterior à data do investimento.");
+                            return;
+                          }
+                          setDueDate(selectedDate);
+                          setValidationErrors(prev => ({ ...prev, dueDate: false }));
                         }}
                       />
                     </div>
@@ -1633,7 +1786,19 @@ export default function Investments() { // Alterado para export default function
                                 <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "text-[1.05rem] mb-1.5")}>
                                   {investmentNameDisplay}
                                 </h3>
-                                <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
+                                <div className="flex items-center gap-2">
+                                  <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
+                                  {investment.status === 'resgatado' && (
+                                    <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md border border-slate-200">
+                                      Resgatado {investment.data_resgate && `em ${format(new Date(investment.data_resgate), "dd/MM/yyyy")}`}
+                                    </span>
+                                  )}
+                                  {!investment.isVencido && investment.data_vencimento && investment.status !== 'resgatado' && (
+                                    <span className="text-slate-400 font-medium text-[11px]">
+                                      • Vence em {formatVencimentoDate(investment.data_vencimento)}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
 
@@ -1644,8 +1809,9 @@ export default function Investments() { // Alterado para export default function
                                   size="icon"
                                   onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
                                   className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                  title="Ver Detalhes"
                                 >
-                                  <span>✏️</span>
+                                  <DynamicIcon name="Eye" className="text-slate-600 h-[18px] w-[18px]" />
                                 </Button>
                                 {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
                                   <Button
@@ -1658,14 +1824,6 @@ export default function Investments() { // Alterado para export default function
                                     <span>💰</span>
                                   </Button>
                                 )}
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
-                                >
-                                  <DynamicIcon name="Trash2" className="text-red-500 h-[18px] w-[18px]" />
-                                </Button>
                               </div>
                             )}
                           </div>
@@ -1684,9 +1842,13 @@ export default function Investments() { // Alterado para export default function
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
-                              <div className={cn("flex items-center gap-1 font-bold text-success/90 w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5")}>
-                                <span className="text-[13px]">🔥</span>
-                                <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
+                              <div className={cn("flex items-center gap-1 font-bold", investment.isVencido ? "text-amber-600/90" : "text-success/90", "w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5")}>
+                                <span className="text-[13px]">{investment.isVencido ? "⏸️" : "🔥"}</span>
+                                <span>
+                                  {investment.isVencido
+                                    ? "+ R$ 0,00 / dia (vencido)"
+                                    : `+ ${formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / ${yieldViewMode === "daily" ? "dia" : "mês"}`}
+                                </span>
                               </div>
                             </div>
 

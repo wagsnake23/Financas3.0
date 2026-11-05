@@ -45,6 +45,7 @@ export interface Investment {
   tipo: string;
   valor: number;
   data: string;
+  data_vencimento?: string | null;
   tipo_rentabilidade: "fixo" | "indexado";
   taxa_fixa?: number | null;
   indexador?: "CDI" | "IPCA" | null;

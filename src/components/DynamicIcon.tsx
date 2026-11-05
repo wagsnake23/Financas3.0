@@ -12,7 +12,7 @@ import {
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
   Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen, Target, Trophy, BarChart3,
-  RefreshCw
+  RefreshCw, AlertCircle
 } from 'lucide-react';
 import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
 import { BRANDS } from "@/data/brands"; // Importar o catálogo de marcas
@@ -32,7 +32,8 @@ const iconMap: { [key: string]: React.ElementType } = {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen, Target, Trophy, BarChart3
+  Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen, Target, Trophy, BarChart3,
+  AlertCircle
 };
 
 interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {

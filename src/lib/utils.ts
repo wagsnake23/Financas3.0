@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
 import { AppCategory, Investment } from "@/types/finance";
 
@@ -207,8 +209,9 @@ export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string
 export function calcularRendimentoComCDI({
   valorInicial,
   dataInicio,
-  dataFim = null, // Novo: data limite do cálculo
-  indexadorMap,
+  dataFim = null, // data limite do cálculo ou resgate
+  dataVencimento = null, // data de vencimento opcional
+  indexadorMap = new Map(),
   indexador = "CDI",
   percentualIndexador = 100,
   taxaFixaAnual = null,
@@ -217,12 +220,13 @@ export function calcularRendimentoComCDI({
   valorInicial: number;
   dataInicio: string | Date;
   dataFim?: string | Date | null;
-  indexadorMap: Map<string, number>;
+  dataVencimento?: string | Date | null;
+  indexadorMap?: Map<string, number>;
   indexador?: string;
   percentualIndexador?: number;
   taxaFixaAnual?: number | null;
   tipoTributacao?: TipoTributacao;
-}): { valorAtual: number; ultimaTaxaAplicada: number; rendimentoBrutoAcumulado: number; irProvisionado: number } {
+}): { valorAtual: number; ultimaTaxaAplicada: number; rendimentoBrutoAcumulado: number; irProvisionado: number; aliquotaAplicada: number } {
   let valorBruto = valorInicial;
 
   // 🔥 Normalização Interna:
@@ -241,8 +245,30 @@ export function calcularRendimentoComCDI({
     primeiroDiaYield = proximoDiaUtil(inicioNormalizado);
   }
 
-  const hoje = dataFim ? (typeof dataFim === 'string' ? new Date(dataFim + "T12:00:00") : new Date(dataFim)) : new Date();
-  hoje.setHours(12, 0, 0, 0);
+  // Data de referência do cálculo (hoje ou data de resgate)
+  const refDate = dataFim
+    ? (typeof dataFim === 'string' ? new Date(dataFim.split('T')[0] + "T12:00:00") : new Date(dataFim))
+    : new Date();
+  refDate.setHours(12, 0, 0, 0);
+
+  // Data de vencimento e dia seguinte
+  let vencDate: Date | null = null;
+  let diaAposVencimento: Date | null = null;
+  if (dataVencimento) {
+    vencDate = typeof dataVencimento === 'string'
+      ? new Date(dataVencimento.split('T')[0] + "T12:00:00")
+      : new Date(dataVencimento);
+    vencDate.setHours(12, 0, 0, 0);
+    diaAposVencimento = new Date(vencDate);
+    diaAposVencimento.setDate(diaAposVencimento.getDate() + 1);
+  }
+
+  // A data de vencimento é o limite final da acumulação de rendimentos.
+  // Quando refDate >= vencDate, o rendimento é calculado até a data de vencimento (inclusiva),
+  // e interrompido a partir do dia seguinte (d < diaAposVencimento).
+  const hoje = (vencDate && diaAposVencimento && refDate >= vencDate)
+    ? diaAposVencimento
+    : refDate;
 
   let ultimaTaxa = 0;
   let ultimaTaxaAplicada = 0;
@@ -351,13 +377,22 @@ export function calcularRendimentoComCDI({
     }
   }
 
+  // Se a data de referência for posterior ou igual ao vencimento, o investimento já venceu:
+  // Não há mais taxa diária aplicada após a data limite de rentabilidade.
+  const isVencido = vencDate ? (refDate >= vencDate) : false;
+  if (isVencido) {
+    ultimaTaxaAplicada = 0;
+  }
+
   // Cálculo de IR e Finalização
   // Para fins tributários de permanência, usamos a data UI original (que é inicioNormalizado + 1 dia)
   const dataReferenciaIR = new Date(inicioNormalizado);
   dataReferenciaIR.setDate(dataReferenciaIR.getDate() + 1);
 
   const lucroTotal = valorBruto - valorInicial;
-  const aliquota = getAliquotaIR(dataReferenciaIR, hoje, tipoTributacao);
+  // O prazo de permanência para o IR é limitado à data de vencimento quando vencido
+  const dataFimIR = (vencDate && refDate >= vencDate) ? vencDate : refDate;
+  const aliquota = getAliquotaIR(dataReferenciaIR, dataFimIR, tipoTributacao);
   
   const ir = Math.round(lucroTotal * (aliquota / 100) * 100) / 100;
   const valorLiquido = Math.round((valorBruto - ir) * 100) / 100;
@@ -367,8 +402,25 @@ export function calcularRendimentoComCDI({
     valorAtual: valorLiquido, 
     ultimaTaxaAplicada, 
     rendimentoBrutoAcumulado, 
-    irProvisionado: ir 
+    irProvisionado: ir,
+    aliquotaAplicada: aliquota
   };
+}
+
+/**
+ * Formata data de vencimento no padrão compacto (ex: "21 Out 2026")
+ */
+export function formatVencimentoDate(dateStr: string | Date | null | undefined): string {
+  if (!dateStr) return "";
+  const d = typeof dateStr === 'string'
+    ? new Date(dateStr.split('T')[0] + "T12:00:00")
+    : new Date(dateStr);
+  const raw = format(d, "dd MMM yyyy", { locale: ptBR });
+  return raw.replace(/(\d{1,2})\s+([a-zçãõ]+)\s+(\d{4})/i, (_, day, mon, year) => {
+    const cleanMon = mon.replace('.', '');
+    const capMon = cleanMon.charAt(0).toUpperCase() + cleanMon.slice(1);
+    return `${day} ${capMon} ${year}`;
+  });
 }
 
 export const getFullName = (profile: any, user: any): string => {

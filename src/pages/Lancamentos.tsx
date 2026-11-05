@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import Loading from "@/components/Loading";
@@ -34,11 +33,6 @@ const Lancamentos = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isMobile) {
-      window.scrollTo(0, 0);
-    }
-  }, [isMobile]);
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { openEditModal } = useTransactionEdit();
