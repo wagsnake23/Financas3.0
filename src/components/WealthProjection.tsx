@@ -126,20 +126,20 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
 
         const lucroAcumulado = patrimonioFuturo - patrimonioHoje;
 
-        // Calcular taxa_media ponderada (baseada no peso BRUTO histórico para consistência com o Dashboard)
-        const weightedSumRates = virtualInvestments.reduce((sum, inv: any) => {
-            // Em Dashboard.tsx a taxa é (rendimentoBrutoTotal / totalLiquido)
-            // Aqui fazemos a soma dos rendimentos anuais teóricos (Base Bruta x Taxa)
-            const baseParaPeso = inv.valorAtualVirtualOriginal !== undefined ? inv.valorAtualVirtualOriginal : inv.valorAtualVirtual;
-            return sum + (baseParaPeso * ((inv.rentabilidade || 0) / 100));
+        // Renda mensal futura: calculada reativamente para cada investimento conforme o período selecionado
+        // Para m = 0 (Hoje): reflete exatamente a renda mensal atual da carteira
+        // Para m > 0: reflete a renda mensal gerada pelo patrimônio projetado daquele período (21 dias úteis)
+        const rendaMensalFutura = virtualInvestments.reduce((sum, inv: any) => {
+            const monthlyRate = Math.pow(1 + inv.taxaDiaria, 21) - 1;
+            const rendimentoMesBase = inv.rendimentoMesTotal !== undefined
+                ? inv.rendimentoMesTotal
+                : (inv.valorAtualVirtualOriginal !== undefined ? inv.valorAtualVirtualOriginal : inv.valorAtualVirtual) * monthlyRate;
+
+            if (projectionMonths === 0) {
+                return sum + rendimentoMesBase;
+            }
+            return sum + (rendimentoMesBase * Math.pow(1 + inv.taxaDiaria, days));
         }, 0);
-
-        const taxaMediaAnualPonderada = patrimonioHoje > 0 ? weightedSumRates / patrimonioHoje : 0;
-
-        // renda_mensal_futura = patrimonio_futuro * taxa_mensal
-        // Usando a mesma lógica do Dashboard: (1 + taxaAnual)^(1/12) - 1
-        const taxaMensal = Math.pow(1 + taxaMediaAnualPonderada, 1 / 12) - 1;
-        const rendaMensalFutura = patrimonioFuturo * taxaMensal;
 
         return {
             patrimonioFuturo,

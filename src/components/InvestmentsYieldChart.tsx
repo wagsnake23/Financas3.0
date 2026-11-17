@@ -7,7 +7,7 @@ import DynamicIcon from "./DynamicIcon";
 import { useMemo, useState } from "react";
 
 interface InvestmentsYieldChartProps {
-    investments: (Investment & { rentabilidade?: number; valorLiquido?: number })[];
+    investments: (Investment & { rentabilidade?: number; valorLiquido?: number; rendimentoMesTotal?: number })[];
     allSubcategories: AppCategory[];
     isMobile?: boolean;
 }
@@ -47,9 +47,10 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
             // 3) Taxa mensal (21 dias úteis)
             const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
 
-            // 4) Rendimento Mensal bruto
-            const baseValue = inv.valorLiquido !== undefined ? inv.valorLiquido : inv.valor;
-            const monthYield = baseValue * taxaMensal;
+            // 4) Rendimento Mensal (usa o mesmo valor individual dos minicards e resumo)
+            const monthYield = inv.rendimentoMesTotal !== undefined
+                ? inv.rendimentoMesTotal
+                : (inv.valorLiquido !== undefined ? inv.valorLiquido : inv.valor) * taxaMensal;
 
             if (!acc[name]) {
                 acc[name] = { value: 0, color, icone };

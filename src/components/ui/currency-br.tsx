@@ -4,32 +4,38 @@ import { cn } from "@/lib/utils";
 
 interface CurrencyBRProps {
   value: number | undefined | null;
-  onChange: (val: number | undefined) => void;
+  onChange?: (val: number | undefined) => void;
+  onValueChange?: (val: number | undefined) => void;
   className?: string;
   placeholder?: string;
   disabled?: boolean; // Adicionado disabled para compatibilidade
   id?: string;
+  autoFocus?: boolean;
 }
 
 export default function CurrencyBR({
   value,
   onChange,
+  onValueChange,
   className,
   placeholder = "R$ 0,00",
   disabled, // Adicionado disabled para compatibilidade
-  id
+  id,
+  autoFocus,
 }: CurrencyBRProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/\D/g, ""); // mantém só números
 
     if (raw === "") {
       // Campo vazio → valor interno volta a undefined (sem valor informado)
-      onChange(undefined);
+      onChange?.(undefined);
+      onValueChange?.(undefined);
       return;
     }
 
     const num = Number(raw) / 100;
-    onChange(num);
+    onChange?.(num);
+    onValueChange?.(num);
   };
 
   // Quando value é undefined ou null → campo visualmente vazio (placeholder aparece)
@@ -51,6 +57,7 @@ export default function CurrencyBR({
       inputMode="numeric"
       placeholder={placeholder}
       disabled={disabled} // Passando disabled para o Input
+      autoFocus={autoFocus}
     />
   );
 }

@@ -603,7 +603,7 @@ export default function Receitas() {
               isMobile ? "h-11 text-lg" : "h-12 text-lg",
               isExpired && "opacity-80"
             )}
-            style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif", boxShadow: "0 6px 16px rgba(34,197,94,.18), inset 0 1px 0 rgba(255,255,255,.25)" } as any}
+            style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif" } as any}
             disabled={!isExpired && loading}
           >
             <Save className="h-5 w-5" strokeWidth={2.5} />
@@ -682,44 +682,87 @@ export default function Receitas() {
         )}
       >
         {isMobile ? (
-          <div className="!fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 container-app bg-[#FAFAFA]">
+          <div className="!fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 !pl-[14px] !pr-[14px] bg-transparent">
             <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
-              <div className="flex flex-col gap-6 pb-6 px-[2px]">
-                <div className="flex justify-between items-start pt-2">
-                  <div className="flex items-start gap-3">
-                    <Button
-                      variant="ghost"
-                      className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                      style={{ background: "#1AA361", filter: "saturate(0.95)" }}
-                      onClick={() => navigate("/lancamentos?type=income")}
-                    >
-                      <DynamicIcon
-                        name="TrendingUp"
-                        className="h-[18px] w-[18px] !text-white"
-                        strokeWidth={3}
-                      />
-                    </Button>
-                    <div className="flex flex-col">
-                      <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#1AA361]" style={{ fontFamily: "'Inter', sans-serif" }}>
-                        Nova Receita
-                      </h1>
-                      <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
-                        Registre seus ganhos
-                      </p>
-                    </div>
+              <div className="flex flex-col gap-6 pb-6 px-0">
+                <div 
+                  className="nova-receita-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" 
+                  style={{ 
+                    background: "#E8F8EF", 
+                    border: "1px solid rgba(255, 255, 255, 0.90)", 
+                    backgroundClip: "padding-box", 
+                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.95)", 
+                    backdropFilter: "blur(14px)", 
+                    WebkitBackdropFilter: "blur(14px)" 
+                  }}
+                >
+                  {/* Faixas curvas, translúcidas e reflexos brancos — identidade verde receitas */}
+                  <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[18px]" style={{ zIndex: 0 }}>
+                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 480">
+                      <defs>
+                        <linearGradient id="wave-grad-receitas-form" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                        </linearGradient>
+                      </defs>
+                      {/* Curva suave superior */}
+                      <path d="M 60,0 C 150,85 240,110 380,30 L 400,0 Z" fill="rgba(255,255,255,0.50)" />
+                      {/* Onda suave diagonal inferior */}
+                      <path d="M 0,480 Q 120,320 220,360 T 400,240 L 400,480 Z" fill="url(#wave-grad-receitas-form)" />
+                    </svg>
                   </div>
 
-                  <Button
-                    variant="ghost"
-                    onClick={() => navigate(-1)}
-                    className="h-8 px-2 font-black text-sm transition-all active:scale-95 !text-[#1AA361] hover:bg-transparent bg-transparent border-none p-0 shadow-none"
-                  >
-                    <DynamicIcon name="ArrowLeft" className="mr-1.5 h-4 w-4 !text-[#1AA361]" strokeWidth={3} />
-                    Voltar
-                  </Button>
-                </div>
+                  {/* Camada Soft Glassmorphism: Brilho translúcido e reflexo radial nos cantos superiores */}
+                  <div 
+                    aria-hidden="true" 
+                    className="absolute inset-0 pointer-events-none rounded-[18px]" 
+                    style={{ 
+                      zIndex: 0,
+                      background: `
+                        radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 32%, transparent 68%),
+                        radial-gradient(circle at 85% 10%, rgba(255, 255, 255, 0.50) 0%, transparent 45%)
+                      `
+                    }} 
+                  />
 
-                {oneOffFormContent}
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-start gap-3">
+                        <Button
+                          variant="ghost"
+                          className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
+                          style={{ background: "#1AA361", filter: "saturate(0.95)" }}
+                          onClick={() => navigate("/lancamentos?type=income")}
+                        >
+                          <DynamicIcon
+                            name="TrendingUp"
+                            className="h-[18px] w-[18px] !text-white"
+                            strokeWidth={3}
+                          />
+                        </Button>
+                        <div className="flex flex-col -translate-y-[4px]">
+                          <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#1AA361]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                            Nova Receita
+                          </h1>
+                          <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
+                            Registre seus ganhos
+                          </p>
+                        </div>
+                      </div>
+
+                      <Button
+                        variant="ghost"
+                        onClick={() => navigate(-1)}
+                        className="h-8 px-2 font-black text-sm transition-all active:scale-95 !text-[#1AA361] hover:bg-transparent bg-transparent border-none p-0 shadow-none"
+                      >
+                        <DynamicIcon name="ArrowLeft" className="mr-1.5 h-4 w-4 !text-[#1AA361]" strokeWidth={3} />
+                        Voltar
+                      </Button>
+                    </div>
+
+                    {oneOffFormContent}
+                  </div>
+                </div>
               </div>
               <div style={{ marginTop: "-12px", marginBottom: "0px" }}>
                 <Footer isMobile={isMobile} user={user} />

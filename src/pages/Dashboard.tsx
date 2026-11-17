@@ -26,7 +26,7 @@ import {
   differenceInBusinessDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, formatCurrency, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils";
+import { cn, formatCurrency, IndexadorHistorico, buildIndexadorMap } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { useFinancialProjection } from "@/hooks/useFinancialProjection";
 import { useProfile } from "@/hooks/useProfile";
@@ -44,6 +44,7 @@ import { MonthlyProjectedYieldChart } from "@/components/MonthlyProjectedYieldCh
 import { InvestmentsYieldChart } from "@/components/InvestmentsYieldChart";
 import { WealthProjection } from "@/components/WealthProjection";
 import { Investment } from "@/types/finance";
+import { useInvestmentsData } from "@/hooks/useInvestmentsData";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -116,21 +117,50 @@ export default function Dashboard() {
       enabled: !!user,
     });
 
-  // Fetch investments
-  const { data: investments = [], isLoading: isLoadingInvestments } = useQuery<Investment[]>({
-    queryKey: ["investments", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("investimentos")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as Investment[];
-    },
-    enabled: !!user,
-  });
+  // ── Fonte Única de Verdade para Investimentos ────────────────────────────
+  // Reutiliza exatamente o mesmo hook do módulo Investimentos (FIFO por lote)
+  const {
+    investments,
+    aportes,
+    alocacoes: alocacoesResgates,
+    calculatedInvestments: calculatedInvestmentsFifo,
+    stats: investmentStats,
+    isLoading: isLoadingInvestments,
+  } = useInvestmentsData();
+
+  // Adaptar o formato FIFO para o formato esperado por WealthProjection e InvestmentsYieldChart
+  // (que esperam: valorLiquido, taxaDiaria, rentabilidade, valorAtualVirtual)
+  const calculatedInvestments = useMemo(() => {
+    return calculatedInvestmentsFifo
+      .filter((c) => c.investimento.status !== "resgatado")
+      .map((c) => ({
+        ...c.investimento,
+        valorLiquido: c.saldoLiquidoTotal,
+        valorAtualVirtual: c.saldoBrutoVirtualTotal,
+        taxaDiaria: c.taxaDiariaPonderada,
+        rentabilidade: c.rentabilidadeLiquidaAnual,
+        rendimentoHojeVirtual: c.rendimentoHojeLiquidoTotal,
+        rendimentoHojeLiquido: c.rendimentoHojeLiquidoTotal,
+        rendimentoMesTotal: c.rendimentoMesTotal,
+        rendimentoMesLiquidoTotal: c.rendimentoMesLiquidoTotal,
+        tipoTributacao: c.investimento.tipo_rentabilidade,
+        rendimentoBruto: c.rendimentoBrutoTotal,
+        imposto: c.irProvisionadoTotal,
+        rendimentoLiquido: c.rendimentoLiquidoTotal,
+        aliquotaIR: 0,
+      }));
+  }, [calculatedInvestmentsFifo]);
+
+  // currentYieldStats agora vem de investmentStats (fonte FIFO — mesma base do módulo Investimentos)
+  const currentYieldStats = useMemo(() => ({
+    totalCurrentBalance: investmentStats.totalCurrentBalance,
+    totalInvested: investmentStats.totalInvested,
+    avgProfitability: investmentStats.avgProfitability,
+    avgMonthlyProfitability: investmentStats.avgMonthlyProfitability,
+    totalDailyYieldRS: investmentStats.totalDailyYieldRS,
+    monthYields: investmentStats.totalMonthlyYieldRS,
+    annualYields: investmentStats.totalCurrentBalance * (investmentStats.avgProfitability / 100),
+  }), [investmentStats]);
 
   // Global Balance Queries for "Saldo Atual" (Identical to Home.tsx)
   const { data: globalReceivedIncome = 0 } = useQuery({
@@ -163,7 +193,7 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  // Fetch active indexers (CDI/IPCA)
+  // Fetch active indexers (CDI/IPCA) — mantido para compatibilidade com outros cálculos
   const { data: indexadores = [] } = useQuery<IndexadorHistorico[]>({
     queryKey: ["indexadores-cdi"],
     queryFn: async () => {
@@ -175,21 +205,6 @@ export default function Dashboard() {
       return data as IndexadorHistorico[];
     },
   });
-
-  const cdi = useMemo(() => {
-    const cdis = indexadores.filter(i => i.tipo === "CDI");
-    if (cdis.length === 0) return 10.65;
-    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
-  }, [indexadores]);
-
-  const ipca = useMemo(() => {
-    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
-    if (ipcas.length === 0) return 5.0;
-    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
-  }, [indexadores]);
-
-  const indexadorMapCDI = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI")), [indexadores]);
-  const indexadorMapIPCA = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA")), [indexadores]);
 
   const {
     monthlyFilteredTransactions,
@@ -266,135 +281,35 @@ export default function Dashboard() {
     return getMonthlyExpenses(selectedMonthStr);
   }, [allExpenseInstallments]);
 
-  const calculatedInvestments = useMemo(() => {
-    return investments.map((inv: Investment) => {
-      // Determinar o mapa de indexador correto
-      let idxMap: Map<string, number> | undefined;
-      if (inv.tipo_rentabilidade === "indexado") {
-        if (inv.indexador === "CDI") idxMap = indexadorMapCDI;
-        else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
-      }
-
-      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
-
-      // Cálculo de rendimento usando dados históricos (Engine Real)
-      const { 
-        valorAtual: valorLiquido, 
-        ultimaTaxaAplicada: taxaDiaria,
-        rendimentoBrutoAcumulado: rendimentoBruto,
-        irProvisionado: valorIR,
-        aliquotaAplicada
-      } = calcularRendimentoComCDI({
-        valorInicial: inv.valor,
-        dataInicio: inv.data,
-        dataFim: inv.data_resgate || null,
-        dataVencimento: inv.data_vencimento || null,
-        indexadorMap: idxMap || new Map<string, number>(),
-        percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
-        taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
-        tipoTributacao
-      });
-      
-      const rendimentoLiquido = valorLiquido - inv.valor;
-      const aliquotaIR = aliquotaAplicada;
-
-      const rendimentoBrutoDia = valorLiquido * taxaDiaria;
-      const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
-
-      return {
-        ...inv,
-        tipoTributacao,
-        rentabilidade: inv.tipo_rentabilidade === "indexado" 
-          ? (inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * (inv.percentual_indexador || 100) / 100
-          : (inv.taxa_fixa || 0),
-        valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto informativo
-        rendimentoHojeVirtual: rendimentoHojeLiquido,
-        taxaDiaria,
-        aliquotaIR,
-        rendimentoBruto,
-        imposto: valorIR,
-        rendimentoLiquido,
-        valorLiquido
-      };
-    });
-  }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
-
-  // Yields calculation
-  const totalProjectedAnnualYield = useMemo(() => {
-    const rawTotal = calculatedInvestments.reduce((sum, inv) => {
-      const annualRateDecimal = inv.rentabilidade / 100;
-      const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
-      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-      const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
-      return sum + (inv.valorAtualVirtual * annualRateDerived);
-    }, 0);
-
-    // Arredondamento Bancário (Round Half Even) para 2 casas
-    const m = 100;
-    const n = +(rawTotal * m).toFixed(8);
-    const i = Math.floor(n);
-    const f = n - i;
-    const e = 1e-8;
-    const rounded = (f > 0.5 - e && f < 0.5 + e)
-      ? (i % 2 === 0 ? i : i + 1)
-      : Math.round(n);
-
-    return rounded / m;
-  }, [calculatedInvestments]);
-
-  const currentYieldStats = useMemo(() => {
-    let totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
-    // Modified to use Net Amount for cockpit totals
-    let totalCurrentBalance = calculatedInvestments.reduce((sum, inv) => sum + inv.valorLiquido, 0);
-
-    if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0, totalCurrentBalance: 0, avgProfitability: 0, totalDailyYieldRS: 0 };
-
-    // taxa_anual_ponderada = Σ (valor_atual × (rentabilidade / 100)) ÷ Σ valor_atual
-    const weightedSum = calculatedInvestments.reduce((sum, inv) => sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100)), 0);
-    const taxaAnualPonderada = weightedSum / totalCurrentBalance;
-    const avgProfitability = taxaAnualPonderada * 100;
-
-    // Rendimento Diário e Mensal com base em 252 e 21 dias úteis
-    const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
-    const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-
-    // Rendimento Diário Total (R$) - Sum of virtual daily yields
-    const totalDailyYieldRS = calculatedInvestments.reduce((sum, inv) => sum + inv.rendimentoHojeVirtual, 0);
-
-    // Rendimento Mensal: juros compostos com base em 21 dias úteis
-    const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
-    const rawMonthYield = totalCurrentBalance * taxaMensal;
-
-    // Arredondamento Bancário para o rendimento mensal
-    const m = 100;
-    const nm = +(rawMonthYield * m).toFixed(8);
-    const im = Math.floor(nm);
-    const fm = nm - im;
-    const e = 1e-8;
-    const monthRounded = (fm > 0.5 - e && fm < 0.5 + e)
-      ? (im % 2 === 0 ? im : im + 1)
-      : Math.round(nm);
-
-    return {
-      monthYields: monthRounded / m,
-      annualYields: totalProjectedAnnualYield,
-      totalInvested,
-      totalCurrentBalance,
-      avgProfitability,
-      totalDailyYieldRS
-    };
-  }, [totalProjectedAnnualYield, investments, calculatedInvestments]);
-
   const { data: profile } = useProfile(user?.id);
 
   const saldoAtualEmConta = useMemo(() => {
-    const currentActiveInvestments = investments
-      .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
-      .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+    const activeInvIds = new Set(
+      investments
+        .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
+        .map((inv) => inv.id)
+    );
+
+    let currentActiveInvestments = 0;
+    if (aportes.length > 0) {
+      const totalAportesAtivos = aportes
+        .filter((ap) => activeInvIds.has(ap.investimento_id))
+        .reduce((sum, ap) => sum + (Number(ap.valor_original) || 0), 0);
+
+      const totalResgatesAtivos = alocacoesResgates
+        .filter((aloc) => activeInvIds.has(aloc.investimento_id))
+        .reduce((sum, aloc) => sum + (Number(aloc.principal_consumido) || 0), 0);
+
+      currentActiveInvestments = Math.max(0, totalAportesAtivos - totalResgatesAtivos);
+    } else {
+      currentActiveInvestments = investments
+        .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
+        .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+    }
       
     const saldoCalculadoSistema = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
     return saldoCalculadoSistema + (profile?.saldo_ajuste || 0);
-  }, [globalReceivedIncome, globalPaidExpenses, investments, profile?.saldo_ajuste]);
+  }, [globalReceivedIncome, globalPaidExpenses, investments, aportes, alocacoesResgates, profile?.saldo_ajuste]);
 
   const patrimonioBase = currentYieldStats.totalCurrentBalance + saldoAtualEmConta;
 
@@ -583,7 +498,7 @@ export default function Dashboard() {
                             <DynamicIcon name="DollarSign" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
-                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Saldo Líquido Total</h4>
+                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">SALDO TOTAL</h4>
                             <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                           </div>
                         </div>
@@ -597,7 +512,7 @@ export default function Dashboard() {
                             <DynamicIcon name="Calendar" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
-                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
+                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">MENSAL</h4>
                             <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
                           </div>
                         </div>
@@ -611,12 +526,12 @@ export default function Dashboard() {
                             <DynamicIcon name="Clock" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
-                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
+                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">DIÁRIO</h4>
                             <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
                           </div>
                         </div>
 
-                        {/* Rentabilidade Média */}
+                        {/* Rentabilidade Média Mensal */}
                         <div className="flex items-center justify-start gap-4 border-l border-[rgba(0,102,255,0.15)] h-10 pl-8">
                           <div
                             className="p-2.5 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
@@ -625,10 +540,10 @@ export default function Dashboard() {
                             <DynamicIcon name="Percent" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
-                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Média</h4>
+                            <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">MÉDIA MENSAL</h4>
                             <div className="flex items-baseline gap-1">
-                              <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
-                              <span className="text-[10px] font-black text-slate-500 uppercase">a.a.</span>
+                              <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{(currentYieldStats.avgMonthlyProfitability ?? 0).toFixed(2).replace('.', ',')}%</p>
+                              <span className="text-[10px] font-black text-slate-500 uppercase">A.M.</span>
                             </div>
                           </div>
                         </div>
@@ -708,7 +623,7 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Saldo líquido total</h4>
+                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">SALDO TOTAL</h4>
                         </div>
                         <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                       </div>
@@ -721,11 +636,11 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Média</h4>
+                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">MÉDIA MENSAL</h4>
                         </div>
                         <div className="flex items-baseline gap-0.5">
-                          <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
-                          <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
+                          <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{(currentYieldStats.avgMonthlyProfitability ?? 0).toFixed(2).replace('.', ',')}%</p>
+                          <span className="text-[8px] font-black text-gray-500 uppercase">A.M.</span>
                         </div>
                       </div>
 
@@ -737,7 +652,7 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Mensal</h4>
+                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">MENSAL</h4>
                         </div>
                         <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
                       </div>
@@ -750,7 +665,7 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Diário</h4>
+                          <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">DIÁRIO</h4>
                         </div>
                         <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
                       </div>

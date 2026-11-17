@@ -35,6 +35,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"; // Importar Dialog components
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
+import { NewContributionDialog } from "@/components/investments/NewContributionDialog";
+import { RescueInvestmentDialog } from "@/components/investments/RescueInvestmentDialog";
+import { useInvestmentsData } from "@/hooks/useInvestmentsData";
+import { InvestmentConsolidatedMetrics } from "@/types/finance";
 import { StatCard } from "@/components/StatCard"; // Importar StatCard
 import { useNavigate } from "react-router-dom"; // NOVO: Importar useNavigate
 import {
@@ -158,53 +162,42 @@ export default function Investments() { // Alterado para export default function
   const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
-  const [isConfirmRescueOpen, setIsConfirmRescueOpen] = useState(false);
-  const [investmentToRescue, setInvestmentToRescue] = useState<any>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
   const [simulationPeriod, setSimulationPeriod] = useState<"diário" | "mensal" | "anual">("diário");
 
-  // Fetch active indexers (CDI/IPCA)
-  const { data: indexadores = [] } = useQuery<IndexadorHistorico[]>({
-    queryKey: ["indexadores-cdi"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, taxa_diaria, taxa_mensal")
-        .order("data_inicio", { ascending: true });
-      if (error) throw error;
-      return data as IndexadorHistorico[];
-    },
-  });
+  // Camada centralizada de investimentos, aportes e resgates FIFO
+  const {
+    investments,
+    calculatedInvestments,
+    consolidatedMap,
+    stats,
+    indexadores,
+    cdi,
+    cdiDiario,
+    ipca12M,
+    ipcaUltimoMensal,
+    indexadorMapCDI,
+    indexadorMapIPCA,
+    isLoading: isLoadingInvestments,
+    invalidateAll,
+  } = useInvestmentsData();
 
-  const cdi = useMemo(() => {
-    const cdis = indexadores.filter(i => i.tipo === "CDI");
-    if (cdis.length === 0) return 10.65;
-    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
-  }, [indexadores]);
+  // Estados para Novo Aporte e Resgate FIFO
+  const [isNewContributionOpen, setIsNewContributionOpen] = useState(false);
+  const [selectedInvestmentForContribution, setSelectedInvestmentForContribution] = useState<Investment | null>(null);
 
-  const cdiDiario = useMemo(() => {
-    const cdis = indexadores.filter(i => i.tipo === "CDI");
-    if (cdis.length === 0) return Math.pow(1 + 0.1065, 1 / 252) - 1;
-    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_diaria;
-  }, [indexadores]);
+  const [isRescueDialogOpen, setIsRescueDialogOpen] = useState(false);
+  const [selectedInvestmentForRescue, setSelectedInvestmentForRescue] = useState<Investment | null>(null);
 
-  const ipca12M = useMemo(() => {
-    return calcularIPCA12M(indexadores);
-  }, [indexadores]);
+  const handleNewContribution = (investment: Investment) => {
+    setSelectedInvestmentForContribution(investment);
+    setIsNewContributionOpen(true);
+  };
 
-  const ipcaUltimoMensal = useMemo(() => {
-    return getLatestIPCAMensal(indexadores);
-  }, [indexadores]);
-
-  const indexadorMapCDI = useMemo(() => {
-    const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI"));
-    return map;
-  }, [indexadores]);
-
-  const indexadorMapIPCA = useMemo(() => {
-    const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA"));
-    return map;
-  }, [indexadores]);
+  const handleRescue = (investment: Investment) => {
+    setSelectedInvestmentForRescue(investment);
+    setIsRescueDialogOpen(true);
+  };
 
   const taxaEstimada = useMemo(() => {
     if (tipoRentabilidade === "fixo") return profitability || 0;
@@ -355,36 +348,32 @@ export default function Investments() { // Alterado para export default function
     { value: "other", label: "Outros", icon: "🎯" },
   ];
 
-  // Fetch investments using Tanstack Query
-  const { data: investments = [], isLoading: isLoadingInvestments } = useQuery<Investment[]>({
-    queryKey: ["investments", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("investimentos")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as Investment[];
-    },
-    enabled: !!user, // Passando enabled
-  });
-
   // Mutation for adding a new investment
   const addInvestmentMutation = useMutation({
     mutationFn: async (newInvestment: TablesInsert<'investimentos'>) => {
-      if (!user?.id) throw new Error("Usuário não autenticado."); // Adicionado verificação
+      if (!user?.id) throw new Error("Usuário não autenticado.");
       const { data, error } = await supabase
         .from("investimentos")
         .insert(newInvestment)
         .select()
         .single();
       if (error) throw error;
+
+      // Inserir aporte inicial na tabela investimentos_aportes
+      const { error: aporteError } = await supabase
+        .from("investimentos_aportes")
+        .insert({
+          investimento_id: data.id,
+          user_id: user.id,
+          valor_original: data.valor,
+          data_aporte: data.data,
+        });
+      if (aporteError) throw aporteError;
+
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
+      invalidateAll();
       showSuccessToast("Investimento adicionado!");
       // Reset form
       setSelectedInvestmentCategoryId(UNSELECTED_VALUE); // Reset
@@ -409,31 +398,6 @@ export default function Investments() { // Alterado para export default function
   // Mutation for deleting an investment
   const deleteInvestmentMutation = useMutation({
     mutationFn: async (id: string) => {
-      if (!user?.id) throw new Error("Usuário não autenticado."); // Adicionado verificação
-      const { error } = await supabase
-        .from("investimentos")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", user.id); // Adicionado eq("user_id", user.id) para segurança
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
-      showSuccessToast("Investimento removido!");
-      setIsConfirmDeleteOpen(false); // Fechar o diálogo após sucesso
-      setInvestmentToDeleteId(null); // Limpar o ID
-    },
-    onError: (error) => {
-      showErrorToast("Erro ao remover investimento", error.message);
-      console.error("Supabase error deleting investment:", error);
-      setIsConfirmDeleteOpen(false); // Fechar o diálogo mesmo em caso de erro
-      setInvestmentToDeleteId(null); // Limpar o ID
-    }
-  });
-
-  // Mutation for rescuing an investment
-  const rescueInvestmentMutation = useMutation({
-    mutationFn: async (id: string) => {
       if (!user?.id) throw new Error("Usuário não autenticado.");
       const { error } = await supabase
         .from("investimentos")
@@ -443,16 +407,16 @@ export default function Investments() { // Alterado para export default function
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
-      showSuccessToast("Investimento resgatado!");
-      setIsConfirmRescueOpen(false);
-      setInvestmentToRescue(null);
+      invalidateAll();
+      showSuccessToast("Investimento removido!");
+      setIsConfirmDeleteOpen(false); // Fechar o diálogo após sucesso
+      setInvestmentToDeleteId(null); // Limpar o ID
     },
     onError: (error) => {
-      showErrorToast("Erro ao resgatar investimento", error.message);
-      console.error("Supabase error rescuing investment:", error);
-      setIsConfirmRescueOpen(false);
-      setInvestmentToRescue(null);
+      showErrorToast("Erro ao remover investimento", error.message);
+      console.error("Supabase error deleting investment:", error);
+      setIsConfirmDeleteOpen(false); // Fechar o diálogo mesmo em caso de erro
+      setInvestmentToDeleteId(null); // Limpar o ID
     }
   });
 
@@ -556,17 +520,6 @@ export default function Investments() { // Alterado para export default function
     }
   };
 
-  const handleRescue = (investment: any) => {
-    setInvestmentToRescue(investment);
-    setIsConfirmRescueOpen(true);
-  };
-
-  const handleConfirmRescue = () => {
-    if (investmentToRescue) {
-      rescueInvestmentMutation.mutate(investmentToRescue.id);
-    }
-  };
-
   const handleEditClick = (investment: Investment) => {
     setEditingInvestment(investment); // investment.nome will be the category ID
     setIsEditModalOpen(true);
@@ -578,88 +531,21 @@ export default function Investments() { // Alterado para export default function
   };
 
   const handleUpdateSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["indexadores"] }); // Also refresh indexers if needed
+    invalidateAll();
     showSuccessToast("Investimento atualizado!");
     handleCancelEdit();
   };
 
-  const calculatedInvestments = useMemo(() => {
-    return (investments || []).map(inv => {
-      let idxMap: Map<string, number> | undefined;
-      if (inv.tipo_rentabilidade === "indexado") {
-        if (inv.indexador === "CDI") idxMap = indexadorMapCDI;
-        else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
-      }
-
-      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
-
-      const pIndexador = inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100;
-
-      // Cálculo de rendimento usando dados históricos (Engine Real - Provisão Diária)
-      const {
-        valorAtual: valorLiquido,
-        ultimaTaxaAplicada: taxaDiaria,
-        rendimentoBrutoAcumulado: rendimentoBruto,
-        irProvisionado: valorIR,
-        aliquotaAplicada
-      } = calcularRendimentoComCDI({
-        valorInicial: inv.valor,
-        dataInicio: inv.data,
-        dataFim: inv.data_resgate || null,
-        dataVencimento: inv.data_vencimento || null,
-        indexadorMap: idxMap || new Map<string, number>(),
-        indexador: inv.indexador ?? "CDI",
-        percentualIndexador: pIndexador,
-        taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
-        tipoTributacao
-      });
-
-      const rendimentoLiquido = valorLiquido - inv.valor;
-      const aliquotaIR = aliquotaAplicada;
-
-      const todayStr = formatInTimeZone(new Date(), TARGET_TIMEZONE, 'yyyy-MM-dd');
-      const dueDateStr = inv.data_vencimento ? inv.data_vencimento.split('T')[0] : null;
-      const isVencido = Boolean(dueDateStr && todayStr >= dueDateStr && inv.status !== 'resgatado');
-
-      const rentabilidadeBruta = inv.tipo_rentabilidade === "indexado"
-        ? (inv.indexador === "CDI"
-          ? (cdi * (inv.percentual_indexador || 100) / 100)
-          : calcularRentabilidadeIPCAPlus(ipca12M, inv.percentual_indexador || 0))
-        : (inv.taxa_fixa || 0);
-
-      const rentabilidadeLiquida = rentabilidadeBruta * (1 - aliquotaIR / 100);
-
-      const rendimentoBrutoDia = isVencido ? 0 : valorLiquido * taxaDiaria;
-      const rendimentoHojeLiquido = isVencido ? 0 : rendimentoBrutoDia * (1 - aliquotaIR / 100);
-
-      return {
-        ...inv,
-        tipoTributacao,
-        rentabilidade: rentabilidadeBruta,
-        rentabilidadeLiquida,
-        valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto para fins informativos
-        rendimentoHojeVirtual: rendimentoHojeLiquido,
-        taxaDiaria: isVencido ? 0 : taxaDiaria,
-        aliquotaIR,
-        rendimentoBruto,
-        imposto: valorIR,
-        rendimentoLiquido,
-        valorLiquido,
-        isVencido,
-        dueDateStr
-      };
-    });
-  }, [investments, cdi, ipca12M, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
-
   const totalProjectedAnnualYield = useMemo(() => {
-    const rawTotal = calculatedInvestments.filter(i => i.status !== 'resgatado').reduce((sum, inv) => {
-      const annualRateDecimal = inv.rentabilidade / 100; // already derived in calculatedInvestments
-      const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
-      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-      const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
-      return sum + (inv.valorAtualVirtual * annualRateDerived);
-    }, 0);
+    const rawTotal = calculatedInvestments
+      .filter((c) => c.investimento.status !== "resgatado")
+      .reduce((sum, c) => {
+        const annualRateDecimal = c.rentabilidadeBrutaAnual / 100;
+        const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
+        const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+        const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
+        return sum + c.saldoBrutoVirtualTotal * annualRateDerived;
+      }, 0);
 
     // Arredondamento Bancário (Round Half Even) para 2 casas
     const m = 100;
@@ -667,54 +553,15 @@ export default function Investments() { // Alterado para export default function
     const i = Math.floor(n);
     const f = n - i;
     const e = 1e-8;
-    const rounded = (f > 0.5 - e && f < 0.5 + e)
-      ? (i % 2 === 0 ? i : i + 1)
-      : Math.round(n);
+    const rounded =
+      f > 0.5 - e && f < 0.5 + e
+        ? i % 2 === 0
+          ? i
+          : i + 1
+        : Math.round(n);
 
     return rounded / m;
-  }, [investments, calculatedInvestments]);
-
-  const stats = useMemo(() => {
-    const activeInvestments = investments.filter(i => i.status !== 'resgatado');
-    const activeCalculated = calculatedInvestments.filter(i => i.status !== 'resgatado');
-    const totalInvested = activeInvestments.reduce((sum, inv) => sum + inv.valor, 0);
-    const totalCurrentBalance = activeCalculated.reduce((sum, inv) => sum + inv.valorLiquido, 0);
-
-    if (totalInvested === 0) return { totalInvested: 0, totalCurrentBalance: 0, avgProfitability: 0, totalDailyYieldRS: 0, totalMonthlyYieldRS: 0 };
-
-    // taxa_anual_ponderada = Σ (valor_atual × (rentabilidade / 100)) ÷ Σ valor_atual
-    const weightedSum = activeCalculated.reduce((sum, inv) => sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100)), 0);
-    const taxaAnualPonderada = weightedSum / totalCurrentBalance;
-    const avgProfitability = taxaAnualPonderada * 100;
-
-    // Rendimento Diário Total (R$) - Sum of virtual daily yields
-    const totalDailyYieldRS = activeCalculated.reduce((sum, inv) => sum + inv.rendimentoHojeVirtual, 0);
-
-    // Rendimento Mensal: juros compostos com base em 21 dias úteis
-    // Para simplificar o rendimento mensal do portfólio, usamos a taxa média ponderada
-    const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
-    const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-    const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
-    const rawMonthYield = totalCurrentBalance * taxaMensal;
-
-    // Arredondamento Bancário para o rendimento mensal
-    const m = 100;
-    const nm = +(rawMonthYield * m).toFixed(8);
-    const im = Math.floor(nm);
-    const fm = nm - im;
-    const e = 1e-8;
-    const monthRounded = (fm > 0.5 - e && fm < 0.5 + e)
-      ? (im % 2 === 0 ? im : im + 1)
-      : Math.round(nm);
-
-    return {
-      totalInvested,
-      totalCurrentBalance,
-      avgProfitability,
-      totalDailyYieldRS,
-      totalMonthlyYieldRS: monthRounded / m
-    };
-  }, [investments, calculatedInvestments]);
+  }, [calculatedInvestments]);
 
 
 
@@ -786,12 +633,12 @@ export default function Investments() { // Alterado para export default function
                     <DynamicIcon name="DollarSign" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Saldo Líquido Total</h4>
+                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">SALDO TOTAL</h4>
                     <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
                 </div>
 
-                {/* Rentabilidade Média */}
+                {/* Rentabilidade Média Mensal */}
                 <div className="flex items-center justify-start gap-4 border-l border-[rgba(0,102,255,0.15)] h-10 pl-6">
                   <div
                     className="p-2.5 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
@@ -800,10 +647,10 @@ export default function Investments() { // Alterado para export default function
                     <DynamicIcon name="Percent" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Média</h4>
+                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">MÉDIA MENSAL</h4>
                     <div className="flex items-baseline gap-1">
-                      <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
-                      <span className="text-[10px] font-black text-slate-500 uppercase">a.a.</span>
+                      <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{(stats.avgMonthlyProfitability ?? 0).toFixed(2).replace('.', ',')}%</p>
+                      <span className="text-[10px] font-black text-slate-500 uppercase">A.M.</span>
                     </div>
                   </div>
                 </div>
@@ -817,7 +664,7 @@ export default function Investments() { // Alterado para export default function
                     <DynamicIcon name="Clock" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
+                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">DIÁRIO</h4>
                     <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
                   </div>
                 </div>
@@ -831,7 +678,7 @@ export default function Investments() { // Alterado para export default function
                     <DynamicIcon name="Calendar" className="h-5 w-5 text-[#0556C3]" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
+                    <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-[0.2em] mb-1 leading-none">MENSAL</h4>
                     <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                   </div>
                 </div>
@@ -1196,23 +1043,23 @@ export default function Investments() { // Alterado para export default function
                   </ToggleGroup>
                 </div>
                 <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
-                  {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
+                  {calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
                     </p>
                   ) : (
-                    calculatedInvestments.filter(i => i.status !== 'resgatado').map((investment) => {
+                    calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').map((item) => {
+                      const investment = item.investimento;
                       const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                       const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                       const investmentNameDisplay = investmentCategory?.nome || investment.nome;
                       const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
 
-                      // Yield calculation based on virtual current balance
-                      const dailyYield = investment.rendimentoHojeVirtual;
-                      const monthlyRate = Math.pow(1 + investment.taxaDiaria, 21) - 1;
-                      const monthlyYield = investment.valorAtualVirtual * monthlyRate;
+                      // Yield calculation based on FIFO consolidated metrics
+                      const dailyYield = item.rendimentoHojeLiquidoTotal;
+                      const monthlyYield = item.rendimentoMesTotal;
 
-                      const [year, month, day] = investment.data.split('-').map(Number);
+                      const [year, month, day] = (item.dataPrimeiroAporte || investment.data).split('-').map(Number);
                       const dateObj = new Date(year, month - 1, day);
                       const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
 
@@ -1220,57 +1067,25 @@ export default function Investments() { // Alterado para export default function
                         <div
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
-                          className={cn(
-                            "relative group overflow-hidden transition-all duration-300",
-                            isMobile ? "pt-[14px] pb-[14px] px-5 cursor-pointer active:scale-[0.98] rounded-[18px] mb-4 last:mb-0" : "py-[14px] pl-4 pr-[52px] rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
-                          )}
-                          style={isMobile ? {
+                          className="pt-[14px] pb-[14px] px-[17px] cursor-pointer active:scale-[0.98] rounded-[18px] mb-4 last:mb-0 transition-all duration-300 relative group overflow-hidden"
+                          style={{
                             backgroundColor: "#FFFFFF",
                             border: "1px solid rgba(0,0,0,0.08)",
                             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
-                          } : {
-                            backgroundColor: "#FFFFFF"
                           }}
                         >
-                          {/* Coluna Vertical de Ações (Direita) */}
-                          {!isMobile && (
-                            <div className="absolute right-3 top-0 bottom-0 flex flex-col justify-center gap-2.5">
-                              <Button
-                                type="button"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                                className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
-                                title="Ver Detalhes"
-                              >
-                                <DynamicIcon name="Eye" className="text-slate-600 h-[18px] w-[18px]" />
-                              </Button>
-
-                              {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
-                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
-                                  title="Resgatar Investimento"
-                                >
-                                  <span>💰</span>
-                                </Button>
-                              )}
-                            </div>
-                          )}
-
-                          {/* 1. Top: Icon, Name, Type */}
-                          <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3")}>
-                            <div className={cn("flex items-center gap-2.5", !isMobile && "-ml-1.5 items-start")}>
-                              <div className={cn("flex items-center justify-center shrink-0 rounded-[12px]", isMobile ? "h-[34px] w-[34px]" : "h-[38px] w-[38px]")} style={{ backgroundColor: "#F6F8FA" }}>
-                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80 leading-none", isMobile ? "h-8 w-8 text-[28px]" : "h-9 w-9 text-[32px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                          {/* 1. Top: Ícone e Nome (Esquerda) e Rentabilidade Percentual (Direita) */}
+                          <div className="flex items-start justify-between gap-2 mb-[17px]">
+                            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                              <div className="flex items-center justify-center shrink-0 rounded-[12px] h-[34px] w-[34px]" style={{ backgroundColor: "#F6F8FA" }}>
+                                <DynamicIcon name={investmentIcon} className="text-primary/80 leading-none h-8 w-8 text-[28px]" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               </div>
-                              <div className="flex flex-col">
-                                <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "leading-tight text-base")}>
+                              <div className="flex flex-col min-w-0">
+                                <h3 className="font-bold text-gray-800 leading-none text-[15px] mb-1 truncate">
                                   {investmentNameDisplay}
                                 </h3>
                                 <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
-                                  <span className={cn("text-gray-600 font-bold", isMobile ? "text-[11px] leading-none" : "text-xs")}>
+                                  <span className="text-gray-600 font-bold text-[11px] leading-none">
                                     {typeLabel}
                                   </span>
                                   {investment.status === 'resgatado' && (
@@ -1278,46 +1093,60 @@ export default function Investments() { // Alterado para export default function
                                       Resgatado {investment.data_resgate && `em ${format(new Date(investment.data_resgate), "dd/MM/yyyy")}`}
                                     </span>
                                   )}
-                                  {!investment.isVencido && investment.data_vencimento && investment.status !== 'resgatado' && (
-                                    <span className="text-slate-400 font-medium text-[10px]">
-                                      • Vence em {formatVencimentoDate(investment.data_vencimento)}
-                                    </span>
-                                  )}
                                 </div>
                               </div>
+                            </div>
+
+                            {/* Rentabilidade Percentual Superior Direita (Sem badge, fundo ou borda) */}
+                            <div className="flex items-center gap-1 text-[#0556C3] font-bold text-[13px] shrink-0 pt-0.5">
+                              <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5 text-[#0556C3]" />
+                              <span>{item.rentabilidadeLiquidaAnual.toFixed(2)}%</span>
                             </div>
                           </div>
 
-                          {/* 2. Main Value and Yield */}
-                          <div className={cn("flex justify-between", isMobile ? "flex-col gap-3" : "flex-col gap-4")}>
-                            <div className="space-y-[7px] w-full">
-                              <div className="flex flex-col">
-                                <span className={cn("text-slate-500 font-black uppercase tracking-wider leading-none", isMobile ? "text-[10px] mb-1" : "text-[10px] mb-1")}>Saldo Líquido Total</span>
-                                <span className={cn("font-bold tracking-tight text-[#0556C3]", isMobile ? "text-[26px] leading-none mb-1.5" : "text-2xl")}>
-                                  {formatCurrency(investment.valorLiquido)}
-                                </span>
-                              </div>
+                          {/* 2. Centro: Saldo Líquido Total */}
+                          <div className="flex flex-col mb-2">
+                            <span className="text-slate-500 font-black uppercase tracking-wider leading-none text-[10px] mb-1">
+                              Saldo Líquido Total
+                            </span>
+                            <span className="font-bold tracking-tight text-[#0556C3] text-[26px] leading-none mb-1.5">
+                              {formatCurrency(item.saldoLiquidoTotal)}
+                            </span>
+                          </div>
 
-                              {/* Rendimento Diário / Mensal + Badge */}
-                              <div className="flex items-center justify-between w-full">
-                                <div className={cn("flex items-center gap-1 font-bold", investment.isVencido ? "text-amber-600/90" : "text-success/90", isMobile ? "text-[12px]" : "text-[12px] ml-0.5 gap-1.5")}>
-                                  <span className={cn(isMobile ? "text-[13px]" : "text-sm")}>{investment.isVencido ? "⏸️" : "🔥"}</span>
-                                  <span>
-                                    {investment.isVencido
-                                      ? "+ R$ 0,00 / dia (vencido)"
-                                      : `+ ${formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / ${yieldViewMode === "daily" ? "dia" : "mês"}`}
-                                  </span>
-                                </div>
-                                
-                                {/* Profitability Badge */}
-                                <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-                                  <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
-                                  <span className="font-black text-[13px] leading-none">
-                                    {investment.rentabilidadeLiquida.toFixed(2)}%
-                                  </span>
-                                </div>
-                              </div>
+                          {/* 3. Rodapé: Rendimento Diário / Mensal (Esquerda) e Botão + Aporte (Direita) */}
+                          <div className="flex items-center justify-between w-full">
+                            <div className={cn("flex items-center gap-1 font-bold text-[12px]", item.isVencido ? "text-amber-600/90" : "text-success/90")}>
+                              <span className="text-[13px]">{item.isVencido ? "⏸️" : "🔥"}</span>
+                              <span>
+                                {item.isVencido
+                                  ? "+ R$ 0,00 / dia (vencido)"
+                                  : `+ ${formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / ${yieldViewMode === "daily" ? "dia" : "mês"}`}
+                              </span>
                             </div>
+
+                            {/* Botão + Aporte no Rodapé à Direita */}
+                            {investment.status !== 'resgatado' && (
+                              <Button
+                                type="button"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleNewContribution(investment);
+                                }}
+                                className="btn-3d h-7 px-3 text-[12px] font-bold !text-[#047857] rounded-full border border-emerald-200/70 flex items-center gap-1.5 transition-all duration-150 active:scale-95 shrink-0 select-none hover:brightness-[1.02]"
+                                style={{
+                                  "--cor-topo": "#ECFDF5",
+                                  "--cor-base": "#D1FAE5",
+                                  boxShadow: "0px 1.5px 3px rgba(0, 0, 0, 0.07), inset 0px 1px 0.5px rgba(255, 255, 255, 0.7), inset 0px -1.5px 0px rgba(5, 150, 105, 0.2)",
+                                } as any}
+                                title="Adicionar aporte"
+                                aria-label="Adicionar aporte"
+                              >
+                                <DynamicIcon name="Plus" className="h-3.5 w-3.5 text-[#047857]" strokeWidth={2.8} />
+                                <span>Aporte</span>
+                              </Button>
+                            )}
                           </div>
                         </div>
                       );
@@ -1337,7 +1166,7 @@ export default function Investments() { // Alterado para export default function
                       >
                         <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Saldo líquido total</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">SALDO TOTAL</h4>
                     </div>
                     <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
@@ -1350,11 +1179,11 @@ export default function Investments() { // Alterado para export default function
                       >
                         <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Média</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">MÉDIA MENSAL</h4>
                     </div>
                     <div className="flex items-baseline gap-0.5">
-                      <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
-                      <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
+                      <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{(stats.avgMonthlyProfitability ?? 0).toFixed(2).replace('.', ',')}%</p>
+                      <span className="text-[8px] font-black text-gray-500 uppercase">A.M.</span>
                     </div>
                   </div>
 
@@ -1366,7 +1195,7 @@ export default function Investments() { // Alterado para export default function
                       >
                         <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Mensal</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">MENSAL</h4>
                     </div>
                     <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                   </div>
@@ -1379,7 +1208,7 @@ export default function Investments() { // Alterado para export default function
                       >
                         <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Diário</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">DIÁRIO</h4>
                     </div>
                     <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
                   </div>
@@ -1748,12 +1577,13 @@ export default function Investments() { // Alterado para export default function
                   </ToggleGroup>
                 </div>
                 <div className={cn("overflow-y-auto no-scrollbar flex-1 min-h-0", isMobile ? "space-y-[12px] max-h-[490px]" : "space-y-3.5")}>
-                  {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
+                  {calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
                     </p>
                   ) : (
-                    calculatedInvestments.filter(i => i.status !== 'resgatado').map((investment) => {
+                    calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').map((item) => {
+                      const investment = item.investimento;
                       const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                       const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                       let investmentNameDisplay = investmentCategory?.nome || investment.nome;
@@ -1780,12 +1610,11 @@ export default function Investments() { // Alterado para export default function
 
                       const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
 
-                      // Yield calculation based on virtual current balance
-                      const dailyYield = investment.rendimentoHojeVirtual;
-                      const monthlyRate = Math.pow(1 + investment.taxaDiaria, 21) - 1;
-                      const monthlyYield = investment.valorAtualVirtual * monthlyRate;
+                      // Yield calculation based on FIFO consolidated metrics
+                      const dailyYield = item.rendimentoHojeLiquidoTotal;
+                      const monthlyYield = item.rendimentoMesTotal;
 
-                      const [year, month, day] = investment.data.split('-').map(Number);
+                      const [year, month, day] = (item.dataPrimeiroAporte || investment.data).split('-').map(Number);
                       const dateObj = new Date(year, month - 1, day);
                       const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
 
@@ -1795,7 +1624,7 @@ export default function Investments() { // Alterado para export default function
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
                           className={cn(
                             "relative group overflow-hidden transition-all duration-300",
-                            isMobile ? "pt-[14px] pb-[14px] px-5 cursor-pointer active:scale-[0.98] rounded-[18px]" : "py-4 px-5 rounded-[16px] border border-[rgba(15,23,42,0.10)] shadow-sm"
+                            isMobile ? "pt-[14px] pb-[14px] px-[17px] cursor-pointer active:scale-[0.98] rounded-[18px]" : "py-4 px-5 rounded-[16px] border border-[rgba(15,23,42,0.10)] shadow-sm"
                           )}
                           style={isMobile ? {
                             backgroundColor: "#FFFFFF",
@@ -1824,32 +1653,62 @@ export default function Investments() { // Alterado para export default function
                                       Resgatado {investment.data_resgate && `em ${format(new Date(investment.data_resgate), "dd/MM/yyyy")}`}
                                     </span>
                                   )}
-                                  {!investment.isVencido && investment.data_vencimento && investment.status !== 'resgatado' && (
-                                    <span className="text-slate-400 font-medium text-[11px]">
-                                      • Vence em {formatVencimentoDate(investment.data_vencimento)}
-                                    </span>
-                                  )}
                                 </div>
                               </div>
                             </div>
 
+                            {/* Ações Mobile */}
+                            {isMobile && investment.status !== 'resgatado' && (
+                              <Button
+                                type="button"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleNewContribution(investment);
+                                }}
+                                className="btn-3d h-7 px-3 text-[12px] font-bold !text-[#047857] rounded-full border border-emerald-200/70 flex items-center gap-1.5 transition-all duration-150 active:scale-95 shrink-0 select-none hover:brightness-[1.02]"
+                                style={{
+                                  "--cor-topo": "#ECFDF5",
+                                  "--cor-base": "#D1FAE5",
+                                  boxShadow: "0px 1.5px 3px rgba(0, 0, 0, 0.07), inset 0px 1px 0.5px rgba(255, 255, 255, 0.7), inset 0px -1.5px 0px rgba(5, 150, 105, 0.2)",
+                                } as any}
+                                title="Adicionar aporte"
+                                aria-label="Adicionar aporte"
+                              >
+                                <DynamicIcon name="Plus" className="h-3.5 w-3.5 text-[#047857]" strokeWidth={2.8} />
+                                <span>Aporte</span>
+                              </Button>
+                            )}
+
+                            {/* Ações Desktop */}
                             {!isMobile && (
-                              <div className="flex gap-2.5">
+                              <div className="flex gap-2">
                                 <Button
                                   type="button"
                                   size="icon"
                                   onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-8 w-8 text-[14px]"
                                   title="Ver Detalhes"
                                 >
-                                  <DynamicIcon name="Eye" className="text-slate-600 h-[18px] w-[18px]" />
+                                  <DynamicIcon name="Eye" className="text-[#0556C3] h-4 w-4" />
                                 </Button>
+                                {investment.status !== 'resgatado' && (
+                                  <Button
+                                    type="button"
+                                    size="icon"
+                                    onClick={(e) => { e.stopPropagation(); handleNewContribution(investment); }}
+                                    className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-emerald-50 border border-emerald-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-emerald-100 h-8 w-8 text-[14px]"
+                                    title="Novo Aporte"
+                                  >
+                                    <DynamicIcon name="Plus" className="text-emerald-700 h-4 w-4" />
+                                  </Button>
+                                )}
                                 {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
                                   <Button
                                     type="button"
                                     size="icon"
                                     onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
-                                    className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                    className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-8 w-8 text-[14px]"
                                     title="Resgatar Investimento"
                                   >
                                     <span>💰</span>
@@ -1868,15 +1727,15 @@ export default function Investments() { // Alterado para export default function
                                   "font-bold tracking-tight text-[#0556C3]",
                                   isMobile ? "text-[26px] leading-none mb-1.5" : "text-[1.4rem]"
                                 )}>
-                                  {formatCurrency(investment.valorLiquido)}
+                                  {formatCurrency(item.saldoLiquidoTotal)}
                                 </span>
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
-                              <div className={cn("flex items-center gap-1 font-bold", investment.isVencido ? "text-amber-600/90" : "text-success/90", "w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5")}>
-                                <span className="text-[13px]">{investment.isVencido ? "⏸️" : "🔥"}</span>
+                              <div className={cn("flex items-center gap-1 font-bold", item.isVencido ? "text-amber-600/90" : "text-success/90", "w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5")}>
+                                <span className="text-[13px]">{item.isVencido ? "⏸️" : "🔥"}</span>
                                 <span>
-                                  {investment.isVencido
+                                  {item.isVencido
                                     ? "+ R$ 0,00 / dia (vencido)"
                                     : `+ ${formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / ${yieldViewMode === "daily" ? "dia" : "mês"}`}
                                 </span>
@@ -1891,7 +1750,7 @@ export default function Investments() { // Alterado para export default function
                               <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
                                 <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
                                 <span className="font-black text-[13px] leading-none">
-                                  {investment.rentabilidadeLiquida.toFixed(2)}%
+                                  {item.rentabilidadeLiquidaAnual.toFixed(2)}%
                                 </span>
                               </div>
 
@@ -1941,6 +1800,7 @@ export default function Investments() { // Alterado para export default function
           {editingInvestment && (
             <EditInvestmentDialog
               investmentToEdit={editingInvestment}
+              consolidated={consolidatedMap.get(editingInvestment.id)}
               onUpdateSuccess={handleUpdateSuccess}
               onCancelEdit={handleCancelEdit}
               user={user}
@@ -1953,6 +1813,10 @@ export default function Investments() { // Alterado para export default function
               onRescueClick={() => {
                 handleCancelEdit();
                 handleRescue(editingInvestment);
+              }}
+              onNewContributionClick={() => {
+                handleCancelEdit();
+                handleNewContribution(editingInvestment);
               }}
             />
           )}
@@ -2013,80 +1877,56 @@ export default function Investments() { // Alterado para export default function
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog open={isConfirmRescueOpen} onOpenChange={setIsConfirmRescueOpen}>
-        <AlertDialogContent
-          className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[22px] shadow-none border-none"
-          )}
-          style={{
-            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
-            backgroundBlendMode: "soft-light",
-            backdropFilter: "blur(6px)",
-            border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
-          }}
-        >
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#0556C3]">
-              💰 Resgatar Investimento
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-center flex flex-col gap-2">
-              <span>Deseja resgatar este investimento?</span>
-              <span>O valor líquido será devolvido ao Caixa Atual.</span>
+      {/* Diálogo de Novo Aporte */}
+      <NewContributionDialog
+        isOpen={isNewContributionOpen}
+        onOpenChange={setIsNewContributionOpen}
+        investment={selectedInvestmentForContribution}
+        categoryName={
+          selectedInvestmentForContribution
+            ? (() => {
+                const cat = allSubcategories.find((c) => c.id === selectedInvestmentForContribution.nome);
+                let name = cat?.nome || selectedInvestmentForContribution.nome;
+                const lower = name.toLowerCase();
+                if (lower.includes("criptomoedas") || lower.includes("crypto") || lower.includes("bitcoin")) return "Criptomoedas";
+                if (lower.includes("ações") || lower.includes("acoes")) return "Ações";
+                if (lower.includes("poupança") || lower.includes("poupanca")) return "Poupança";
+                return name;
+              })()
+            : undefined
+        }
+        categoryIcon={
+          selectedInvestmentForContribution
+            ? allSubcategories.find((c) => c.id === selectedInvestmentForContribution.nome)?.icone || "TrendingUp"
+            : undefined
+        }
+        isMobile={isMobile}
+        onSuccess={() => {
+          invalidateAll();
+        }}
+      />
 
-              {investmentToRescue && (
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left mt-2 flex flex-col gap-1.5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)]">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-500 font-semibold">Valor Investido:</span>
-                    <span className="text-slate-700 font-black">{formatCurrency(investmentToRescue.valor)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-500 font-semibold">Rendimento Líquido:</span>
-                    <span className="text-green-600 font-black">+{formatCurrency(investmentToRescue.rendimentoLiquido)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-1.5 mb-0.5">
-                    <span className="text-slate-500 font-semibold">Imposto de Renda:</span>
-                    <span className="text-red-500 font-black">-{formatCurrency(investmentToRescue.imposto)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-600 font-bold">Saldo Líquido Total:</span>
-                    <span className="text-[#0556C3] font-black text-lg leading-none">{formatCurrency(investmentToRescue.valorLiquido)}</span>
-                  </div>
-                </div>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter
-            className={cn(
-              "flex flex-col sm:flex-row justify-center gap-2 mt-4",
-              isMobile && "flex-row items-center justify-between mt-2"
-            )}
-          >
-            <AlertDialogCancel
-              disabled={rescueInvestmentMutation.isPending}
-              className={cn(
-                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
-                isMobile && "h-11 text-lg"
-              )}
-              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
-              onClick={() => setIsConfirmRescueOpen(false)}
-            >
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmRescue}
-              disabled={rescueInvestmentMutation.isPending}
-              className={cn(
-                "flex-1 rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                isMobile && "h-11 text-lg"
-              )}
-              style={{ "--cor-topo": "#3B82F6", "--cor-base": "#2563EB" } as any}
-            >
-              {rescueInvestmentMutation.isPending ? "Aguarde..." : "Resgatar"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Diálogo de Resgate Total e Parcial FIFO */}
+      <RescueInvestmentDialog
+        isOpen={isRescueDialogOpen}
+        onOpenChange={setIsRescueDialogOpen}
+        investment={selectedInvestmentForRescue}
+        consolidated={
+          selectedInvestmentForRescue
+            ? consolidatedMap.get(selectedInvestmentForRescue.id) || null
+            : null
+        }
+        categoryName={
+          selectedInvestmentForRescue
+            ? allSubcategories.find((c) => c.id === selectedInvestmentForRescue.nome)?.nome ||
+              selectedInvestmentForRescue.nome
+            : undefined
+        }
+        isMobile={isMobile}
+        onSuccess={() => {
+          invalidateAll();
+        }}
+      />
     </div>
   );
 }

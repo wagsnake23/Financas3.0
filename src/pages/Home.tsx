@@ -203,6 +203,34 @@ export default function Home() {
         enabled: !!user,
     });
 
+    const { data: aportes = [] } = useQuery<Tables<"investimentos_aportes">[]>({
+        queryKey: ["investments-aportes", user?.id],
+        queryFn: async () => {
+            if (!user?.id) return [];
+            const { data, error } = await supabase
+                .from("investimentos_aportes")
+                .select("*")
+                .eq("user_id", user.id);
+            if (error) throw error;
+            return (data || []) as Tables<"investimentos_aportes">[];
+        },
+        enabled: !!user,
+    });
+
+    const { data: alocacoesResgates = [] } = useQuery<Tables<"investimentos_resgates_aportes">[]>({
+        queryKey: ["investments-resgates-aportes", user?.id],
+        queryFn: async () => {
+            if (!user?.id) return [];
+            const { data, error } = await supabase
+                .from("investimentos_resgates_aportes")
+                .select("*")
+                .eq("user_id", user.id);
+            if (error) throw error;
+            return (data || []) as Tables<"investimentos_resgates_aportes">[];
+        },
+        enabled: !!user,
+    });
+
     // Global Balance Queries for "Saldo Atual"
     const { 
         data: globalReceivedIncome,
@@ -313,9 +341,29 @@ export default function Home() {
             .reduce((sum, p) => sum + p.valor_parcela, 0);
         
         // Subtract Active Investments (originated from saldo_atual)
-        const currentActiveInvestments = (investimentos || [])
-            .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
-            .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+        // Considera o principal remanescente ativo de todos os aportes e resgates associados
+        const activeInvIds = new Set(
+            (investimentos || [])
+                .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
+                .map((inv) => inv.id)
+        );
+
+        let currentActiveInvestments = 0;
+        if (aportes.length > 0) {
+            const totalAportesAtivos = aportes
+                .filter((ap) => activeInvIds.has(ap.investimento_id))
+                .reduce((sum, ap) => sum + (Number(ap.valor_original) || 0), 0);
+
+            const totalResgatesAtivos = alocacoesResgates
+                .filter((aloc) => activeInvIds.has(aloc.investimento_id))
+                .reduce((sum, aloc) => sum + (Number(aloc.principal_consumido) || 0), 0);
+
+            currentActiveInvestments = Math.max(0, totalAportesAtivos - totalResgatesAtivos);
+        } else {
+            currentActiveInvestments = (investimentos || [])
+                .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
+                .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+        }
 
         // Raw calculated system balance WITHOUT manual adjustment
         // Apenas calcula o saldo quando todas as fontes estiverem confirmadas, impedindo valor negativo temporário
@@ -362,6 +410,8 @@ export default function Home() {
         allRevenues, 
         allExpenseInstallments, 
         investimentos, 
+        aportes,
+        alocacoesResgates,
         globalReceivedIncome, 
         globalPaidExpenses, 
         profile?.saldo_ajuste,
@@ -767,7 +817,7 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
+                                    className="home-mobile-card pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
                                         background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, rgba(239,68,68,.07) 85%, rgba(239,68,68,.10) 100%), #FFF5F5",
@@ -852,7 +902,7 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
+                                    className="home-mobile-card pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
                                         background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, rgba(34,197,94,.07) 85%, rgba(34,197,94,.10) 100%), #F3FFF7",
@@ -1505,7 +1555,11 @@ export default function Home() {
 
             <Footer
                 isMobile={isMobile}
-                className={cn(isMobile ? "relative w-full mt-6 mb-[env(safe-area-inset-bottom,16px)] pt-2 pb-2 z-20 !bg-transparent" : "mt-8")}
+                className={cn(
+                    isMobile
+                        ? "fixed bottom-0 left-0 right-0 z-40 !mt-0 !mb-0 pb-[max(env(safe-area-inset-bottom,6px),6px)] pt-1 pointer-events-auto bg-transparent"
+                        : "mt-8"
+                )}
                 user={user}
             />
         </div >

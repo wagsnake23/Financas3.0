@@ -56,6 +56,89 @@ export interface Investment {
   created_at?: string | null;
 }
 
+// Interfaces para Múltiplos Aportes e Resgates FIFO
+export interface InvestmentContribution {
+  id: string;
+  investimento_id: string;
+  user_id: string;
+  valor_original: number;
+  data_aporte: string;
+  created_at: string;
+}
+
+export interface InvestmentRedemption {
+  id: string;
+  investimento_id: string;
+  user_id: string;
+  data_resgate: string;
+  tipo: "parcial" | "total" | "legado";
+  valor_liquido_solicitado: number;
+  valor_bruto_total: number;
+  rendimento_bruto_total: number;
+  ir_total: number;
+  valor_liquido_total: number;
+  is_legado?: boolean;
+  observacao?: string | null;
+  created_at: string;
+}
+
+export interface InvestmentRedemptionAllocation {
+  id: string;
+  resgate_id: string;
+  aporte_id: string;
+  investimento_id: string;
+  user_id: string;
+  principal_consumido: number;
+  valor_bruto_resgatado: number;
+  rendimento_bruto: number;
+  ir_retido: number;
+  valor_liquido: number;
+  aliquota_ir: number;
+  is_legado?: boolean;
+  created_at: string;
+}
+
+export interface InvestmentLotCalculation {
+  aporte: InvestmentContribution;
+  numero: number;
+  principalOriginal: number;
+  principalJaResgatado: number;
+  principalRemanescente: number;
+  isEsgotado: boolean;
+  rendimentoBruto: number;
+  irProvisionado: number;
+  aliquotaAplicada: number;
+  rendimentoLiquido: number;
+  saldoLiquido: number;
+  saldoBrutoVirtual: number;
+  ultimaTaxaAplicada: number;
+  rendimentoHojeLiquido: number;
+}
+
+export interface InvestmentConsolidatedMetrics {
+  investimento: Investment;
+  aportes: InvestmentContribution[];
+  lotes: InvestmentLotCalculation[];
+  totalAportes: number;
+  valorAplicadoTotal: number;
+  valorOriginalTotal: number;
+  principalJaResgatadoTotal: number;
+  rendimentoBrutoTotal: number;
+  irProvisionadoTotal: number;
+  rendimentoLiquidoTotal: number;
+  saldoLiquidoTotal: number;
+  saldoBrutoVirtualTotal: number;
+  rendimentoHojeLiquidoTotal: number;
+  rendimentoMesTotal: number;
+  rendimentoMesLiquidoTotal: number;
+  taxaDiariaPonderada: number;
+  rentabilidadeBrutaAnual: number;
+  rentabilidadeLiquidaAnual: number;
+  dataPrimeiroAporte: string;
+  isVencido: boolean;
+  dueDateStr: string | null;
+}
+
 // NOVO: Interface para Itens da Lista de Compras
 export interface ShoppingItem {
   id: string;
