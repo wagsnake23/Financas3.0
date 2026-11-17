@@ -441,7 +441,7 @@ export default function Receitas() {
                 align="start"
               >
                 <div className="flex flex-col max-h-[320px]">
-                  <div className="flex items-center border-b border-slate-100 px-3 shrink-0">
+                  <div className="hidden md:flex items-center border-b border-slate-100 px-3 shrink-0">
                     <span className="text-sm mr-2 opacity-70">🔎</span>
                     <input
                       className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
