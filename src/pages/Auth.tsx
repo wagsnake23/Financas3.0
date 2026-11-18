@@ -9,8 +9,19 @@ import { useToast } from "@/contexts/ToastContext";
 import { z } from "zod";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DynamicIcon from "@/components/DynamicIcon";
+import { UserCheck } from "lucide-react";
 import { cn, getBorderClass } from "@/lib/utils";
 import { Footer } from "@/components/Footer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Validation schemas
 const emailSchema = z.string().trim().email("Email inválido").max(255, "Email muito longo");
@@ -35,6 +46,7 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nome, setNome] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
+  const [showDuplicateEmailModal, setShowDuplicateEmailModal] = useState(false);
 
   // Effect to handle URL parameters (e.g., ?mode=reset-password)
   useEffect(() => {
@@ -171,25 +183,89 @@ export default function Auth() {
       },
     });
 
-    if (error) {
-      showErrorToast("Erro ao criar conta", error.message);
-    } else if (data.user) {
+    // 1. Detecção híbrida e segura de e-mail já cadastrado
+    const errorCode = (error as any)?.code || (error as any)?.error_code;
+    const errorMessage = error?.message?.toLowerCase() || "";
 
-      showSuccessToast(
-        "Cadastro concluído",
-        "Você já pode entrar com seu e-mail e senha."
+    const isExplicitDuplicateError =
+      Boolean(error) && (
+        errorCode === "user_already_exists" ||
+        errorCode === "email_exists" ||
+        errorMessage.includes("user already registered") ||
+        errorMessage.includes("email already in use") ||
+        errorMessage.includes("already registered")
       );
 
-      // After successful signup, clear the form and switch to login view.
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setNome("");
-      setValidationErrors({});
-      setViewMode("login"); // Switch back to login view
+    const isObfuscatedDuplicateUser =
+      !error &&
+      Boolean(data?.user) &&
+      Array.isArray(data.user.identities) &&
+      data.user.identities.length === 0;
+
+    if (isExplicitDuplicateError || isObfuscatedDuplicateUser) {
+      setLoading(false);
+      setShowDuplicateEmailModal(true);
+      return;
+    }
+
+    if (error) {
+      // Tratar rate limit e erros de rede sem confundi-los com duplicidade
+      if (error.status === 429 || errorCode === "over_email_send_rate_limit") {
+        showErrorToast(
+          "Muitas tentativas",
+          "Aguarde alguns minutos antes de tentar se cadastrar novamente."
+        );
+      } else if (errorMessage.includes("failed to fetch") || !navigator.onLine) {
+        showErrorToast(
+          "Erro de Conexão",
+          "Não foi possível conectar ao servidor. Verifique sua conexão com a internet."
+        );
+      } else {
+        showErrorToast("Erro ao criar conta", error.message);
+      }
+    } else if (data?.user) {
+      // Avaliação detalhada de sucesso real:
+      // Se possui sessão ativa (autoconfirm ativado), usuário já entra autenticado
+      // Se não possui sessão, mas possui identidades criadas, depende de confirmação por email
+      const hasActiveSession = Boolean(data.session);
+
+      if (hasActiveSession) {
+        showSuccessToast(
+          "Conta criada com sucesso!",
+          "Você já está conectado."
+        );
+        navigate("/");
+      } else {
+        showSuccessToast(
+          "Cadastro realizado!",
+          "Verifique seu e-mail para confirmar a conta antes de entrar."
+        );
+        // Limpar o formulário e alternar para a tela de login
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setNome("");
+        setValidationErrors({});
+        setViewMode("login");
+      }
     }
 
     setLoading(false);
+  };
+
+  const handleGoToLoginFromDuplicate = () => {
+    setShowDuplicateEmailModal(false);
+    // Preserva o e-mail informado e limpa apenas os campos de cadastro
+    setPassword("");
+    setConfirmPassword("");
+    setNome("");
+    setValidationErrors({});
+    setViewMode("login");
+  };
+
+  const handleCancelDuplicate = () => {
+    setShowDuplicateEmailModal(false);
+    // Mantém o usuário na tela de cadastro com todos os campos preservados
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
@@ -668,6 +744,77 @@ export default function Auth() {
           />
         </Card>
       )}
+
+      {/* Modal de E-mail Já Cadastrado */}
+      <AlertDialog open={showDuplicateEmailModal} onOpenChange={setShowDuplicateEmailModal}>
+        <AlertDialogContent
+          className={cn(
+            isMobile
+              ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none"
+              : "sm:max-w-[400px] !pb-4 !rounded-[22px] shadow-none border-none"
+          )}
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <AlertDialogHeader className="text-center space-y-3">
+            <div className="flex justify-center items-center w-full pt-1">
+              <div
+                className="btn-3d btn-3d-icon p-3 rounded-2xl flex items-center justify-center border-none cursor-default h-12 w-12"
+                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              >
+                <UserCheck className="h-6 w-6 text-[#1E40AF] shrink-0" strokeWidth={2.2} />
+              </div>
+            </div>
+            <AlertDialogTitle className="text-center text-xl font-black text-slate-800 m-0 leading-tight">
+              Este e-mail já está cadastrado!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center flex flex-col gap-2.5 text-slate-700 m-0 text-sm leading-relaxed">
+              <span>
+                Parece que você já possui uma conta no <strong>Minhas Finanças</strong> utilizando este endereço:
+              </span>
+              <span
+                className="w-full text-center font-semibold text-slate-900 bg-slate-100/80 px-2 py-1 rounded-md text-[12px] sm:text-[13px] tracking-tight whitespace-nowrap overflow-hidden text-ellipsis border border-slate-200/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
+                title={email}
+              >
+                {email}
+              </span>
+              <span>Deseja acessar sua conta agora?</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter
+            className={cn(
+              "flex flex-col sm:flex-row justify-center gap-2 mt-4",
+              isMobile && "flex-row items-center justify-between"
+            )}
+          >
+            <AlertDialogCancel
+              onClick={handleCancelDuplicate}
+              className={cn(
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
+                isMobile && "h-11 text-lg"
+              )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleGoToLoginFromDuplicate}
+              className={cn(
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
+              )}
+              style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
+            >
+              Fazer login
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
