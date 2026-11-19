@@ -19,6 +19,7 @@ export const BRANDS = [
   { id: "loterias", name: "Loterias", icon: "/brands/loterias.svg" },
   { id: "bitcoin", name: "Bitcoin", icon: "/brands/bitcoin.svg" },
   { id: "ethereum", name: "Ethereum", icon: "/brands/ethereum.svg" },
+  { id: "tesouro", name: "Tesouro", icon: "/brands/tesouro.svg" },
 
   // Streaming e Entretenimento
   { id: "netflix", name: "Netflix", icon: "/brands/Netflix_icon.svg" },

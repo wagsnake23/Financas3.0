@@ -17,6 +17,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { Investment } from "@/types/finance";
 import { formatInTimeZone, TARGET_TIMEZONE, cn } from "@/lib/utils";
+import { ptBR } from "date-fns/locale";
 
 interface NewContributionDialogProps {
   isOpen: boolean;
@@ -229,7 +230,7 @@ export const NewContributionDialog: React.FC<NewContributionDialogProps> = ({
             >
               <DynamicIcon name="Calendar" className="mr-2 h-4 w-4 text-slate-400" />
               {date ? (
-                formatInTimeZone(date, TARGET_TIMEZONE, "dd/MM/yyyy")
+                formatInTimeZone(date, TARGET_TIMEZONE, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
               ) : (
                 <span className="text-muted-foreground font-normal">Selecione a data</span>
               )}

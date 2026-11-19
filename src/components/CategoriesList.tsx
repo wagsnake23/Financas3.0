@@ -267,6 +267,8 @@ interface CategoriesListProps {
   hideTitle?: boolean;
   searchTerm?: string;
   onSearchChange?: (value: string) => void;
+  selectedCategoryId?: string | null;
+  onSelectCategory?: (id: string | null) => void;
 }
 
 const CategoriesList = ({
@@ -280,8 +282,19 @@ const CategoriesList = ({
   hideTitle = false,
   searchTerm = "",
   onSearchChange,
+  selectedCategoryId: controlledSelectedCategoryId,
+  onSelectCategory,
 }: CategoriesListProps) => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [internalSelectedCategoryId, setInternalSelectedCategoryId] = useState<string | null>(null);
+
+  const selectedCategoryId = controlledSelectedCategoryId !== undefined ? controlledSelectedCategoryId : internalSelectedCategoryId;
+  const setSelectedCategoryId = (id: string | null) => {
+    if (onSelectCategory) {
+      onSelectCategory(id);
+    } else {
+      setInternalSelectedCategoryId(id);
+    }
+  };
 
 
   const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "480px");

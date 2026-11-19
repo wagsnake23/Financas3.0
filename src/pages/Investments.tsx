@@ -84,6 +84,9 @@ export default function Investments() { // Alterado para export default function
     return allCategories
       .filter(cat => cat.parent_id !== null)
       .filter(cat => {
+        // Categorias e subcategorias criadas pelo usuário (user_id !== null) nunca são filtradas
+        if (cat.user_id !== null) return true;
+
         const lowerNome = cat.nome.toLowerCase();
 
         // Filtro de Aportes

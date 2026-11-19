@@ -71,6 +71,7 @@ const Categories = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Novo estado para o modal
   const [formKey, setFormKey] = useState(0);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para resetar o formulário
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
@@ -81,6 +82,9 @@ const Categories = () => {
     let poupancaAdded = false;
     return rawCategories
       .filter(cat => {
+        // Categorias e subcategorias criadas pelo usuário (user_id !== null) nunca são filtradas
+        if (cat.user_id !== null) return true;
+
         const lowerNome = cat.nome.toLowerCase();
         
         // Filtro de Aportes
@@ -163,12 +167,15 @@ const Categories = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
       toast.success("Subcategoria adicionada com sucesso ", { // Mensagem atualizada
         style: toastSuccessStyle,
         duration: toastDuration
       });
+      if (data?.parent_id) {
+        setSelectedCategoryId(data.parent_id);
+      }
       setFormKey(prev => prev + 1); // Limpa o formulário após o sucesso
     },
     onError: (error) => {
@@ -496,6 +503,8 @@ const Categories = () => {
                     hideTitle={isMobile}
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
+                    selectedCategoryId={selectedCategoryId}
+                    onSelectCategory={setSelectedCategoryId}
                   />
                 </React.Suspense>
               </div>
