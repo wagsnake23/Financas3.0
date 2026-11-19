@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { useProfile } from "@/hooks/useProfile";
 import { Tables } from "@/integrations/supabase/types";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
@@ -89,6 +89,7 @@ export default function Home() {
     const { user, loading: authLoading } = useAuth();
     const isMobile = useIsMobile();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
     const [activeTrendModal, setActiveTrendModal] = useState<"saldo" | "despesas" | "receitas" | null>(null);
     const [isAjusteModalOpen, setIsAjusteModalOpen] = useState(false);
@@ -1360,7 +1361,17 @@ export default function Home() {
                     saldoCalculadoSistema={isSaldoReady ? stats.saldoCalculadoSistema : dStats.saldoCalculadoSistema}
                     saldoAtualComAjuste={displayedCaixaAtual}
                     userId={user.id}
-                    onAjusteSalvo={refetchProfile}
+                    onAjusteSalvo={(novoSaldoAjuste) => {
+                        refetchProfile();
+                        if (novoSaldoAjuste !== undefined) {
+                            const baseSistema = isSaldoReady ? stats.saldoCalculadoSistema : dStats.saldoCalculadoSistema;
+                            const novoCaixaAtual = baseSistema + novoSaldoAjuste;
+                            lastStableData.current.stats = {
+                                ...lastStableData.current.stats,
+                                currentCaixaAtual: novoCaixaAtual,
+                            };
+                        }
+                    }}
                     isMobile={!!isMobile}
                     allExpenseInstallments={allExpenseInstallments}
                     allRevenues={allRevenues}

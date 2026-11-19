@@ -21,7 +21,7 @@ interface SaldoAjusteDialogProps {
   saldoCalculadoSistema: number;
   saldoAtualComAjuste: number;
   userId: string;
-  onAjusteSalvo: () => void;
+  onAjusteSalvo: (novoSaldoAjuste?: number) => void;
   isMobile: boolean;
   allExpenseInstallments?: any[];
   allRevenues?: any[];
@@ -602,18 +602,32 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
     setLoading(true);
     try {
       // Execução atômica e transacional exclusivamente via RPC no Supabase
-      const { error: rpcError } = await (supabase.rpc as any)("registrar_ajuste_saldo", {
+      // Envia explicitamente o saldoCalculadoSistema (saldo-base sem offset anterior)
+      const { data: rpcData, error: rpcError } = await (supabase.rpc as any)("registrar_ajuste_saldo", {
         p_saldo_informado: saldoInformado,
+        p_saldo_calculado_sistema: saldoCalculadoSistema,
       });
 
       if (rpcError) {
         throw rpcError;
       }
       
+      const novoSaldoAjuste = rpcData?.novo_saldo_ajuste ?? (saldoInformado - saldoCalculadoSistema);
+
+      // Atualiza de forma imediata e síncrona o cache do perfil para evitar delay de 5 min do staleTime
+      queryClient.setQueryData(["profile", userId], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          saldo_ajuste: novoSaldoAjuste,
+          saldo_ajuste_updated_at: new Date().toISOString(),
+        };
+      });
+
       toast.success("Saldo ajustado com sucesso.");
       queryClient.invalidateQueries({ queryKey: ["historicoAjustesSaldo", userId] });
-      queryClient.invalidateQueries({ queryKey: ["profile", userId] });
-      onAjusteSalvo();
+      await queryClient.invalidateQueries({ queryKey: ["profile", userId] });
+      onAjusteSalvo(novoSaldoAjuste);
       onOpenChange(false);
     } catch (err: any) {
       console.error("Erro ao registrar ajuste de saldo via RPC:", err);
