@@ -2,14 +2,14 @@
   "name": "Controle Financeiro Pessoal",
   "short_name": "Finanças",
   "description": "Sistema completo de controle financeiro pessoal. Gerencie suas receitas, despesas e visualize relatórios detalhados.",
-  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#FAFAFA",
   "theme_color": "#FAFAFA",
   "orientation": "portrait",
-
+  "lang": "pt-BR",
+  "categories": ["finance", "productivity", "utilities"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
