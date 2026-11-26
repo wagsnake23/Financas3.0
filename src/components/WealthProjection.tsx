@@ -33,11 +33,18 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
 
             // Usamos o valor líquido real (pós-IR) calculado pela engine para "Hoje" (m=0)
             const valorHoje = inv.valorLiquido !== undefined ? inv.valorLiquido : inv.valor;
-            
-            // Projeção futura baseada na rentabilidade atual
-            const taxaDiaria = inv.taxaDiaria !== undefined 
-                ? inv.taxaDiaria 
-                : Math.pow(1 + ((inv.rentabilidade || 0) / 100), 1 / 252) - 1;
+            const rendimentoHojeLiquido =
+                typeof inv.rendimentoHojeLiquido === "number" && Number.isFinite(inv.rendimentoHojeLiquido)
+                    ? inv.rendimentoHojeLiquido
+                    : undefined;
+
+            // Projeção futura baseada na taxa diária líquida efetiva (mesma base do card de resumo)
+            const taxaDiaria =
+                rendimentoHojeLiquido !== undefined
+                    ? (valorHoje > 0 && rendimentoHojeLiquido > 0 ? rendimentoHojeLiquido / valorHoje : 0)
+                    : (inv.taxaDiaria !== undefined
+                        ? inv.taxaDiaria
+                        : Math.pow(1 + ((inv.rentabilidade || 0) / 100), 1 / 252) - 1);
 
             return {
                 ...inv,
@@ -127,18 +134,17 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
         const lucroAcumulado = patrimonioFuturo - patrimonioHoje;
 
         // Renda mensal futura: calculada reativamente para cada investimento conforme o período selecionado
-        // Para m = 0 (Hoje): reflete exatamente a renda mensal atual da carteira
+        // Para m = 0 (Hoje): reflete exatamente a renda mensal composta atual da carteira (21 dias úteis)
         // Para m > 0: reflete a renda mensal gerada pelo patrimônio projetado daquele período (21 dias úteis)
         const rendaMensalFutura = virtualInvestments.reduce((sum, inv: any) => {
-            const monthlyRate = Math.pow(1 + inv.taxaDiaria, 21) - 1;
-            const rendimentoMesBase = inv.rendimentoMesTotal !== undefined
-                ? inv.rendimentoMesTotal
-                : (inv.valorAtualVirtualOriginal !== undefined ? inv.valorAtualVirtualOriginal : inv.valorAtualVirtual) * monthlyRate;
-
-            if (projectionMonths === 0) {
-                return sum + rendimentoMesBase;
+            if (!Number.isFinite(inv.taxaDiaria) || inv.taxaDiaria <= 0 || !Number.isFinite(inv.valorAtualVirtual) || inv.valorAtualVirtual <= 0) {
+                return sum;
             }
-            return sum + (rendimentoMesBase * Math.pow(1 + inv.taxaDiaria, days));
+            const monthlyRate = Math.pow(1 + inv.taxaDiaria, 21) - 1;
+            const patrimonioProjetadoAtivo = projectionMonths === 0
+                ? inv.valorAtualVirtual
+                : inv.valorAtualVirtual * Math.pow(1 + inv.taxaDiaria, days);
+            return sum + (patrimonioProjetadoAtivo * monthlyRate);
         }, 0);
 
         return {

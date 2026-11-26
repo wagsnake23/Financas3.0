@@ -23,7 +23,17 @@ import Metas from "./pages/Metas";
 import Orcamentos from "./pages/Orcamentos";
 import Profile from "./pages/Profile";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutos
+      gcTime: 1000 * 60 * 15, // 15 minutos
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      refetchOnMount: true,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

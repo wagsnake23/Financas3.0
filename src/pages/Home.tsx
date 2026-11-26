@@ -31,6 +31,7 @@ import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { SaldoAjusteDialog } from "@/components/SaldoAjusteDialog";
 import { useFinancialProjection } from "@/hooks/useFinancialProjection";
+import { calcularCaixaAtual } from "@/lib/caixaAtual";
 
 
 const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLines = true }: { expenses: number, revenues: number, balance: number, height?: number, showScaleLines?: boolean }) => {
@@ -204,7 +205,12 @@ export default function Home() {
         enabled: !!user,
     });
 
-    const { data: aportes = [] } = useQuery<Tables<"investimentos_aportes">[]>({
+    const { 
+        data: aportes = [],
+        isLoading: isLoadingAportes,
+        isSuccess: isSuccessAportes,
+        isError: isErrorAportes,
+    } = useQuery<Tables<"investimentos_aportes">[]>({
         queryKey: ["investments-aportes", user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
@@ -218,7 +224,12 @@ export default function Home() {
         enabled: !!user,
     });
 
-    const { data: alocacoesResgates = [] } = useQuery<Tables<"investimentos_resgates_aportes">[]>({
+    const { 
+        data: alocacoesResgates = [],
+        isLoading: isLoadingAlocacoesResgates,
+        isSuccess: isSuccessAlocacoesResgates,
+        isError: isErrorAlocacoesResgates,
+    } = useQuery<Tables<"investimentos_resgates_aportes">[]>({
         queryKey: ["investments-resgates-aportes", user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
@@ -284,8 +295,8 @@ export default function Home() {
         refetch: refetchProfile 
     } = useProfile(user?.id);
 
-    // Estado e prontidão do Saldo em Conta: apenas pronto quando TODAS as 4 fontes obrigatórias tiverem sido carregadas com sucesso
-    const isSaldoError = !!(isErrorGlobalIncome || isErrorGlobalExpenses || isErrorInvestments || isErrorProfile);
+    // Estado e prontidão do Saldo em Conta: apenas pronto quando TODAS as fontes obrigatórias tiverem sido carregadas com sucesso
+    const isSaldoError = !!(isErrorGlobalIncome || isErrorGlobalExpenses || isErrorInvestments || isErrorAportes || isErrorAlocacoesResgates || isErrorProfile);
 
     const isSaldoReady = useMemo(() => {
         if (authLoading || !user) return false;
@@ -293,9 +304,11 @@ export default function Home() {
         const incomeReady = isSuccessGlobalIncome && globalReceivedIncome !== undefined;
         const expensesReady = isSuccessGlobalExpenses && globalPaidExpenses !== undefined;
         const investmentsReady = isSuccessInvestments && investimentos !== undefined;
+        const aportesReady = isSuccessAportes && aportes !== undefined;
+        const alocacoesReady = isSuccessAlocacoesResgates && alocacoesResgates !== undefined;
         const profileReady = isSuccessProfile && profile !== undefined;
 
-        return incomeReady && expensesReady && investmentsReady && profileReady;
+        return incomeReady && expensesReady && investmentsReady && aportesReady && alocacoesReady && profileReady;
     }, [
         authLoading,
         user,
@@ -306,6 +319,10 @@ export default function Home() {
         globalPaidExpenses,
         isSuccessInvestments,
         investimentos,
+        isSuccessAportes,
+        aportes,
+        isSuccessAlocacoesResgates,
+        alocacoesResgates,
         isSuccessProfile,
         profile,
     ]);
@@ -341,41 +358,25 @@ export default function Home() {
             .filter((p) => p.vencimento.startsWith(selectedMonthStr) && p.pago === true)
             .reduce((sum, p) => sum + p.valor_parcela, 0);
         
-        // Subtract Active Investments (originated from saldo_atual)
-        // Considera o principal remanescente ativo de todos os aportes e resgates associados
-        const activeInvIds = new Set(
-            (investimentos || [])
-                .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
-                .map((inv) => inv.id)
-        );
+        // Cálculo Centralizado do Caixa Atual (SSOT)
+        // Regra: Receitas - Despesas - Principal Retido + Rendimento Líquido Realizado + Ajuste Manual
+        const {
+            capitalPrincipalRetido,
+            rendimentoLiquidoRealizado,
+            saldoCalculadoSistema: rawCalculadoSistema,
+            caixaAtualFinal: rawCaixaAtualFinal,
+        } = calcularCaixaAtual({
+            globalReceivedIncome: globalReceivedIncome || 0,
+            globalPaidExpenses: globalPaidExpenses || 0,
+            investimentos: investimentos || EMPTY_ARRAY,
+            aportes: aportes || EMPTY_ARRAY,
+            alocacoesResgates: alocacoesResgates || EMPTY_ARRAY,
+            saldoAjusteManual: profile?.saldo_ajuste || 0,
+        });
 
-        let currentActiveInvestments = 0;
-        if (aportes.length > 0) {
-            const totalAportesAtivos = aportes
-                .filter((ap) => activeInvIds.has(ap.investimento_id))
-                .reduce((sum, ap) => sum + (Number(ap.valor_original) || 0), 0);
-
-            const totalResgatesAtivos = alocacoesResgates
-                .filter((aloc) => activeInvIds.has(aloc.investimento_id))
-                .reduce((sum, aloc) => sum + (Number(aloc.principal_consumido) || 0), 0);
-
-            currentActiveInvestments = Math.max(0, totalAportesAtivos - totalResgatesAtivos);
-        } else {
-            currentActiveInvestments = (investimentos || [])
-                .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
-                .reduce((sum, inv) => sum + (inv.valor || 0), 0);
-        }
-
-        // Raw calculated system balance WITHOUT manual adjustment
-        // Apenas calcula o saldo quando todas as fontes estiverem confirmadas, impedindo valor negativo temporário
-        const saldoCalculadoSistema = isSaldoReady
-            ? (globalReceivedIncome ?? 0) - (globalPaidExpenses ?? 0) - currentActiveInvestments
-            : 0;
-
-        // Caixa Atual represents the GLOBAL actual balance PLUS manual adjustment
-        const currentCaixaAtual = isSaldoReady
-            ? saldoCalculadoSistema + (profile?.saldo_ajuste || 0)
-            : 0;
+        const currentActiveInvestments = capitalPrincipalRetido;
+        const saldoCalculadoSistema = isSaldoReady ? rawCalculadoSistema : 0;
+        const currentCaixaAtual = isSaldoReady ? rawCaixaAtualFinal : 0;
         
         const currentBalance = currentIncome - currentExpenses;
 
@@ -1378,6 +1379,8 @@ export default function Home() {
                     categories={allSubcategories}
                     profile={profile}
                     investimentos={investimentos || EMPTY_ARRAY}
+                    aportes={aportes || EMPTY_ARRAY}
+                    alocacoesResgates={alocacoesResgates || EMPTY_ARRAY}
                 />
             )}
             <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>

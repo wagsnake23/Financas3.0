@@ -110,7 +110,8 @@ export interface IndexadorHistorico {
   tipo: string;
   taxa_anual: number;
   taxa_diaria: number;
-  taxa_mensal?: number; // IPCA
+  taxa_mensal?: number | null;
+  periodicidade?: string | null;
   data_inicio: string;
 }
 
@@ -205,17 +206,20 @@ export function calcularRentabilidadeIPCAPlus(ipca12M: number | null, taxaRealPe
   return ((1 + ipcaDec) * (1 + realDec) - 1) * 100;
 }
 
+const dateKeyFormatterSP = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Sao_Paulo",
+});
+
 /**
  * Normaliza uma data para o formato YYYY-MM-DD usando o fuso horário de Brasília.
+ * Reutiliza instância única de Intl.DateTimeFormat para evitar alocação em loops diários.
  */
 function formatDateKey(date: Date | string): string {
   if (typeof date === 'string') {
     return date.split('T')[0];
   }
 
-  return date.toLocaleDateString("en-CA", {
-    timeZone: "America/Sao_Paulo",
-  });
+  return dateKeyFormatterSP.format(date);
 }
 
 /**
@@ -368,6 +372,7 @@ export function calcularRendimentoComCDI({
   }
 
   const taxaDiariaFixa = taxaFixaAnual !== null ? (Math.pow(1 + taxaFixaAnual / 100, 1 / 252) - 1) : 0;
+  const hojeKey = formatDateKey(hoje);
 
   let ultimoMesProcessado = -1;
 
@@ -398,9 +403,7 @@ export function calcularRendimentoComCDI({
       const ipcaDiario = Math.pow(1 + ipcaMensal, 1 / diasNoMes) - 1;
 
       // 2. Aplicação da Taxa Real (Juros Spread) - Diariamente
-      const taxaFixaAnualDecimal = (percentualIndexador || 0) > 1 
-        ? (percentualIndexador || 0) / 100 
-        : (percentualIndexador || 0);
+      const taxaFixaAnualDecimal = (percentualIndexador || 0) / 100;
 
       // Taxa fixa diária (Base 365 dias calendarizados)
       const taxaFixaDiaria = Math.pow(1 + taxaFixaAnualDecimal, 1 / 365) - 1;
@@ -421,7 +424,7 @@ export function calcularRendimentoComCDI({
         taxaBase = taxaDiariaFixa;
       } else {
         const taxaDia = indexadorMap.get(key);
-        const isHoje = formatDateKey(d) === formatDateKey(hoje);
+        const isHoje = key === hojeKey;
 
         if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
           taxaBase = taxaDia;

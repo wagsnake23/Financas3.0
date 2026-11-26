@@ -14,6 +14,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { useProfile } from "@/hooks/useProfile";
 import { AppCategory } from "@/types/finance";
 import { categories as defaultCategories } from "@/data/categories";
+import { calcularRendimentoLiquidoRealizado } from "@/lib/caixaAtual";
 
 interface SaldoAjusteDialogProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ interface SaldoAjusteDialogProps {
   categories?: AppCategory[];
   profile?: any;
   investimentos?: any[];
+  aportes?: any[];
+  alocacoesResgates?: any[];
 }
 
 interface ExtratoItem {
@@ -106,6 +109,8 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
   categories: propsCategories,
   profile: propsProfile,
   investimentos: propsInvestments,
+  aportes: propsAportes,
+  alocacoesResgates: propsAlocacoesResgates,
 }) => {
   const [saldoInformadoStr, setSaldoInformadoStr] = useState("");
   const [loading, setLoading] = useState(false);
@@ -218,12 +223,28 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
     enabled: isOpen && !propsInvestments && !!userId,
   });
 
+  // Consulta de alocações de resgate como fallback se não fornecido via props
+  const { data: queryAlocacoesResgates = [] } = useQuery({
+    queryKey: ["investments-resgates-aportes", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("investimentos_resgates_aportes")
+        .select("*")
+        .eq("user_id", userId);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: isOpen && !propsAlocacoesResgates && !!userId,
+  });
+
   const { data: queryCategories = [] } = useCategories(propsCategories ? undefined : userId);
   const { data: queryProfile } = useProfile(propsProfile ? undefined : userId);
 
   const effectiveExpenses = propsExpenses || queryExpenses;
   const effectiveRevenues = propsRevenues || queryRevenues;
   const effectiveInvestments = propsInvestments || queryInvestments;
+  const effectiveAlocacoesResgates = propsAlocacoesResgates || queryAlocacoesResgates;
   const effectiveCategories = propsCategories || queryCategories;
   const effectiveProfile = propsProfile || queryProfile;
 
@@ -428,65 +449,72 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
       }
     }
 
-    // 4. Resgates de investimentos (origem saldo_atual)
-    if (Array.isArray(effectiveInvestments)) {
-      for (const inv of effectiveInvestments) {
-        if (inv.status !== "resgatado" || !inv.data_resgate) continue;
-        if (inv.origem_investimento && inv.origem_investimento !== "saldo_atual") continue;
+    // 4. Rendimento Líquido Realizado de Resgates (origem saldo_atual) via alocações FIFO persistidas
+    if (Array.isArray(effectiveAlocacoesResgates) && effectiveAlocacoesResgates.length > 0) {
+      const saldoAtualInvIds = new Set(
+        (effectiveInvestments || [])
+          .filter((inv) => inv.origem_investimento === "saldo_atual")
+          .map((inv) => inv.id)
+      );
 
-        const dateRaw = inv.data_resgate;
-        const { date, dateOnlyStr, timestamp } = parseDateParts(dateRaw);
-        if (dateOnlyStr > todayStr) continue; // Não incluir registros futuros
+      // Agrupar alocações por resgate_id (ou exibir individualmente caso resgate_id não exista)
+      const resgatesMap = new Map<string, {
+        resgateId: string;
+        investimentoId: string;
+        rendimentoLiquidoTotal: number;
+        createdAt: string;
+      }>();
 
-        let idxMap: Map<string, number> | undefined;
-        if (inv.tipo_rentabilidade === "indexado") {
-          if (inv.indexador === "CDI") idxMap = indexadorMapCDI;
-          else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
-        }
+      for (const aloc of effectiveAlocacoesResgates) {
+        if (!saldoAtualInvIds.has(aloc.investimento_id)) continue;
+        const vLiquido = Number(aloc.valor_liquido) || 0;
+        const pConsumido = Number(aloc.principal_consumido) || 0;
+        const rendLiquido = vLiquido - pConsumido;
+        // Se rendimento líquido for 0 (ex: lote legado ou resgate no mesmo dia sem rendimento), não polui o extrato
+        if (Math.abs(rendLiquido) < 0.001) continue;
 
-        const tipoTributacao = getTipoTributacao({ nome: inv.nome }, effectiveCategories);
-        const pIndexador = inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100;
-
-        let valorLiquido = inv.valor || 0;
-        try {
-          const res = calcularRendimentoComCDI({
-            valorInicial: inv.valor || 0,
-            dataInicio: inv.data,
-            dataFim: inv.data_resgate,
-            dataVencimento: inv.data_vencimento || null,
-            indexadorMap: idxMap || new Map<string, number>(),
-            indexador: inv.indexador ?? "CDI",
-            percentualIndexador: pIndexador,
-            taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
-            tipoTributacao,
+        const key = aloc.resgate_id || aloc.id;
+        if (!resgatesMap.has(key)) {
+          resgatesMap.set(key, {
+            resgateId: key,
+            investimentoId: aloc.investimento_id,
+            rendimentoLiquidoTotal: 0,
+            createdAt: aloc.created_at || new Date().toISOString(),
           });
-          if (res && res.valorAtual > 0) {
-            valorLiquido = res.valorAtual;
-          }
-        } catch (e) {
-          console.warn("Erro ao calcular rendimento do resgate:", e);
         }
+        const itemResgate = resgatesMap.get(key)!;
+        itemResgate.rendimentoLiquidoTotal += rendLiquido;
+      }
 
-        const category = getCategoryInfo(inv.nome);
-        let title = category?.nome || inv.nome || "Investimento";
+      for (const resgate of resgatesMap.values()) {
+        const dateRaw = resgate.createdAt;
+        const { date, dateOnlyStr, timestamp } = parseDateParts(dateRaw);
+        if (dateOnlyStr > todayStr) continue;
+
+        const inv = (effectiveInvestments || []).find((i) => i.id === resgate.investimentoId);
+        const category = inv ? getCategoryInfo(inv.nome) : null;
+        let title = category?.nome || inv?.nome || "Investimento";
         if (title.endsWith(" (rendimentos, resgates)")) {
           title = title.slice(0, -" (rendimentos, resgates)".length);
         }
-        const icon = (inv as any).icone || category?.icone || "PiggyBank";
-        const iconColor = category?.cor || "#059669";
+        const icon = (inv as any)?.icone || category?.icone || "TrendingUp";
+        const isPositive = resgate.rendimentoLiquidoTotal >= 0;
+        const iconColor = isPositive ? "#059669" : "#DC2626";
         const formattedDate = formatExtratoDate(date);
-        const formattedAmount = `+ ${formatCurrency(valorLiquido)}`;
+        const formattedAmount = isPositive
+          ? `+ ${formatCurrency(resgate.rendimentoLiquidoTotal)}`
+          : `− ${formatCurrency(Math.abs(resgate.rendimentoLiquidoTotal))}`;
 
         items.push({
-          id: `rescue-${inv.id}`,
+          id: `rescue-yield-${resgate.resgateId}`,
           type: "rescue",
           effectiveDate: date,
           dateOnlyStr,
           secondaryTimestamp: timestamp,
           title,
-          secondary: "Resgate de investimento",
-          amount: valorLiquido,
-          isPositive: true,
+          secondary: "Rendimento Líquido de Resgates",
+          amount: Math.abs(resgate.rendimentoLiquidoTotal),
+          isPositive,
           icon,
           iconColor,
           formattedDate,

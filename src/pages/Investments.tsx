@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; /
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI, formatVencimentoDate, calcularIPCA12M, getLatestIPCAMensal, calcularRentabilidadeIPCAPlus } from "@/lib/utils";
+import {
+  PendingInvestmentAttempt,
+  computePayloadHash,
+  loadPendingAttempt,
+  savePendingAttempt,
+  clearPendingAttempt,
+  consultarOperacaoServidor,
+  cancelarOperacaoServidor,
+} from "@/lib/investmentIdempotency";
 import { format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon, Lock } from "lucide-react"; // Importar CalendarIcon e Lock
@@ -351,163 +360,265 @@ export default function Investments() { // Alterado para export default function
     { value: "other", label: "Outros", icon: "🎯" },
   ];
 
-  // Mutation for adding a new investment
+  const isSubmittingRef = useRef<boolean>(false);
+  const [pendingAttempt, setPendingAttempt] = useState<PendingInvestmentAttempt | null>(null);
+
+  // Recuperação de tentativas pendentes após F5 ou ao carregar a página
+  useEffect(() => {
+    if (!user?.id) return;
+    const existing = loadPendingAttempt(user.id);
+    if (existing && (existing.status === "submitting" || existing.status === "ambiguous_timeout")) {
+      setPendingAttempt(existing);
+      // Preencher o formulário com o payload original da tentativa pendente
+      setSelectedInvestmentCategoryId(existing.payload.nome);
+      setType(existing.payload.tipo);
+      setAmount(existing.payload.valor);
+      setDate(existing.payload.data ? parseISO(existing.payload.data) : new Date());
+      setDueDate(existing.payload.data_vencimento ? parseISO(existing.payload.data_vencimento) : undefined);
+      setTipoRentabilidade(existing.payload.tipo_rentabilidade as any);
+      setIndexador((existing.payload.indexador || "CDI") as any);
+      setPercentualIndexador(existing.payload.percentual_indexador ?? undefined);
+      setProfitability(existing.payload.taxa_fixa ?? undefined);
+      showErrorToast("Tentativa pendente recuperada", "Existe um cadastro em processamento. Reconcilie ou cancele antes de novo envio.");
+    }
+  }, [user?.id]);
+
+  // Mutation for adding a new investment (atômico via RPC com idempotência)
   const addInvestmentMutation = useMutation({
-    mutationFn: async (newInvestment: TablesInsert<'investimentos'>) => {
+    mutationFn: async ({
+      idempotencyKey,
+      payload,
+    }: {
+      idempotencyKey: string;
+      payload: PendingInvestmentAttempt["payload"];
+    }) => {
       if (!user?.id) throw new Error("Usuário não autenticado.");
-      const { data, error } = await supabase
-        .from("investimentos")
-        .insert(newInvestment)
-        .select()
-        .single();
+
+      const { data, error } = await (supabase.rpc as any)("criar_investimento_com_aporte", {
+        p_idempotency_key: idempotencyKey,
+        p_nome: payload.nome,
+        p_tipo: payload.tipo,
+        p_valor: payload.valor,
+        p_data: payload.data,
+        p_data_vencimento: payload.data_vencimento,
+        p_tipo_rentabilidade: payload.tipo_rentabilidade,
+        p_indexador: payload.indexador,
+        p_percentual_indexador: payload.percentual_indexador,
+        p_taxa_fixa: payload.taxa_fixa,
+        p_origem_investimento: payload.origem_investimento,
+      });
+
       if (error) throw error;
-
-      // Inserir aporte inicial na tabela investimentos_aportes
-      const { error: aporteError } = await supabase
-        .from("investimentos_aportes")
-        .insert({
-          investimento_id: data.id,
-          user_id: user.id,
-          valor_original: data.valor,
-          data_aporte: data.data,
-        });
-      if (aporteError) throw aporteError;
-
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (user?.id) clearPendingAttempt(user.id);
+      setPendingAttempt(null);
       invalidateAll();
-      showSuccessToast("Investimento adicionado!");
+      showSuccessToast(
+        data?.idempotente
+          ? "Investimento recuperado e confirmado com sucesso!"
+          : "Investimento adicionado com sucesso!"
+      );
       // Reset form
-      setSelectedInvestmentCategoryId(UNSELECTED_VALUE); // Reset
-      setAmount(undefined); // Reset para undefined
-      setProfitability(undefined); // Reset para undefined
-      setPercentualIndexador(undefined); // Reset percentual indexador
-      setTipoRentabilidade("indexado"); // Reinicia como indexado
-      setDate(new Date()); // Reset para Date
-      setDueDate(undefined); // Reset vencimento
+      setSelectedInvestmentCategoryId(UNSELECTED_VALUE);
+      setAmount(undefined);
+      setProfitability(undefined);
+      setPercentualIndexador(undefined);
+      setTipoRentabilidade("indexado");
+      setDate(new Date());
+      setDueDate(undefined);
       setType("fixed");
-      setValidationErrors({}); // Clear errors on success
+      setValidationErrors({});
     },
-    onError: (error) => {
-      showErrorToast("Erro ao adicionar investimento", error.message);
+    onError: (error: any) => {
+      showErrorToast("Erro ao adicionar investimento", error.message || "Tente novamente.");
       console.error("Supabase error adding investment:", error);
     },
     onSettled: () => {
+      isSubmittingRef.current = false;
       setLoadingForm(false);
     }
   });
 
-  // Mutation for deleting an investment
+  // Mutation for deleting an investment (atômico via RPC)
   const deleteInvestmentMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!user?.id) throw new Error("Usuário não autenticado.");
-      const { error } = await supabase
-        .from("investimentos")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", user.id);
+      const { data, error } = await (supabase.rpc as any)("excluir_investimento_atomico", {
+        p_investimento_id: id,
+      });
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       invalidateAll();
-      showSuccessToast("Investimento removido!");
-      setIsConfirmDeleteOpen(false); // Fechar o diálogo após sucesso
-      setInvestmentToDeleteId(null); // Limpar o ID
+      showSuccessToast("Investimento removido com sucesso!");
+      setIsConfirmDeleteOpen(false);
+      setInvestmentToDeleteId(null);
     },
-    onError: (error) => {
-      showErrorToast("Erro ao remover investimento", error.message);
+    onError: (error: any) => {
+      showErrorToast("Erro ao remover investimento", error.message || "Tente novamente.");
       console.error("Supabase error deleting investment:", error);
-      setIsConfirmDeleteOpen(false); // Fechar o diálogo mesmo em caso de erro
-      setInvestmentToDeleteId(null); // Limpar o ID
+      setIsConfirmDeleteOpen(false);
+      setInvestmentToDeleteId(null);
     }
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. Trava síncrona contra duplo clique imediato
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setLoadingForm(true);
 
-    const newErrors: Record<string, boolean> = {};
-    let hasError = false;
+    try {
+      const newErrors: Record<string, boolean> = {};
+      let hasError = false;
 
-    if (!user) {
-      showErrorToast("Usuário não autenticado.");
-      setLoadingForm(false);
-      return;
-    }
+      if (!user) {
+        showErrorToast("Usuário não autenticado.");
+        return;
+      }
 
-    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || selectedInvestmentCategoryId.trim() === "") {
-      newErrors.selectedInvestmentCategoryId = true;
-      hasError = true;
-    }
-    if (amount === undefined || amount <= 0) {
-      newErrors.amount = true;
-      hasError = true;
-    }
-    if (tipoRentabilidade === "fixo" && (profitability === undefined || profitability < 0)) {
-      newErrors.profitability = true;
-      hasError = true;
-    }
-    if (tipoRentabilidade === "indexado") {
-      if (percentualIndexador === undefined || percentualIndexador <= 0) {
-        newErrors.percentualIndexador = true;
+      if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || selectedInvestmentCategoryId.trim() === "") {
+        newErrors.selectedInvestmentCategoryId = true;
         hasError = true;
       }
-    }
-    if (!date) {
-      newErrors.date = true;
-      hasError = true;
-    }
-
-    if (date && dueDate) {
-      const dateFormatted = formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd');
-      const dueDateFormatted = formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd');
-      if (dueDateFormatted < dateFormatted) {
-        newErrors.dueDate = true;
+      if (amount === undefined || amount <= 0) {
+        newErrors.amount = true;
         hasError = true;
       }
-    }
-
-    setValidationErrors(newErrors);
-    if (hasError) {
-      if (newErrors.dueDate) {
-        showErrorToast("A data de vencimento não pode ser anterior à data do investimento.");
-      } else {
-        if (newErrors.selectedInvestmentCategoryId) {
-          setTimeout(() => {
-            document.getElementById("investment-category")?.focus();
-          }, 10);
+      if (tipoRentabilidade === "fixo" && (profitability === undefined || profitability < 0)) {
+        newErrors.profitability = true;
+        hasError = true;
+      }
+      if (tipoRentabilidade === "indexado") {
+        if (percentualIndexador === undefined || percentualIndexador <= 0) {
+          newErrors.percentualIndexador = true;
+          hasError = true;
         }
-        showErrorToast("Preencha todos os campos obrigatórios");
       }
+      if (!date) {
+        newErrors.date = true;
+        hasError = true;
+      }
+
+      if (date && dueDate) {
+        const dateFormatted = formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd');
+        const dueDateFormatted = formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd');
+        if (dueDateFormatted < dateFormatted) {
+          newErrors.dueDate = true;
+          hasError = true;
+        }
+      }
+
+      setValidationErrors(newErrors);
+      if (hasError) {
+        if (newErrors.dueDate) {
+          showErrorToast("A data de vencimento não pode ser anterior à data do investimento.");
+        } else {
+          if (newErrors.selectedInvestmentCategoryId) {
+            setTimeout(() => {
+              document.getElementById("investment-category")?.focus();
+            }, 10);
+          }
+          showErrorToast("Preencha todos os campos obrigatórios");
+        }
+        return;
+      }
+
+      const formattedDate = date ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') : "";
+      const formattedDueDate = dueDate ? formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd') : null;
+
+      const payload: PendingInvestmentAttempt["payload"] = {
+        nome: selectedInvestmentCategoryId,
+        tipo: type,
+        valor: amount!,
+        data: formattedDate,
+        data_vencimento: formattedDueDate,
+        tipo_rentabilidade: tipoRentabilidade,
+        indexador: tipoRentabilidade === "indexado" ? indexador : null,
+        percentual_indexador: tipoRentabilidade === "indexado" ? (percentualIndexador ?? null) : null,
+        taxa_fixa: tipoRentabilidade === "fixo" ? (profitability ?? null) : null,
+        origem_investimento: "saldo_atual",
+      };
+
+      const currentHash = computePayloadHash(payload);
+
+      // 2. Reconciliação / Obtenção da chave de idempotência
+      let idempotencyKey: string = crypto.randomUUID();
+      const existing = loadPendingAttempt(user.id);
+
+      if (existing) {
+        if (existing.payloadHash === currentHash) {
+          // Reutiliza a chave se o payload for idêntico
+          idempotencyKey = existing.idempotencyKey;
+        } else {
+          // Se houver tentativa pendente ambígua com payload diferente, bloqueia e avisa
+          if (existing.status === "ambiguous_timeout") {
+            showErrorToast("Tentativa pendente detectada", "Existe uma tentativa de cadastro pendente com dados diferentes. Cancele-a antes de iniciar um novo cadastro.");
+            return;
+          }
+          // Caso contrário, gera nova chave
+          idempotencyKey = crypto.randomUUID();
+        }
+      }
+
+      // 3. Salvar tentativa no localStorage antes de disparar
+      const attemptData: PendingInvestmentAttempt = {
+        idempotencyKey,
+        userId: user.id,
+        payload,
+        payloadHash: currentHash,
+        status: "submitting",
+        createdAt: Date.now(),
+      };
+      savePendingAttempt(attemptData);
+
+      // 4. Executar via mutation
+      await addInvestmentMutation.mutateAsync({ idempotencyKey, payload });
+
+    } catch (err: any) {
+      console.error("Erro na submissão de investimento:", err);
+      // Se for timeout ou erro de conexão, marca como ambíguo no storage
+      if (user?.id) {
+        const stored = loadPendingAttempt(user.id);
+        if (stored) {
+          stored.status = "ambiguous_timeout";
+          savePendingAttempt(stored);
+          setPendingAttempt(stored);
+        }
+      }
+    } finally {
+      isSubmittingRef.current = false;
       setLoadingForm(false);
-      return;
     }
+  };
 
-    // Formatar a data usando os componentes locais para evitar problemas de fuso horário
-    const formattedDate = date
-      ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
-      : "";
-
-    const formattedDueDate = dueDate
-      ? formatInTimeZone(dueDate, TARGET_TIMEZONE, 'yyyy-MM-dd')
-      : null;
-
-    const newInvestmentData: TablesInsert<'investimentos'> = {
-      user_id: user.id,
-      nome: selectedInvestmentCategoryId, // Store category ID
-      tipo: type,
-      valor: amount, // Usar o valor como number
-      data: formattedDate, // Usar a data formatada
-      data_vencimento: formattedDueDate,
-      tipo_rentabilidade: tipoRentabilidade,
-      taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
-      indexador: tipoRentabilidade === "indexado" ? indexador : null,
-      percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
-      origem_investimento: "saldo_atual",
-    };
-
-    addInvestmentMutation.mutate(newInvestmentData);
+  // Função para cancelar com segurança uma tentativa ambígua
+  const handleCancelPendingAttempt = async () => {
+    if (!user?.id || !pendingAttempt) return;
+    setLoadingForm(true);
+    try {
+      const res = await cancelarOperacaoServidor(pendingAttempt.idempotencyKey);
+      if (res?.cancelled) {
+        clearPendingAttempt(user.id);
+        setPendingAttempt(null);
+        showSuccessToast("Tentativa pendente cancelada com sucesso.");
+      } else {
+        // Se a operação já tinha sido concluída no banco
+        clearPendingAttempt(user.id);
+        setPendingAttempt(null);
+        invalidateAll();
+        showSuccessToast("A operação anterior já havia sido concluída no banco. Dados atualizados!");
+      }
+    } catch (err: any) {
+      showErrorToast("Erro ao cancelar operação", err.message || "Tente novamente.");
+    } finally {
+      setLoadingForm(false);
+    }
   };
 
   // NOVO: Função para abrir o diálogo de confirmação
@@ -1011,84 +1122,81 @@ export default function Investments() { // Alterado para export default function
 
             {/* Investments List */}
             <div className="mt-2">
-              <Card
-                className={cn("p-6 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
-                style={{ backgroundColor: "#F6F8FA" }}
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className={cn("text-2xl font-extrabold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
-                  <ToggleGroup
-                    type="single"
-                    value={yieldViewMode}
-                    onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
-                    className={cn(
-                      "btn-3d flex items-center justify-between p-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default",
-                      isMobile && "-mt-1"
-                    )}
-                    style={{
-                      "--cor-topo": "#E6F0FF",
-                      "--cor-base": "#DCEBFF",
-                      boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
-                    } as any}
+              <div className="flex items-center justify-between mb-4 px-0.5">
+                <h2 className="text-xl font-extrabold text-[#0556C3]">💰 Meus Investimentos</h2>
+                <ToggleGroup
+                  type="single"
+                  value={yieldViewMode}
+                  onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
+                  className="btn-3d flex items-center justify-between p-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default -mt-1"
+                  style={{
+                    "--cor-topo": "#E6F0FF",
+                    "--cor-base": "#DCEBFF",
+                    boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+                  } as any}
+                >
+                  <ToggleGroupItem
+                    value="daily"
+                    className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                   >
-                    <ToggleGroupItem
-                      value="daily"
-                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
-                    >
-                      DIA
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                      value="monthly"
-                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
-                    >
-                      MÊS
-                    </ToggleGroupItem>
-                  </ToggleGroup>
-                </div>
-                <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
-                  {calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').length === 0 ? (
-                    <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
-                      Nenhum investimento cadastrado ainda.
-                    </p>
-                  ) : (
-                    calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').map((item) => {
-                      const investment = item.investimento;
-                      const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
-                      const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
-                      const investmentNameDisplay = investmentCategory?.nome || investment.nome;
-                      const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
+                    DIA
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="monthly"
+                    className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                  >
+                    MÊS
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              <div className="space-y-3 max-h-[500px] overflow-y-auto no-scrollbar px-1 py-1 -mx-1">
+                {calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').length === 0 ? (
+                  <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
+                    Nenhum investimento cadastrado ainda.
+                  </p>
+                ) : (
+                  calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').map((item) => {
+                    const investment = item.investimento;
+                    const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
+                    const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
+                    const investmentNameDisplay = investmentCategory?.nome || investment.nome;
+                    const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
 
-                      // Yield calculation based on FIFO consolidated metrics
-                      const dailyYield = item.rendimentoHojeLiquidoTotal;
-                      const monthlyYield = item.rendimentoMesTotal;
+                    // Yield calculation based on FIFO consolidated metrics
+                    const dailyYield = item.rendimentoHojeLiquidoTotal;
+                    const monthlyYield = item.rendimentoMesTotal;
 
-                      const [year, month, day] = (item.dataPrimeiroAporte || investment.data).split('-').map(Number);
-                      const dateObj = new Date(year, month - 1, day);
-                      const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
+                    const [year, month, day] = (item.dataPrimeiroAporte || investment.data).split('-').map(Number);
+                    const dateObj = new Date(year, month - 1, day);
+                    const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
 
-                      return (
-                        <div
-                          key={investment.id}
-                          onClick={() => { if (isMobile) handleEditClick(investment); }}
-                          className="pt-[14px] pb-[14px] px-[17px] cursor-pointer active:scale-[0.98] rounded-[18px] mb-4 last:mb-0 transition-all duration-300 relative group overflow-hidden"
-                          style={{
-                            backgroundColor: "#FFFFFF",
-                            border: "1px solid rgba(0,0,0,0.08)",
-                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
-                          }}
-                        >
+                    return (
+                      <div
+                        key={investment.id}
+                        onClick={() => { if (isMobile) handleEditClick(investment); }}
+                        className="pt-[14px] pb-[14px] px-[17px] cursor-pointer active:scale-[0.98] rounded-[18px] transition-all duration-300 relative group overflow-hidden"
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                          backdropFilter: "blur(8px)",
+                          border: "1px solid rgba(148, 163, 184, 0.24)",
+                          boxShadow: "0 6px 18px -6px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(148, 163, 184, 0.12)"
+                        }}
+                      >
                           {/* 1. Top: Ícone e Nome (Esquerda) e Rentabilidade Percentual (Direita) */}
                           <div className="flex items-start justify-between gap-2 mb-[17px]">
                             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                              <div className="flex items-center justify-center shrink-0 rounded-[12px] h-[34px] w-[34px]" style={{ backgroundColor: "#F6F8FA" }}>
-                                <DynamicIcon name={investmentIcon} className="text-primary/80 leading-none h-8 w-8 text-[28px]" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className="flex items-center justify-center shrink-0 h-[34px] w-[34px]">
+                                <DynamicIcon name={investmentIcon} className="text-primary/80 leading-none h-8 w-8 text-[28px]" style={{ filter: "drop-shadow(0 3px 5px rgba(15, 23, 42, 0.14))" }} />
                               </div>
                               <div className="flex flex-col min-w-0">
-                                <h3 className="font-bold text-gray-800 leading-none text-[15px] mb-1 truncate">
+                                <h3
+                                  className="font-semibold text-slate-800 leading-none text-[15px] mb-1 truncate"
+                                  style={{ textShadow: "0 1px 0 rgba(255, 255, 255, 0.8)" }}
+                                >
                                   {investmentNameDisplay}
                                 </h3>
                                 <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
-                                  <span className="text-gray-600 font-bold text-[11px] leading-none">
+                                  <span className="text-slate-500 font-semibold text-[11px] leading-none">
                                     {typeLabel}
                                   </span>
                                   {investment.status === 'resgatado' && (
@@ -1109,10 +1217,13 @@ export default function Investments() { // Alterado para export default function
 
                           {/* 2. Centro: Saldo Líquido Total */}
                           <div className="flex flex-col mb-2">
-                            <span className="text-slate-500 font-black uppercase tracking-wider leading-none text-[10px] mb-1">
+                            <span className="text-slate-400 font-semibold uppercase tracking-wider leading-none text-[10px] mb-1">
                               Saldo Líquido Total
                             </span>
-                            <span className="font-bold tracking-tight text-[#0556C3] text-[26px] leading-none mb-1.5">
+                            <span
+                              className="font-bold tracking-tight text-[#0556C3] text-[26px] leading-none mb-1.5"
+                              style={{ textShadow: "0 1px 2px rgba(5, 86, 195, 0.10)" }}
+                            >
                               {formatCurrency(item.saldoLiquidoTotal)}
                             </span>
                           </div>
@@ -1137,16 +1248,16 @@ export default function Investments() { // Alterado para export default function
                                   e.stopPropagation();
                                   handleNewContribution(investment);
                                 }}
-                                className="btn-3d h-7 px-3 text-[12px] font-bold !text-[#047857] rounded-full border border-emerald-200/70 flex items-center gap-1.5 transition-all duration-150 active:scale-95 shrink-0 select-none hover:brightness-[1.02]"
+                                className="btn-3d h-7 px-3 text-[12px] font-bold !text-[#0556C3] rounded-full border border-blue-200/70 flex items-center gap-1.5 transition-all duration-150 active:scale-95 shrink-0 select-none hover:brightness-[1.02]"
                                 style={{
-                                  "--cor-topo": "#ECFDF5",
-                                  "--cor-base": "#D1FAE5",
-                                  boxShadow: "0px 1.5px 3px rgba(0, 0, 0, 0.07), inset 0px 1px 0.5px rgba(255, 255, 255, 0.7), inset 0px -1.5px 0px rgba(5, 150, 105, 0.2)",
+                                  "--cor-topo": "#EFF6FF",
+                                  "--cor-base": "#DBEAFE",
+                                  boxShadow: "0px 1.5px 3px rgba(0, 0, 0, 0.07), inset 0px 1px 0.5px rgba(255, 255, 255, 0.7), inset 0px -1.5px 0px rgba(5, 86, 195, 0.2)",
                                 } as any}
                                 title="Adicionar aporte"
                                 aria-label="Adicionar aporte"
                               >
-                                <DynamicIcon name="Plus" className="h-3.5 w-3.5 text-[#047857]" strokeWidth={2.8} />
+                                <DynamicIcon name="Plus" className="h-3.5 w-3.5 text-[#0556C3]" strokeWidth={2.8} />
                                 <span>Aporte</span>
                               </Button>
                             )}
@@ -1156,7 +1267,6 @@ export default function Investments() { // Alterado para export default function
                     })
                   )}
                 </div>
-              </Card>
 
               {/* 🔹 NOVO: Card de resumo unificado (MOBILE) */}
               <div className="mt-6 py-6 px-[22px] shadow-sm rounded-[18px] border border-[rgba(15,23,42,0.10)]" style={{ backgroundColor: "#FFFFFF" }}>
@@ -1579,7 +1689,7 @@ export default function Investments() { // Alterado para export default function
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
-                <div className={cn("overflow-y-auto no-scrollbar flex-1 min-h-0", isMobile ? "space-y-[12px] max-h-[490px]" : "space-y-3.5")}>
+                <div className={cn("overflow-y-auto no-scrollbar flex-1 min-h-0 px-1 py-1 -mx-1", isMobile ? "space-y-[12px] max-h-[490px]" : "space-y-3.5")}>
                   {calculatedInvestments.filter(c => c.investimento.status !== 'resgatado').length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
@@ -1627,30 +1737,30 @@ export default function Investments() { // Alterado para export default function
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
                           className={cn(
                             "relative group overflow-hidden transition-all duration-300",
-                            isMobile ? "pt-[14px] pb-[14px] px-[17px] cursor-pointer active:scale-[0.98] rounded-[18px]" : "py-4 px-5 rounded-[16px] border border-[rgba(15,23,42,0.10)] shadow-sm"
+                            isMobile ? "pt-[14px] pb-[14px] px-[17px] cursor-pointer active:scale-[0.98] rounded-[18px]" : "py-4 px-5 rounded-[16px]"
                           )}
-                          style={isMobile ? {
-                            backgroundColor: "#FFFFFF",
-                            border: "1px solid rgba(0,0,0,0.08)",
-                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
-                          } : {
-                            backgroundColor: "#FFFFFF",
-                            border: "1px solid rgba(0,0,0,0.08)",
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)"
+                          style={{
+                            backgroundColor: "rgba(255, 255, 255, 0.92)",
+                            backdropFilter: "blur(8px)",
+                            border: "1px solid rgba(148, 163, 184, 0.24)",
+                            boxShadow: "0 6px 18px -6px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(148, 163, 184, 0.12)"
                           }}
                         >
                           {/* 1. Top: Icon, Name, Type and Actions */}
                           <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3.5")}>
                             <div className="flex items-center gap-2.5">
-                              <div className={cn("flex items-center justify-center shrink-0 rounded-[12px]", isMobile ? "h-[34px] w-[34px]" : "h-[38px] w-[38px]")} style={{ backgroundColor: "#F6F8FA" }}>
-                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80 leading-none", isMobile ? "h-8 w-8 text-[28px]" : "h-9 w-9 text-[32px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className={cn("flex items-center justify-center shrink-0", isMobile ? "h-[34px] w-[34px]" : "h-[38px] w-[38px]")}>
+                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80 leading-none", isMobile ? "h-8 w-8 text-[28px]" : "h-9 w-9 text-[32px]")} style={{ filter: "drop-shadow(0 3px 5px rgba(15, 23, 42, 0.14))" }} />
                               </div>
                               <div className="flex flex-col">
-                                <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "text-[1.05rem] mb-1.5")}>
+                                <h3
+                                  className={cn("font-semibold text-slate-800 leading-none", isMobile ? "text-[15px] mb-1" : "text-[1.05rem] mb-1.5")}
+                                  style={{ textShadow: "0 1px 0 rgba(255, 255, 255, 0.8)" }}
+                                >
                                   {investmentNameDisplay}
                                 </h3>
                                 <div className="flex items-center gap-2">
-                                  <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
+                                  <p className="text-[11px] text-slate-500 font-semibold leading-none">{typeLabel}</p>
                                   {investment.status === 'resgatado' && (
                                     <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md border border-slate-200">
                                       Resgatado {investment.data_resgate && `em ${format(new Date(investment.data_resgate), "dd/MM/yyyy")}`}
@@ -1726,10 +1836,13 @@ export default function Investments() { // Alterado para export default function
                             <div className="space-y-[7px] w-full">
                               <div className="flex flex-col">
                                 <span className={cn("text-slate-500 font-black uppercase tracking-wider leading-none", isMobile ? "text-[10px] mb-1" : "text-[9px] mb-0.5")}>Saldo Líquido Total</span>
-                                <span className={cn(
-                                  "font-bold tracking-tight text-[#0556C3]",
-                                  isMobile ? "text-[26px] leading-none mb-1.5" : "text-[1.4rem]"
-                                )}>
+                                <span
+                                  className={cn(
+                                    "font-bold tracking-tight text-[#0556C3]",
+                                    isMobile ? "text-[26px] leading-none mb-1.5" : "text-[1.4rem]"
+                                  )}
+                                  style={{ textShadow: "0 1px 2px rgba(5, 86, 195, 0.10)" }}
+                                >
                                   {formatCurrency(item.saldoLiquidoTotal)}
                                 </span>
                               </div>
@@ -1782,7 +1895,7 @@ export default function Investments() { // Alterado para export default function
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px]",
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-4 !pt-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px] !pt-4 !px-5 !pb-5",
             "shadow-none border-none"
           )}
           style={{
@@ -1793,13 +1906,7 @@ export default function Investments() { // Alterado para export default function
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
-          <DialogHeader className={cn(
-            "flex flex-row items-center justify-start gap-1 pb-0 mb-0 !space-y-0 transform translate-y-[5px]",
-            isMobile ? "-mt-[2px] -mb-2" : "-mt-[10px] pl-1"
-          )}>
-            <span className="text-xl select-none">📋</span>
-            <DialogTitle className="text-[19px] font-bold tracking-normal pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Detalhes do Investimento</DialogTitle>
-          </DialogHeader>
+          <DialogTitle className="sr-only">Detalhes do Investimento</DialogTitle>
           {editingInvestment && (
             <EditInvestmentDialog
               investmentToEdit={editingInvestment}

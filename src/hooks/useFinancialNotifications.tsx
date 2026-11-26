@@ -49,6 +49,7 @@ export const useFinancialNotifications = () => {
       }));
     },
     enabled: !!user,
+    staleTime: 1000 * 60 * 5, // 5 minutos (invalidado imediatamente nas mutações relevantes)
   });
 
   const { data: overdueExpenses = [], isLoading: loadingExpenses } = useQuery({
@@ -93,6 +94,7 @@ export const useFinancialNotifications = () => {
       });
     },
     enabled: !!user,
+    staleTime: 1000 * 60 * 5, // 5 minutos (invalidado imediatamente nas mutações relevantes)
   });
 
   // Calculate totals

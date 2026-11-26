@@ -98,7 +98,7 @@ export default function Despesas() {
     expenses,
     expenseInstallments,
     isLoading: isLoadingExpenseData,
-  } = useExpenseData(user, UNSELECTED_VALUE, !!user);
+  } = useExpenseData(user, UNSELECTED_VALUE, !isMobile && !!user);
 
   const { data: rawCategories = [], isLoading: isLoadingCategories } = useCategories(user?.id);
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
@@ -28,6 +28,7 @@ import {
 import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency, IndexadorHistorico, buildIndexadorMap } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
+import { useCategories } from "@/hooks/useCategories";
 import { useFinancialProjection } from "@/hooks/useFinancialProjection";
 import { useProfile } from "@/hooks/useProfile";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
@@ -43,8 +44,10 @@ import { ProjectedYieldCard } from "@/components/ProjectedYieldCard";
 import { MonthlyProjectedYieldChart } from "@/components/MonthlyProjectedYieldChart";
 import { InvestmentsYieldChart } from "@/components/InvestmentsYieldChart";
 import { WealthProjection } from "@/components/WealthProjection";
+import { MonthlyEvolutionCard } from "@/components/MonthlyEvolutionCard";
 import { Investment } from "@/types/finance";
 import { useInvestmentsData } from "@/hooks/useInvestmentsData";
+import { calcularCaixaAtual } from "@/lib/caixaAtual";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -123,6 +126,11 @@ export default function Dashboard() {
     investments,
     aportes,
     alocacoes: alocacoesResgates,
+    resgates: resgatesInvestimentos,
+    indexadores,
+    indexadorMapCDI,
+    indexadorMapIPCA,
+    allSubcategories: investmentSubcategories,
     calculatedInvestments: calculatedInvestmentsFifo,
     stats: investmentStats,
     isLoading: isLoadingInvestments,
@@ -193,18 +201,7 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  // Fetch active indexers (CDI/IPCA) — mantido para compatibilidade com outros cálculos
-  const { data: indexadores = [] } = useQuery<IndexadorHistorico[]>({
-    queryKey: ["indexadores-cdi"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, taxa_diaria")
-        .order("data_inicio", { ascending: true });
-      if (error) throw error;
-      return data as IndexadorHistorico[];
-    },
-  });
+  const { data: rawCategories = [] } = useCategories(user?.id);
 
   const {
     monthlyFilteredTransactions,
@@ -284,31 +281,15 @@ export default function Dashboard() {
   const { data: profile } = useProfile(user?.id);
 
   const saldoAtualEmConta = useMemo(() => {
-    const activeInvIds = new Set(
-      investments
-        .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
-        .map((inv) => inv.id)
-    );
-
-    let currentActiveInvestments = 0;
-    if (aportes.length > 0) {
-      const totalAportesAtivos = aportes
-        .filter((ap) => activeInvIds.has(ap.investimento_id))
-        .reduce((sum, ap) => sum + (Number(ap.valor_original) || 0), 0);
-
-      const totalResgatesAtivos = alocacoesResgates
-        .filter((aloc) => activeInvIds.has(aloc.investimento_id))
-        .reduce((sum, aloc) => sum + (Number(aloc.principal_consumido) || 0), 0);
-
-      currentActiveInvestments = Math.max(0, totalAportesAtivos - totalResgatesAtivos);
-    } else {
-      currentActiveInvestments = investments
-        .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
-        .reduce((sum, inv) => sum + (inv.valor || 0), 0);
-    }
-      
-    const saldoCalculadoSistema = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
-    return saldoCalculadoSistema + (profile?.saldo_ajuste || 0);
+    const { caixaAtualFinal } = calcularCaixaAtual({
+      globalReceivedIncome: globalReceivedIncome || 0,
+      globalPaidExpenses: globalPaidExpenses || 0,
+      investimentos: investments || [],
+      aportes: aportes || [],
+      alocacoesResgates: alocacoesResgates || [],
+      saldoAjusteManual: profile?.saldo_ajuste || 0,
+    });
+    return caixaAtualFinal;
   }, [globalReceivedIncome, globalPaidExpenses, investments, aportes, alocacoesResgates, profile?.saldo_ajuste]);
 
   const patrimonioBase = currentYieldStats.totalCurrentBalance + saldoAtualEmConta;
@@ -368,17 +349,17 @@ export default function Dashboard() {
     (isLoadingInvestments && investments.length === 0) ||
     (isLoadingAllExpenses && allExpenseInstallments.length === 0);
 
-  const handlePreviousMonth = () => {
+  const handlePreviousMonth = useCallback(() => {
     setSelectedMonth((prev) => subMonths(prev, 1));
-  };
+  }, []);
 
-  const handleNextMonth = () => {
+  const handleNextMonth = useCallback(() => {
     setSelectedMonth((prev) => addMonths(prev, 1));
-  };
+  }, []);
 
-  const handleMonthClick = (date: Date) => {
+  const handleMonthClick = useCallback((date: Date) => {
     setSelectedMonth(date);
-  };
+  }, []);
 
 
 
@@ -559,6 +540,26 @@ export default function Dashboard() {
                     isMobile={isMobile}
                   />
                 </div>
+
+                {/* Evolução Mensal (IPCA x CDI x Meus Investimentos) */}
+                <div className="w-full mb-4">
+                  <MonthlyEvolutionCard
+                    indexadores={indexadores}
+                    investments={investments}
+                    aportes={aportes}
+                    alocacoes={alocacoesResgates}
+                    resgates={resgatesInvestimentos}
+                    allSubcategories={investmentSubcategories}
+                    indexadorMapCDI={indexadorMapCDI}
+                    indexadorMapIPCA={indexadorMapIPCA}
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    onSelectMonth={handleMonthClick}
+                    isLoading={isLoadingInvestments}
+                    isMobile={isMobile}
+                  />
+                </div>
               </>
             ) : (
               <>
@@ -607,6 +608,26 @@ export default function Dashboard() {
                 <div className="mb-4">
                   <WealthProjection
                     investments={calculatedInvestments}
+                    isMobile={isMobile}
+                  />
+                </div>
+
+                {/* Evolução Mensal (IPCA x CDI x Meus Investimentos) */}
+                <div className="mb-4">
+                  <MonthlyEvolutionCard
+                    indexadores={indexadores}
+                    investments={investments}
+                    aportes={aportes}
+                    alocacoes={alocacoesResgates}
+                    resgates={resgatesInvestimentos}
+                    allSubcategories={investmentSubcategories}
+                    indexadorMapCDI={indexadorMapCDI}
+                    indexadorMapIPCA={indexadorMapIPCA}
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    onSelectMonth={handleMonthClick}
+                    isLoading={isLoadingInvestments}
                     isMobile={isMobile}
                   />
                 </div>
@@ -857,7 +878,7 @@ export default function Dashboard() {
                 />
                 <InvestmentsYieldChart
                   investments={calculatedInvestments}
-                  allSubcategories={allSubcategories}
+                  allSubcategories={rawCategories}
                   isMobile={isMobile}
                 />
               </>
@@ -876,6 +897,25 @@ export default function Dashboard() {
             {!filter && (
               <WealthProjection
                 investments={calculatedInvestments}
+                isMobile={isMobile}
+              />
+            )}
+
+            {!filter && (
+              <MonthlyEvolutionCard
+                indexadores={indexadores}
+                investments={investments}
+                aportes={aportes}
+                alocacoes={alocacoesResgates}
+                resgates={resgatesInvestimentos}
+                allSubcategories={investmentSubcategories}
+                indexadorMapCDI={indexadorMapCDI}
+                indexadorMapIPCA={indexadorMapIPCA}
+                selectedMonth={selectedMonth}
+                onPreviousMonth={handlePreviousMonth}
+                onNextMonth={handleNextMonth}
+                onSelectMonth={handleMonthClick}
+                isLoading={isLoadingInvestments}
                 isMobile={isMobile}
               />
             )}
@@ -1045,7 +1085,7 @@ export default function Dashboard() {
                 />
                 <InvestmentsYieldChart
                   investments={calculatedInvestments}
-                  allSubcategories={allSubcategories}
+                  allSubcategories={rawCategories}
                   isMobile={isMobile}
                 />
               </div>
@@ -1067,6 +1107,27 @@ export default function Dashboard() {
               <div className="mt-8">
                 <WealthProjection
                   investments={calculatedInvestments}
+                  isMobile={isMobile}
+                />
+              </div>
+            )}
+
+            {!filter && (
+              <div className="mt-8">
+                <MonthlyEvolutionCard
+                  indexadores={indexadores}
+                  investments={investments}
+                  aportes={aportes}
+                  alocacoes={alocacoesResgates}
+                  resgates={resgatesInvestimentos}
+                  allSubcategories={investmentSubcategories}
+                  indexadorMapCDI={indexadorMapCDI}
+                  indexadorMapIPCA={indexadorMapIPCA}
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  onSelectMonth={handleMonthClick}
+                  isLoading={isLoadingInvestments}
                   isMobile={isMobile}
                 />
               </div>

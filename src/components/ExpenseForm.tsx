@@ -520,7 +520,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["expenseInstallments", user?.id],
       });
-      queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments"] });
+      queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["globalPaidExpenses", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["overdue-expenses-notifications", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["recentPaidExpenses", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["orcamentos-realizado", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["metas-realizado", user?.id] });
       
       setLoading(false);
       

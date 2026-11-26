@@ -156,46 +156,46 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     allSubcategories.find((c) => c.id === investmentToEdit.nome)?.nome || investmentToEdit.nome;
 
   return (
-    <div className={cn(isMobile ? "space-y-4" : "space-y-5", isMobile && "w-full mx-auto")}>
+    <div className={cn(isMobile ? "space-y-3.5" : "space-y-4", isMobile && "w-full mx-auto")}>
+      {/* Cabeçalho: Ícone alinhado ao topo do botão fechar + Bloco de identificação (Nome + Categoria) */}
+      <div className="flex items-start gap-2.5 w-full !mt-0 pr-9">
+        {/* Ícone do investimento: topo alinhado com o botão de fechar e acompanhando visualmente as duas linhas de identificação */}
+        <div
+          className="flex items-center justify-center shrink-0 rounded-[12px] h-[38px] w-[38px] bg-white border border-[rgba(0,0,0,0.06)] shadow-sm"
+        >
+          <DynamicIcon
+            name={allSubcategories.find((c) => c.id === investmentToEdit.nome)?.icone || "MoreHorizontal"}
+            className="h-8 w-8 text-[28px] leading-none text-[#0556C3]"
+            style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }}
+          />
+        </div>
+
+        {/* Bloco de identificação: Nome na 1ª linha + Categoria compacta na 2ª linha */}
+        <div className="flex flex-col justify-center min-h-[38px] flex-1 min-w-0">
+          <h2
+            className="text-base font-bold text-slate-800 leading-tight line-clamp-2 break-words text-left"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            {categoryDisplayName}
+          </h2>
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider leading-none mt-1">
+            {investmentTypes.find((t) => t.value === investmentToEdit.tipo)?.label || investmentToEdit.tipo}
+          </span>
+        </div>
+      </div>
+
       <DialogDescription className="sr-only">Resumo e detalhes do investimento.</DialogDescription>
-      <div className={cn("space-y-3", isMobile ? "-mt-16" : "-mt-6")}>
-        <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-[16px] shadow-sm flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-50/50 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="bg-white p-2 rounded-xl border border-[rgba(0,0,0,0.06)] shadow-sm">
-                <DynamicIcon
-                  name={allSubcategories.find((c) => c.id === investmentToEdit.nome)?.icone || "MoreHorizontal"}
-                  className="h-[34px] w-[34px] text-[34px] leading-none text-[#0556C3]"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-base font-black text-slate-800 leading-tight">
-                  {categoryDisplayName}
-                </span>
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  {investmentTypes.find((t) => t.value === investmentToEdit.tipo)?.label || investmentToEdit.tipo}
-                </span>
-              </div>
-            </div>
 
-            {/* Indicador clicável com a quantidade de aportes */}
-            {consolidated && (
-              <button
-                type="button"
-                onClick={() => setIsHistoryOpen(true)}
-                className="btn-3d py-1 px-2.5 rounded-xl text-xs font-black !text-[#1E40AF] border-none transition-all active:scale-95 flex items-center gap-1 shadow-sm shrink-0"
-                style={{ "--cor-topo": "#EFF6FF", "--cor-base": "#DBEAFE" } as any}
-                title="Ver histórico de aportes"
-              >
-                <span>
-                  {totalAportes} {totalAportes === 1 ? "aporte" : "aportes"}
-                </span>
-                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5 text-blue-500" />
-              </button>
-            )}
-          </div>
-
+      {/* Cartão com Informações e Resultados Financeiros */}
+      <div className="space-y-3">
+        <div
+          className="rounded-[18px] flex flex-col overflow-hidden"
+          style={{
+            backgroundColor: "#FFFFFF",
+            border: "1px solid rgba(0,0,0,0.08)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)",
+          }}
+        >
           {/* List Items */}
           <div className="flex flex-col p-4 gap-3">
             <div className="flex items-center justify-between">
@@ -303,28 +303,37 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
 
       {/* Controles de Ação do Modal */}
-      <div className="flex flex-row items-center w-full pt-2 gap-2 mt-2">
-        {investmentToEdit.origem_investimento === "saldo_atual" &&
-          investmentToEdit.status !== "resgatado" &&
-          onRescueClick && (
+      {((investmentToEdit.origem_investimento === "saldo_atual" &&
+        investmentToEdit.status !== "resgatado" &&
+        onRescueClick) ||
+        consolidated) && (
+        <div className="flex flex-row items-center w-full pt-2 gap-2 mt-2">
+          {investmentToEdit.origem_investimento === "saldo_atual" &&
+            investmentToEdit.status !== "resgatado" &&
+            onRescueClick && (
+              <Button
+                type="button"
+                onClick={onRescueClick}
+                className="flex-1 rounded-[14px] btn-3d font-black !text-[#9A3412] border-none transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.03)] text-[16px] sm:text-[19px] h-11 flex items-center justify-center gap-1.5 px-1"
+                style={{ "--cor-topo": "#FFEDD5", "--cor-base": "#FED7AA" } as any}
+              >
+                <span>💰</span> <span className="truncate">Resgatar</span>
+              </Button>
+            )}
+          {consolidated && (
             <Button
               type="button"
-              onClick={onRescueClick}
-              className="flex-1 rounded-[14px] btn-3d font-black !text-[#9A3412] border-none transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.03)] text-[16px] sm:text-[19px] h-11 flex items-center justify-center gap-1.5 px-1"
-              style={{ "--cor-topo": "#FFEDD5", "--cor-base": "#FED7AA" } as any}
+              onClick={() => setIsHistoryOpen(true)}
+              className="flex-1 rounded-[14px] btn-3d font-black !text-[#2447A5] transition-all active:scale-95 text-[16px] sm:text-[18px] h-11 flex items-center justify-center gap-1 px-2 !border-[1px] !border-[#BFDBFE]/70 shadow-[inset_0_2px_2px_rgba(255,255,255,0.8),inset_1.5px_0_1.5px_rgba(255,255,255,0.4),inset_-1.5px_0_1.5px_rgba(255,255,255,0.4),0_1px_2px_rgba(36,71,165,0.08)]"
+              style={{ "--cor-topo": "#EFF6FF", "--cor-base": "#DBEAFE" } as any}
+              title="Ver histórico de aportes"
             >
-              <span>💰</span> <span className="truncate">Resgatar</span>
+              <span className="truncate">Aportes ({totalAportes})</span>
+              <DynamicIcon name="ChevronRight" className="h-4 w-4 text-[#2447A5] shrink-0" strokeWidth={2.8} />
             </Button>
           )}
-        <Button
-          type="button"
-          onClick={onCancelEdit}
-          className="flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] transition-all active:scale-95 text-[17px] sm:text-[19px] h-11 flex items-center justify-center !border-[1px] !border-[#A5B4FC]/40 shadow-[inset_0_2px_2px_rgba(255,255,255,0.8),inset_1.5px_0_1.5px_rgba(255,255,255,0.4),inset_-1.5px_0_1.5px_rgba(255,255,255,0.4),0_1px_2px_rgba(0,0,0,0.03)]"
-          style={{ "--cor-topo": "#C7D2FE", "--cor-base": "#A5B4FC" } as any}
-        >
-          Fechar
-        </Button>
-      </div>
+        </div>
+      )}
 
       {/* Modal de Histórico de Aportes */}
       {consolidated && (

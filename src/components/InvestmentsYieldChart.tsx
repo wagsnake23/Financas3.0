@@ -12,6 +12,26 @@ interface InvestmentsYieldChartProps {
     isMobile?: boolean;
 }
 
+const normalizeText = (value?: string | null) =>
+    (value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+
+const isTesouroDiretoInvestment = (inv: Investment, category?: AppCategory): boolean => {
+    const candidates = [category?.nome, category?.id, inv.nome];
+    return candidates.some((text) => {
+        const norm = normalizeText(text);
+        return (
+            norm.includes("tesouro") ||
+            norm.includes("ntn-b") ||
+            norm.includes("ntnb") ||
+            /\blft\b/.test(norm) ||
+            /\bltn\b/.test(norm)
+        );
+    });
+};
+
 export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile }: InvestmentsYieldChartProps) => {
     const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
     const [tooltipY, setTooltipY] = useState(0);
@@ -33,9 +53,12 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
     const chartData = useMemo(() => {
         const yieldByInvestment = investments.reduce((acc, inv) => {
             const category = allSubcategories.find(c => c.id === inv.nome);
-            const name = category?.nome || "Outros";
-            const color = category ? getCategoryColor(category, allSubcategories) : `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-            const icone = category?.icone || "💰";
+            const isTesouro = isTesouroDiretoInvestment(inv, category);
+            const name = isTesouro ? "Tesouro Direto" : (category?.nome || "Outros");
+            const color = category
+                ? getCategoryColor(category, allSubcategories)
+                : (isTesouro ? "#22C55E" : `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+            const icone = isTesouro ? "brand:tesouro" : (category?.icone || "💰");
 
             // 1) Taxa diária (juros compostos 252 dias úteis)
             const annualRateDecimal = (inv.rentabilidade || 0) / 100;

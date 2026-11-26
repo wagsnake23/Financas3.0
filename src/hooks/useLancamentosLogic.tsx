@@ -94,14 +94,33 @@ export const useLancamentosLogic = (
     enabled: !!user,
   });
 
-  const { data: allExpenseInstallments = [] } = useQuery<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>({
+  const { data: allExpenseInstallments = [] } = useQuery<
+    (Tables<'despesas_parcelas'> & {
+      despesas: Pick<
+        Tables<'despesas'>,
+        | 'id'
+        | 'categoria_id'
+        | 'user_id'
+        | 'descricao'
+        | 'forma_pagamento'
+        | 'tipo_pagamento'
+        | 'cartao_id'
+        | 'is_recurring_master'
+        | 'numero_parcelas'
+        | 'data_competencia'
+      > | null;
+    })[]
+  >({
     queryKey: ["allExpenseInstallments", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("despesas_parcelas")
-        .select("*, despesas(categoria_id, user_id)")
-        .filter("despesas.user_id", "eq", user.id);
+        .select(
+          "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas, data_competencia)"
+        )
+        .filter("despesas.user_id", "eq", user.id)
+        .order("vencimento", { ascending: true });
       if (error) throw error;
       return data;
     },

@@ -35,10 +35,11 @@ export function useInvestmentsData() {
   // 1. Fetch Indexadores (CDI / IPCA)
   const { data: indexadores = [], isLoading: isLoadingIndexadores } = useQuery<IndexadorHistorico[]>({
     queryKey: ["indexadores-cdi"],
+    staleTime: 1000 * 60 * 30,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, taxa_diaria, taxa_mensal")
+        .select("tipo, taxa_anual, data_inicio, taxa_diaria, taxa_mensal, periodicidade")
         .order("data_inicio", { ascending: true });
       if (error) throw error;
       return data as IndexadorHistorico[];
@@ -231,15 +232,47 @@ export function useInvestmentsData() {
       activeConsolidated.reduce((sum, c) => sum + c.rendimentoHojeLiquidoTotal, 0)
     );
 
-    // Rendimento mensal total: soma direta e exata dos rendimentos mensais individuais de todos os investimentos ativos (regra dos minicards)
-    const totalMonthlyYieldRS = roundCurrency(
-      activeConsolidated.reduce((sum, c) => sum + c.rendimentoMesTotal, 0)
+    // Indicadores mensais consolidados (capitalização composta em 21 dias úteis a partir do rendimento diário real)
+    // Considera apenas o patrimônio ativo que efetivamente gera rendimento diário
+    const DIAS_UTEIS_MES = 21;
+    const activeYieldingInvestments = activeConsolidated.filter(
+      (c) =>
+        Number.isFinite(c.saldoLiquidoTotal) &&
+        c.saldoLiquidoTotal > 0 &&
+        Number.isFinite(c.rendimentoHojeLiquidoTotal) &&
+        c.rendimentoHojeLiquidoTotal > 0
     );
 
-    // Rentabilidade média mensal consolidada: (totalMonthlyYieldRS / totalCurrentBalance) * 100
-    const avgMonthlyProfitability = totalCurrentBalance > 0
-      ? (totalMonthlyYieldRS / totalCurrentBalance) * 100
-      : 0;
+    const patrimonioGerador = activeYieldingInvestments.reduce(
+      (sum, c) => sum + c.saldoLiquidoTotal,
+      0
+    );
+    const rendimentoDiarioGerador = activeYieldingInvestments.reduce(
+      (sum, c) => sum + c.rendimentoHojeLiquidoTotal,
+      0
+    );
+
+    let avgMonthlyProfitability = 0;
+    let totalMonthlyYieldRS = 0;
+
+    if (
+      Number.isFinite(patrimonioGerador) &&
+      Number.isFinite(rendimentoDiarioGerador) &&
+      patrimonioGerador > 0 &&
+      rendimentoDiarioGerador > 0
+    ) {
+      const taxaDiariaEfetiva = rendimentoDiarioGerador / patrimonioGerador;
+      const rentabilidadeMensalComposta = Math.pow(1 + taxaDiariaEfetiva, DIAS_UTEIS_MES) - 1;
+      const rendimentoMensalEstimado = patrimonioGerador * rentabilidadeMensalComposta;
+
+      if (
+        Number.isFinite(rentabilidadeMensalComposta) &&
+        Number.isFinite(rendimentoMensalEstimado)
+      ) {
+        avgMonthlyProfitability = rentabilidadeMensalComposta * 100;
+        totalMonthlyYieldRS = roundCurrency(rendimentoMensalEstimado);
+      }
+    }
 
     return {
       totalInvested,

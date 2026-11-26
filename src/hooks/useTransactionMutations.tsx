@@ -38,15 +38,30 @@ export const useTransactionMutations = ({
   const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
   const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
-  const invalidateAllTransactionQueries = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] });
-    queryClient.invalidateQueries({ queryKey: ["despesas", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["cartoes", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["pending-receipts-notifications", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["overdue-expenses-notifications", user?.id] });
-  }, [queryClient, user?.id]);
+  const invalidateAllTransactionQueries = useCallback(
+    (affectedType: TransactionType | "both" = "both") => {
+      if (affectedType === "income" || affectedType === "both") {
+        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["allRevenues", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["globalReceivedIncome", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["pending-receipts-notifications", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["recentReceivedRevenues", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["receitas-mes", user?.id] });
+      }
+      if (affectedType === "expense" || affectedType === "both") {
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["globalPaidExpenses", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["expenses", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["despesas", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["overdue-expenses-notifications", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["recentPaidExpenses", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["orcamentos-realizado", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["metas-realizado", user?.id] });
+      }
+    },
+    [queryClient, user?.id]
+  );
 
   const handleDeleteTransaction = useCallback(
     async (id: string, type: "income" | "expense", deleteScope: DeleteScope) => {
@@ -189,7 +204,7 @@ export const useTransactionMutations = ({
         setIsEditModalOpen(false);
         setTimeout(() => {
           setEditingTransaction(null);
-          invalidateAllTransactionQueries();
+          invalidateAllTransactionQueries(type);
           setLoadingEditData(false);
         }, 300);
       } catch (err: any) {
@@ -430,7 +445,7 @@ export const useTransactionMutations = ({
         setIsEditModalOpen(false);
         setTimeout(() => {
           setEditingTransaction(null);
-          invalidateAllTransactionQueries();
+          invalidateAllTransactionQueries(type);
           setLoadingEditData(false);
         }, 300);
       } catch (err: any) {
@@ -450,29 +465,53 @@ export const useTransactionMutations = ({
       }
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
-      const currentTimestamp = formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"); // NOVO: Usa formatInTimeZone
+      const currentTimestamp = formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss");
+      const selectedMonthStr = format(selectedMonth, "yyyy-MM");
 
-      // 1. Optimistically update the UI
+      // Snapshots para rollback seguro em caso de falha
+      const monthlyRevenueKey = ["revenues", user.id, selectedMonthStr] as const;
+      const baseRevenueKey = ["revenues", user.id] as const;
+      const monthlyInstallmentKey = ["expenseInstallments", user.id, selectedMonthStr] as const;
+      const baseInstallmentKey = ["expenseInstallments", user.id] as const;
+      const allInstallmentsKey = ["allExpenseInstallments", user.id] as const;
+
+      const prevMonthlyRevenues = type === "income" ? queryClient.getQueryData(monthlyRevenueKey) : undefined;
+      const prevBaseRevenues = type === "income" ? queryClient.getQueryData(baseRevenueKey) : undefined;
+      const prevMonthlyInstallments = type === "expense" ? queryClient.getQueryData(monthlyInstallmentKey) : undefined;
+      const prevBaseInstallments = type === "expense" ? queryClient.getQueryData(baseInstallmentKey) : undefined;
+      const prevAllInstallments = type === "expense" ? queryClient.getQueryData(allInstallmentsKey) : undefined;
+
+      // 1. Optimistically update the UI (chaves mensal e global quando presentes no cache)
       if (type === "income") {
-        queryClient.setQueryData(
-          ["revenues", user.id],
-          (oldData: Tables<'receitas'>[] | undefined) => {
-            if (!oldData) return oldData;
-            return oldData.map((r) =>
-              r.id === id ? { ...r, status: newStatus, updated_at: newStatus === "Recebida" ? currentTimestamp : r.updated_at } : r // NOVO: Atualiza updated_at
-            );
-          }
-        );
+        const updateRevenues = (oldData: Tables<'receitas'>[] | undefined) => {
+          if (!oldData) return oldData;
+          return oldData.map((r) =>
+            r.id === id ? { ...r, status: newStatus, updated_at: newStatus === "Recebida" ? currentTimestamp : r.updated_at } : r
+          );
+        };
+        if (prevMonthlyRevenues !== undefined) {
+          queryClient.setQueryData(monthlyRevenueKey, updateRevenues);
+        }
+        if (prevBaseRevenues !== undefined) {
+          queryClient.setQueryData(baseRevenueKey, updateRevenues);
+        }
       } else { // expense
-        queryClient.setQueryData(
-          ["expenseInstallments", user.id],
-          (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
-            if (!oldData) return oldData;
-            return oldData.map((p) =>
-              p.id === id ? { ...p, pago: newStatus === "Recebida", data_pagamento: newStatus === "Recebida" ? currentTimestamp : null } : p // NOVO: Atualiza data_pagamento
-            );
-          }
-        );
+        const pagoFlag = newStatus === "Recebida";
+        const updateInstallments = (oldData: any[] | undefined) => {
+          if (!oldData) return oldData;
+          return oldData.map((p) =>
+            p.id === id ? { ...p, pago: pagoFlag, data_pagamento: pagoFlag ? currentTimestamp : null } : p
+          );
+        };
+        if (prevMonthlyInstallments !== undefined) {
+          queryClient.setQueryData(monthlyInstallmentKey, updateInstallments);
+        }
+        if (prevBaseInstallments !== undefined) {
+          queryClient.setQueryData(baseInstallmentKey, updateInstallments);
+        }
+        if (prevAllInstallments !== undefined) {
+          queryClient.setQueryData(allInstallmentsKey, updateInstallments);
+        }
       }
 
       // 2. Perform the API call
@@ -480,14 +519,14 @@ export const useTransactionMutations = ({
         if (type === "income") {
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus, updated_at: currentTimestamp }) // NOVO: Envia updated_at
+            .update({ status: newStatus, updated_at: currentTimestamp })
             .eq("id", id)
             .eq("user_id", user.id);
           if (error) throw error;
         } else { // expense
           const pago = newStatus === "Recebida";
           const dataPagamento = pago
-            ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") // NOVO: Directly use new Date()
+            ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss")
             : null;
 
           const { error } = await supabase
@@ -499,37 +538,34 @@ export const useTransactionMutations = ({
             .eq("id", id);
           if (error) throw error;
         }
-        toast.success("Status atualizado!", { id: toastId, duration: toastDuration, style: toastSuccessStyle }); // Adicionar ID, duração e estilo
-        // Invalidate queries to ensure data consistency, but the UI is already updated
-        invalidateAllTransactionQueries(); // This will re-fetch and confirm the state
+        toast.success("Status atualizado!", { id: toastId, duration: toastDuration, style: toastSuccessStyle });
+        // Invalida apenas o domínio afetado (receita ou despesa) para garantir consistência de saldo, notificações e gráficos
+        invalidateAllTransactionQueries(type);
       } catch (error: any) {
         console.error("Erro ao atualizar status:", error);
-        toast.error("Erro ao atualizar status.", { id: toastId, description: error.message, duration: toastDuration, style: toastErrorStyle }); // Adicionar ID, duração e estilo
-        // 3. Revert UI on error
+        toast.error("Erro ao atualizar status.", { id: toastId, description: error.message, duration: toastDuration, style: toastErrorStyle });
+        // 3. Revert UI on error usando os snapshots exatos
         if (type === "income") {
-          queryClient.setQueryData(
-            ["revenues", user.id],
-            (oldData: Tables<'receitas'>[] | undefined) => {
-              if (!oldData) return oldData;
-              return oldData.map((r) =>
-                r.id === id ? { ...r, status: (newStatus === "Recebida" ? "Pendente" : "Recebida"), updated_at: r.updated_at } : r // Reverte updated_at também
-              );
-            }
-          );
+          if (prevMonthlyRevenues !== undefined) {
+            queryClient.setQueryData(monthlyRevenueKey, prevMonthlyRevenues);
+          }
+          if (prevBaseRevenues !== undefined) {
+            queryClient.setQueryData(baseRevenueKey, prevBaseRevenues);
+          }
         } else { // expense
-          queryClient.setQueryData(
-            ["expenseInstallments", user.id],
-            (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
-              if (!oldData) return oldData;
-              return oldData.map((p) =>
-                p.id === id ? { ...p, pago: (newStatus === "Recebida" ? false : true), data_pagamento: p.data_pagamento } : p // Reverte data_pagamento também
-              );
-            }
-          );
+          if (prevMonthlyInstallments !== undefined) {
+            queryClient.setQueryData(monthlyInstallmentKey, prevMonthlyInstallments);
+          }
+          if (prevBaseInstallments !== undefined) {
+            queryClient.setQueryData(baseInstallmentKey, prevBaseInstallments);
+          }
+          if (prevAllInstallments !== undefined) {
+            queryClient.setQueryData(allInstallmentsKey, prevAllInstallments);
+          }
         }
       }
     },
-    [user, queryClient, invalidateAllTransactionQueries, toastDuration, toastSuccessStyle, toastErrorStyle] // Adicionar toastDuration às dependências
+    [user, queryClient, selectedMonth, invalidateAllTransactionQueries, toastDuration, toastSuccessStyle, toastErrorStyle]
   );
 
   return {

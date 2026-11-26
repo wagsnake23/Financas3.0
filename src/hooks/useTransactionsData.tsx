@@ -22,6 +22,9 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     let poupancaAdded = false;
     return rawCategories
       .filter(cat => {
+        // Categorias e subcategorias criadas pelo usuário (user_id !== null) nunca são filtradas
+        if (cat.user_id !== null) return true;
+
         const lowerNome = cat.nome.toLowerCase();
         
         // Filtro de Aportes

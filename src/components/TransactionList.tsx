@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -354,8 +354,11 @@ export const TransactionList = ({
       showSuccessToast("Sucesso", "Fatura paga com sucesso!");
 
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["globalPaidExpenses", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["overdue-expenses-notifications", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["recentPaidExpenses", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["metas-realizado", user?.id] });
 
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);

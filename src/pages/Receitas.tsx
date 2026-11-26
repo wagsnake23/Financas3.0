@@ -326,7 +326,11 @@ export default function Receitas() {
       setIsRecurring(false);
       setValidationErrors({});
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["allRevenues"] });
+      queryClient.invalidateQueries({ queryKey: ["allRevenues", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["globalReceivedIncome", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["pending-receipts-notifications", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["recentReceivedRevenues", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["receitas-mes", user?.id] });
     } catch (error: any) {
       showErrorToast("Erro", error.message || "Erro ao adicionar receita");
       console.error("Supabase error adding revenue:", error);
