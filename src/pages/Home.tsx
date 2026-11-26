@@ -32,6 +32,8 @@ import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { SaldoAjusteDialog } from "@/components/SaldoAjusteDialog";
 import { useFinancialProjection } from "@/hooks/useFinancialProjection";
 import { calcularCaixaAtual } from "@/lib/caixaAtual";
+import { MonthlyEvolutionCard } from "@/components/MonthlyEvolutionCard";
+import { useInvestmentsData } from "@/hooks/useInvestmentsData";
 
 
 const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLines = true }: { expenses: number, revenues: number, balance: number, height?: number, showScaleLines?: boolean }) => {
@@ -85,6 +87,46 @@ const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixCol
 };
 
 const EMPTY_ARRAY: any[] = [];
+
+const DesktopMonthlyEvolutionSection: React.FC<{
+    selectedMonth: Date;
+    onPreviousMonth: () => void;
+    onNextMonth: () => void;
+    onSelectMonth: (date: Date) => void;
+}> = ({ selectedMonth, onPreviousMonth, onNextMonth, onSelectMonth }) => {
+    const {
+        indexadores,
+        investments,
+        aportes,
+        alocacoesResgates,
+        resgatesInvestimentos,
+        allSubcategories,
+        indexadorMapCDI,
+        indexadorMapIPCA,
+        isLoading,
+    } = useInvestmentsData();
+
+    return (
+        <div className="w-full mt-4 md:mt-[21px]">
+            <MonthlyEvolutionCard
+                indexadores={indexadores}
+                investments={investments}
+                aportes={aportes}
+                alocacoes={alocacoesResgates}
+                resgates={resgatesInvestimentos}
+                allSubcategories={allSubcategories}
+                indexadorMapCDI={indexadorMapCDI}
+                indexadorMapIPCA={indexadorMapIPCA}
+                selectedMonth={selectedMonth}
+                onPreviousMonth={onPreviousMonth}
+                onNextMonth={onNextMonth}
+                onSelectMonth={onSelectMonth}
+                isLoading={isLoading}
+                isMobile={false}
+            />
+        </div>
+    );
+};
 
 export default function Home() {
     const { user, loading: authLoading } = useAuth();
@@ -544,8 +586,9 @@ export default function Home() {
 
 
 
-    const handlePrevMonth = () => setSelectedMonth((m) => subMonths(m, 1));
-    const handleNextMonth = () => setSelectedMonth((m) => addMonths(m, 1));
+    const handlePrevMonth = React.useCallback(() => setSelectedMonth((m) => subMonths(m, 1)), []);
+    const handleNextMonth = React.useCallback(() => setSelectedMonth((m) => addMonths(m, 1)), []);
+    const handleSelectMonth = React.useCallback((date: Date) => setSelectedMonth(date), []);
 
     const userName = getDisplayName(profile, user);
     const getGreeting = () => {
@@ -1001,6 +1044,7 @@ export default function Home() {
                         </div>
                     </div>
                 ) : (
+                    <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px] md:auto-rows-fr md:items-stretch">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
@@ -1353,6 +1397,13 @@ export default function Home() {
                             </div>
                         </Card>
                     </div>
+                    <DesktopMonthlyEvolutionSection
+                        selectedMonth={selectedMonth}
+                        onPreviousMonth={handlePrevMonth}
+                        onNextMonth={handleNextMonth}
+                        onSelectMonth={handleSelectMonth}
+                    />
+                    </>
                 )}
             </main>
             {user && (

@@ -540,26 +540,6 @@ export default function Dashboard() {
                     isMobile={isMobile}
                   />
                 </div>
-
-                {/* Evolução Mensal (IPCA x CDI x Meus Investimentos) */}
-                <div className="w-full mb-4">
-                  <MonthlyEvolutionCard
-                    indexadores={indexadores}
-                    investments={investments}
-                    aportes={aportes}
-                    alocacoes={alocacoesResgates}
-                    resgates={resgatesInvestimentos}
-                    allSubcategories={investmentSubcategories}
-                    indexadorMapCDI={indexadorMapCDI}
-                    indexadorMapIPCA={indexadorMapIPCA}
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    onSelectMonth={handleMonthClick}
-                    isLoading={isLoadingInvestments}
-                    isMobile={isMobile}
-                  />
-                </div>
               </>
             ) : (
               <>
@@ -1107,27 +1087,6 @@ export default function Dashboard() {
               <div className="mt-8">
                 <WealthProjection
                   investments={calculatedInvestments}
-                  isMobile={isMobile}
-                />
-              </div>
-            )}
-
-            {!filter && (
-              <div className="mt-8">
-                <MonthlyEvolutionCard
-                  indexadores={indexadores}
-                  investments={investments}
-                  aportes={aportes}
-                  alocacoes={alocacoesResgates}
-                  resgates={resgatesInvestimentos}
-                  allSubcategories={investmentSubcategories}
-                  indexadorMapCDI={indexadorMapCDI}
-                  indexadorMapIPCA={indexadorMapIPCA}
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  onSelectMonth={handleMonthClick}
-                  isLoading={isLoadingInvestments}
                   isMobile={isMobile}
                 />
               </div>

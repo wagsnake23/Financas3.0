@@ -1,5 +1,6 @@
 import React, { memo, startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -11,6 +12,7 @@ import {
 } from "recharts";
 import { Card } from "@/components/ui/card";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
+import DynamicIcon from "@/components/DynamicIcon";
 import { cn, IndexadorHistorico } from "@/lib/utils";
 import {
   AppCategory,
@@ -49,8 +51,14 @@ const COLORS = {
   portfolio: "#16A34A",
 } as const;
 
+const CHART_LINE_COLORS = {
+  ipca: "#EF4444",
+  cdi: "#3B82F6",
+  portfolio: "#22C55E",
+} as const;
+
 const CHART_MARGIN_MOBILE = { top: 6, right: 6, left: 6, bottom: 0 };
-const CHART_MARGIN_DESKTOP = { top: 12, right: 20, left: 6, bottom: 6 };
+const CHART_MARGIN_DESKTOP = { top: 8, right: 20, left: 6, bottom: 2 };
 const Y_TICK_MOBILE = { fill: "#94A3B8", fontSize: 10.5, fontWeight: 600 };
 const Y_TICK_DESKTOP = { fill: "#94A3B8", fontSize: 11, fontWeight: 600 };
 const TOOLTIP_CURSOR = { stroke: "rgba(148, 163, 184, 0.35)", strokeWidth: 1, strokeDasharray: "3 3" };
@@ -234,7 +242,7 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
     const rawMin = Math.min(...allValues);
     const rawMax = Math.max(...allValues);
     const span = Math.max(0.4, rawMax - rawMin);
-    const pad = span * 0.16;
+    const pad = span * (isMobile ? 0.16 : 0.34);
 
     const minVal =
       rawMin < 0
@@ -246,7 +254,7 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
       yDomain: [minVal, maxVal === minVal ? minVal + 1 : maxVal] as [number, number],
       hasNegative: rawMin < 0,
     };
-  }, [points]);
+  }, [points, isMobile]);
 
   const hasAnySeriesData = useMemo(() => {
     return points.some((p) => p.ipca !== null || p.cdi !== null || p.portfolio !== null);
@@ -411,30 +419,32 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
     []
   );
 
+  const chartColors = isMobile ? COLORS : CHART_LINE_COLORS;
+
   const renderIpcaDot = useMemo(
-    () => createDotRenderer("ipca", COLORS.ipca),
-    [createDotRenderer]
+    () => createDotRenderer("ipca", chartColors.ipca),
+    [createDotRenderer, chartColors.ipca]
   );
   const renderCdiDot = useMemo(
-    () => createDotRenderer("cdi", COLORS.cdi),
-    [createDotRenderer]
+    () => createDotRenderer("cdi", chartColors.cdi),
+    [createDotRenderer, chartColors.cdi]
   );
   const renderPortfolioDot = useMemo(
-    () => createDotRenderer("portfolio", COLORS.portfolio),
-    [createDotRenderer]
+    () => createDotRenderer("portfolio", chartColors.portfolio),
+    [createDotRenderer, chartColors.portfolio]
   );
 
   const renderIpcaActiveDot = useMemo(
-    () => createActiveDotRenderer("ipca", COLORS.ipca),
-    [createActiveDotRenderer]
+    () => createActiveDotRenderer("ipca", chartColors.ipca),
+    [createActiveDotRenderer, chartColors.ipca]
   );
   const renderCdiActiveDot = useMemo(
-    () => createActiveDotRenderer("cdi", COLORS.cdi),
-    [createActiveDotRenderer]
+    () => createActiveDotRenderer("cdi", chartColors.cdi),
+    [createActiveDotRenderer, chartColors.cdi]
   );
   const renderPortfolioActiveDot = useMemo(
-    () => createActiveDotRenderer("portfolio", COLORS.portfolio),
-    [createActiveDotRenderer]
+    () => createActiveDotRenderer("portfolio", chartColors.portfolio),
+    [createActiveDotRenderer, chartColors.portfolio]
   );
 
   const handleChartClick = useCallback(
@@ -533,39 +543,79 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
     <Card
       className={cn(
         "w-full overflow-hidden flex flex-col relative",
-        isMobile ? "rounded-[21px] px-4 pt-4 pb-3 h-[330px]" : "border-none rounded-[32px] p-8"
+        isMobile ? "rounded-[21px] px-4 pt-4 pb-3 h-[330px]" : "rounded-[24px] px-6 pt-5 pb-4"
       )}
-      style={{
-        background:
-          "linear-gradient(135deg, rgba(250, 251, 255, 0.94) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(244, 247, 255, 0.94) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.85)",
-        backgroundClip: "padding-box",
-        boxShadow:
-          "0 8px 24px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(18px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-      }}
+      style={
+        isMobile
+          ? {
+              background:
+                "linear-gradient(135deg, rgba(250, 251, 255, 0.94) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(244, 247, 255, 0.94) 100%)",
+              border: "1px solid rgba(255, 255, 255, 0.85)",
+              backgroundClip: "padding-box",
+              boxShadow:
+                "0 8px 24px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.95)",
+              backdropFilter: "blur(18px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+            }
+          : {
+              background:
+                "radial-gradient(circle at top right, rgba(255,255,255,.78), transparent 60%), linear-gradient(135deg, #F6F8FC 0%, #FAFBFD 35%, #FFFFFF 68%, rgba(148,163,184,0.08) 85%, rgba(59,130,246,0.07) 100%)",
+              border: "1px solid rgba(255,255,255,0.85)",
+              backgroundClip: "padding-box",
+              outline: "none",
+              boxShadow:
+                "0 8px 24px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.95)",
+            }
+      }
     >
-      {/* Brilho sutil de superfície */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: "-20px",
-          right: "-30px",
-          width: "40%",
-          height: "35%",
-          borderRadius: "50%",
-          background: "rgba(255,255,255,0.28)",
-          filter: "blur(4px)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
+      {/* Acabamento decorativo de fundo */}
+      {isMobile ? (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: "-20px",
+            right: "-30px",
+            width: "40%",
+            height: "35%",
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.28)",
+            filter: "blur(4px)",
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
+      ) : (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]"
+          style={{ zIndex: 0 }}
+        >
+          <svg
+            className="absolute inset-0 w-full h-full"
+            preserveAspectRatio="none"
+            viewBox="0 0 500 220"
+          >
+            <defs>
+              <linearGradient id="wave-grad-evolution-desk" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.12" />
+              </linearGradient>
+            </defs>
+            {/* Curva suave superior */}
+            <path d="M 80,0 C 180,60 300,75 480,20 L 500,0 Z" fill="rgba(255,255,255,0.5)" />
+            {/* Onda orgânica inferior */}
+            <path
+              d="M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z"
+              fill="url(#wave-grad-evolution-desk)"
+            />
+          </svg>
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-col w-full h-full">
         {/* Cabeçalho com seletor de mês/ano */}
-        <div className={cn("flex flex-col shrink-0", isMobile ? "mb-3.5" : "mb-5")}>
+        <div className={cn("flex flex-col shrink-0", isMobile ? "mb-3.5" : "mb-3.5")}>
           <div className={cn("flex items-start justify-between gap-2", isMobile && "h-[46px]")}>
             <div className="flex items-start gap-2 min-w-0">
               <div className="h-7 w-1.5 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full shrink-0 mt-0.5" />
@@ -588,8 +638,8 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
               ) : (
                 <div className="flex items-center gap-2.5 min-w-0 pt-0.5">
                   <h3
-                    className="tracking-tight leading-tight text-slate-800 whitespace-nowrap text-lg font-black"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
+                    className="text-[15px] md:text-[17px] tracking-[0.5px] leading-tight text-slate-800 whitespace-nowrap"
+                    style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700 }}
                   >
                     Indicador Econômico
                   </h3>
@@ -603,14 +653,41 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
             </div>
 
             <div className="shrink-0">
-              <MonthNavigatorCompact
-                premiumMode={true}
-                selectedMonth={selectedMonth}
-                onPreviousMonth={onPreviousMonth}
-                onNextMonth={handleSafeNextMonth}
-                isMobile={isMobile}
-                variant="balance"
-              />
+              {isMobile ? (
+                <MonthNavigatorCompact
+                  premiumMode={true}
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={onPreviousMonth}
+                  onNextMonth={handleSafeNextMonth}
+                  isMobile={isMobile}
+                  variant="balance"
+                />
+              ) : (
+                <div
+                  className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
+                  style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
+                >
+                  <button
+                    type="button"
+                    onClick={onPreviousMonth}
+                    className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm"
+                    style={{ border: "1px solid rgba(0,0,0,0.05)" }}
+                  >
+                    <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
+                  </button>
+                  <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                    {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleSafeNextMonth}
+                    className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm"
+                    style={{ border: "1px solid rgba(0,0,0,0.05)" }}
+                  >
+                    <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -681,16 +758,13 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
                     >
                       {formatPercentPTBR(ind.value)}
                     </span>
-                    <span className="tabular-nums whitespace-nowrap leading-tight">
-                      <span
-                        className="font-semibold text-[11.5px]"
-                        style={{ color: "#475569" }}
-                      >
+                    <span className="tabular-nums whitespace-nowrap text-[10px] md:text-[12px] font-normal leading-tight">
+                      <span style={{ color: "#475569" }}>
                         {ind.subMetricValue}
                       </span>
                       {ind.subMetricValue !== "--" && (
                         <span
-                          className="font-medium ml-0.5 text-[10.5px]"
+                          className="ml-0.5"
                           style={{ color: "#64748B" }}
                         >
                           {ind.subMetricUnit}
@@ -709,7 +783,7 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
           <div
             className={cn(
               "w-full flex items-center justify-center text-slate-400 text-xs font-medium shrink-0",
-              isMobile ? "h-[164px]" : "h-[285px]"
+              isMobile ? "h-[164px]" : "h-[220px]"
             )}
           >
             Carregando evolução mensal...
@@ -718,14 +792,14 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
           <div
             className={cn(
               "w-full flex items-center justify-center text-slate-400 text-xs font-medium text-center px-4 shrink-0",
-              isMobile ? "h-[164px]" : "h-[240px]"
+              isMobile ? "h-[164px]" : "h-[220px]"
             )}
           >
             Ainda não há dados mensais suficientes de IPCA, CDI ou investimentos para exibir o gráfico.
           </div>
         ) : (
-          <div className={cn("w-full shrink-0", isMobile ? "h-[164px] [&_svg]:overflow-visible" : "h-[285px]")}>
-            <ResponsiveContainer width="100%" height={isMobile ? 164 : 285}>
+          <div className={cn("w-full shrink-0", isMobile ? "h-[164px] [&_svg]:overflow-visible" : "h-[220px]")}>
+            <ResponsiveContainer width="100%" height={isMobile ? 164 : 220}>
               <AreaChart
                 data={points}
                 margin={isMobile ? CHART_MARGIN_MOBILE : CHART_MARGIN_DESKTOP}
@@ -734,30 +808,30 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
                 <defs>
                   {/* Degradês translúcidos sutis sob cada curva */}
                   <linearGradient id="evolution-grad-ipca" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.ipca} stopOpacity={0.14} />
-                    <stop offset="68%" stopColor={COLORS.ipca} stopOpacity={0.03} />
-                    <stop offset="100%" stopColor={COLORS.ipca} stopOpacity={0} />
+                    <stop offset="0%" stopColor={chartColors.ipca} stopOpacity={isMobile ? 0.14 : 0.11} />
+                    <stop offset="68%" stopColor={chartColors.ipca} stopOpacity={isMobile ? 0.03 : 0.025} />
+                    <stop offset="100%" stopColor={chartColors.ipca} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="evolution-grad-cdi" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.cdi} stopOpacity={0.14} />
-                    <stop offset="68%" stopColor={COLORS.cdi} stopOpacity={0.03} />
-                    <stop offset="100%" stopColor={COLORS.cdi} stopOpacity={0} />
+                    <stop offset="0%" stopColor={chartColors.cdi} stopOpacity={isMobile ? 0.14 : 0.11} />
+                    <stop offset="68%" stopColor={chartColors.cdi} stopOpacity={isMobile ? 0.03 : 0.025} />
+                    <stop offset="100%" stopColor={chartColors.cdi} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="evolution-grad-portfolio" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.portfolio} stopOpacity={0.15} />
-                    <stop offset="68%" stopColor={COLORS.portfolio} stopOpacity={0.03} />
-                    <stop offset="100%" stopColor={COLORS.portfolio} stopOpacity={0} />
+                    <stop offset="0%" stopColor={chartColors.portfolio} stopOpacity={isMobile ? 0.15 : 0.12} />
+                    <stop offset="68%" stopColor={chartColors.portfolio} stopOpacity={isMobile ? 0.03 : 0.025} />
+                    <stop offset="100%" stopColor={chartColors.portfolio} stopOpacity={0} />
                   </linearGradient>
 
                   {/* Profundidade suave atrás das linhas (referência card Ultravioleta) */}
                   <filter id="evolution-glow-ipca" x="-10%" y="-20%" width="120%" height="150%">
-                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor={COLORS.ipca} floodOpacity="0.20" />
+                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor={chartColors.ipca} floodOpacity={isMobile ? "0.20" : "0.15"} />
                   </filter>
                   <filter id="evolution-glow-cdi" x="-10%" y="-20%" width="120%" height="150%">
-                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor={COLORS.cdi} floodOpacity="0.20" />
+                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor={chartColors.cdi} floodOpacity={isMobile ? "0.20" : "0.15"} />
                   </filter>
                   <filter id="evolution-glow-portfolio" x="-10%" y="-20%" width="120%" height="150%">
-                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor={COLORS.portfolio} floodOpacity="0.22" />
+                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor={chartColors.portfolio} floodOpacity={isMobile ? "0.22" : "0.16"} />
                   </filter>
                 </defs>
 
@@ -769,7 +843,7 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
                   tick={renderXAxisTick}
                   tickSize={isMobile ? 0 : 6}
                   tickMargin={isMobile ? 0 : 2}
-                  height={isMobile ? 18 : 30}
+                  height={isMobile ? 18 : 26}
                 />
                 <YAxis
                   hide={isMobile}
@@ -792,12 +866,12 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
                   <Tooltip content={<MonthlyEvolutionTooltip />} cursor={TOOLTIP_CURSOR} />
                 )}
                 <Area
-                  type={isMobile ? "bumpX" : "monotone"}
+                  type="bumpX"
                   dataKey="ipca"
                   name="IPCA"
                   baseValue={0}
-                  stroke={COLORS.ipca}
-                  strokeWidth={2.4}
+                  stroke={CHART_LINE_COLORS.ipca}
+                  strokeWidth={isMobile ? 2.4 : 2.2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   fill="url(#evolution-grad-ipca)"
@@ -808,12 +882,12 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
                   isAnimationActive={false}
                 />
                 <Area
-                  type="monotone"
+                  type={isMobile ? "monotone" : "bumpX"}
                   dataKey="cdi"
                   name="CDI"
                   baseValue={0}
-                  stroke={COLORS.cdi}
-                  strokeWidth={2.4}
+                  stroke={CHART_LINE_COLORS.cdi}
+                  strokeWidth={isMobile ? 2.4 : 2.2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   fill="url(#evolution-grad-cdi)"
@@ -824,12 +898,12 @@ const MonthlyEvolutionCardComponent: React.FC<MonthlyEvolutionCardProps> = ({
                   isAnimationActive={false}
                 />
                 <Area
-                  type="monotone"
+                  type={isMobile ? "monotone" : "bumpX"}
                   dataKey="portfolio"
                   name="Meus investimentos"
                   baseValue={0}
-                  stroke={COLORS.portfolio}
-                  strokeWidth={2.6}
+                  stroke={CHART_LINE_COLORS.portfolio}
+                  strokeWidth={isMobile ? 2.6 : 2.4}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   fill="url(#evolution-grad-portfolio)"
