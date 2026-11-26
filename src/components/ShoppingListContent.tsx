@@ -445,21 +445,44 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       )}
     >
       {/* Main container with padding */}
-      <div className={cn("flex flex-col items-center gap-1 w-full text-center", isMobile ? "mb-2" : "mb-4")}>
-        <h2
-          className={cn(
-            "flex items-center justify-center gap-2 text-2xl font-bold text-[#356DD8] w-full -mt-[4px] mb-[3px]",
-            isMobile && "text-xl -mt-[5px]"
-          )}
-        >
-          <DynamicIcon 
-            name="ShoppingCart" 
-            className={cn("shrink-0 fill-current", isMobile ? "h-[22px] w-[22px]" : "h-[26px] w-[26px]")} 
-          />
-          <span>Lista de Compras</span>
-        </h2>
+      <div className={cn("flex flex-col w-full", isMobile ? "items-center gap-1 text-center mb-2" : "items-start gap-4 mb-5")}>
+        {isMobile ? (
+          <h2 className="flex items-center justify-center gap-2 text-xl font-bold text-[#356DD8] w-full -mt-[5px] mb-[3px]">
+            <DynamicIcon
+              name="ShoppingCart"
+              className="shrink-0 fill-current h-[22px] w-[22px]"
+            />
+            <span>Lista de Compras</span>
+          </h2>
+        ) : (
+          <div className="flex items-start justify-between w-full">
+            <div className="flex items-start gap-3">
+              <div
+                className="btn-3d btn-3d-icon p-2 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-1"
+                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              >
+                <DynamicIcon
+                  name="ShoppingCart"
+                  className="h-[22px] w-[22px] text-[#1e3a8a] shrink-0"
+                  strokeWidth={2.4}
+                />
+              </div>
+              <div className="flex flex-col text-left">
+                <h1
+                  className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  Lista de Compras
+                </h1>
+                <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
+                  Organize suas compras e acompanhe seus itens
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-        <div className="flex items-center justify-between gap-2 mt-1 w-full px-1">
+        <div className={cn("flex items-center justify-between w-full", isMobile ? "gap-2 mt-1 px-1" : "gap-3 mt-1")}>
           {/* Total Items - Reset Sort */}
           <button
             type="button"
@@ -557,7 +580,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col w-full min-h-0">
-        <div className={cn("mb-4 shrink-0 relative mt-2 w-full")}>
+        <div className={cn("shrink-0 relative w-full", isMobile ? "mb-4 mt-2" : "mb-5")}>
           <input
             ref={newItemInputRef}
             type="text"
@@ -565,7 +588,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             value={searchTerm}
             onChange={handleSearchTermChange}
             onKeyDown={handleNewItemSubmit}
-            className="w-full p-3 pr-11 rounded-xl border border-input bg-white ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className={cn(
+              "w-full p-3 pr-11 bg-white ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+              isMobile
+                ? "rounded-xl border border-input"
+                : "rounded-[12px] border border-[#E7EDF5] shadow-[0_2px_10px_rgba(15,23,42,0.04)] transition-all focus-visible:border-[#CBD5E1]"
+            )}
           />
           <button
             onClick={handleSearchClick}
@@ -578,24 +606,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
         <div
           className={cn(
-            "w-full flex-1 min-h-0 overflow-y-auto no-scrollbar",
-            isMobile ? "" : "rounded-xl border bg-transparent mb-2 font-roboto"
+            "flex-1 min-h-0 overflow-y-auto no-scrollbar",
+            isMobile ? "px-1 py-1 -mx-1" : "w-full bg-transparent mb-2"
           )}
         >
-          {/* Sticky Header - Oculto em mobile */}
-          {!isMobile && (
-            <div
-              className="sticky top-0 z-10 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-300 text-sm text-gray-700 bg-gray-100"
-            >
-              <div className="col-span-2 text-center font-bold">Nº</div>
-              <div className="col-span-5 font-bold">Produto</div>
-              <div className="col-span-2 text-center font-bold">Status</div>
-              <div className="col-span-3 text-right font-bold pr-4">Ações</div>
-            </div>
-          )}
-
           {/* LISTA COM SCROLL */}
-          <div className={cn("bg-transparent", !isMobile && "divide-y divide-gray-200 bg-transparent")}>
+          <div className={cn("bg-transparent", !isMobile && "space-y-[8px] py-0.5")}>
             {filteredItems.length === 0 && (
               searchTerm ? (
                 <div className="p-8 text-center text-sm text-muted-foreground animate-fade-in">
@@ -628,17 +644,27 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               isMobile ? (
                 <div
                   key={item.id}
-                  className={cn(
-                    "bg-white rounded-[11px] py-2 pl-[13px] pr-4 border border-[#E2E8F0]/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] flex items-center justify-between mb-2 animate-fade-in active:scale-[0.99] transition-all",
-                    item.status ? "border-l-[3px] border-l-[#25D366]" : "border-l-[3px] border-l-[#FF8888]"
-                  )}
+                  className="relative overflow-hidden bg-[#FFFFFF] rounded-[18px] py-2 pl-[13px] pr-4 flex items-center justify-between mb-2.5 animate-fade-in active:scale-[0.98] transition-all duration-300"
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    borderTop: "1px solid #E2E8F0",
+                    borderRight: "1px solid #E2E8F0",
+                    borderBottom: "1px solid #E2E8F0",
+                    borderLeft: item.status ? "3px solid #25D366" : "3px solid #FF8888",
+                    boxShadow: "0 6px 18px -6px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(148, 163, 184, 0.12)"
+                  }}
                 >
                   <div className="flex flex-col w-full gap-1">
                     {/* 🟢 PRIMEIRA LINHA: Nº e Produto */}
                     <div className="flex items-center justify-between w-full mt-[2px]">
                       <div className="flex items-center gap-[9px] min-w-0">
                         {/* Nº */}
-                        <span className="text-[0.80rem] text-[#356DD8] font-extrabold whitespace-nowrap min-w-[28px] text-center leading-none">
+                        <span
+                          className={cn(
+                            "text-[0.80rem] font-extrabold whitespace-nowrap min-w-[28px] text-center leading-none",
+                            item.status ? "text-[#10B955] opacity-65" : "text-[#356DD8]"
+                          )}
+                        >
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         {/* Produto */}
@@ -702,7 +728,11 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                         </div>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <button className="h-7 w-7 text-red-400 bg-red-50 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors">
+                            <button
+                              type="button"
+                              className="h-7 w-7 text-red-400 bg-transparent flex items-center justify-center transition-opacity active:opacity-70"
+                              aria-label="Excluir item"
+                            >
                               <DynamicIcon name="Trash2" className="h-4 w-4" />
                             </button>
                           </AlertDialogTrigger>
@@ -748,100 +778,130 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 <div
                   key={item.id}
                   className={cn(
-                    "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
-                    item.status && "bg-green-50"
+                    "group bg-[#FFFFFF] rounded-[12px] border border-[#E7EDF5] shadow-[0_2px_10px_rgba(15,23,42,0.04)] transition-all hover:shadow-[0_4px_16px_rgba(15,23,42,0.07)] hover:border-[#D5DDE8] active:scale-[0.998] animate-fade-in",
+                    item.status
+                      ? "border-l-[3px] border-l-[#25D366]"
+                      : "border-l-[3px] border-l-[#FF8888]"
                   )}
                 >
-                  {/* Nº */}
-                  <div className={cn("col-span-2 text-center font-bold text-[#356DD8] text-base", item.status && "opacity-60")}>
-                    {index + 1}
-                  </div>
+                  <div className="flex items-center w-full px-6 py-[13px] gap-4">
+                    {/* COLUNA 1 — NUMERAÇÃO */}
+                    <div className="flex items-center justify-center w-[52px] shrink-0">
+                      <span
+                        className={cn(
+                          "text-[15px] font-extrabold tracking-tight leading-none",
+                          item.status ? "text-[#10B955] opacity-65" : "text-[#356DD8]"
+                        )}
+                      >
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                    </div>
 
-                  {/* Produto + Data */}
-                  <div className="col-span-5">
-                    <span
-                      className={cn(
-                        "text-lg font-bold",
-                        item.status && "text-gray-400"
-                      )}
-                    >
-                      {item.product}
-                    </span>
+                    {/* COLUNA 2 — PRODUTO + DATA */}
+                    <div className="flex flex-col flex-1 min-w-0 pr-2">
+                      <span
+                        className={cn(
+                          "text-[15px] font-bold leading-tight truncate",
+                          item.status ? "text-slate-400" : "text-slate-800"
+                        )}
+                      >
+                        {item.product}
+                      </span>
 
-                    {item.status && item.date ? (
-                      <p className="mt-[1px] text-sm font-medium text-gray-500">
-                        📅 {item.date}
-                      </p>
-                    ) : !item.status && item.created_at ? (
-                      <p className="mt-[1px] text-sm font-medium text-gray-500 flex items-center gap-1.5">
-                        <CalendarDays className="w-3.5 h-3.5 text-[#356DD8]" /> 
-                        <span>{format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</span>
-                      </p>
-                    ) : null}
-                  </div>
+                      {item.status && item.date ? (
+                        <p className="mt-[4px] text-[12px] font-medium text-slate-400 flex items-center gap-1.5 leading-none">
+                          <CalendarDays className="w-3.5 h-3.5 text-[#10B955] shrink-0" />
+                          <span className="truncate">{item.date}</span>
+                        </p>
+                      ) : !item.status && item.created_at ? (
+                        <p className="mt-[4px] text-[12px] font-medium text-slate-400 flex items-center gap-1.5 leading-none">
+                          <CalendarDays className="w-3.5 h-3.5 text-[#356DD8] shrink-0" />
+                          <span className="truncate">
+                            {format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                          </span>
+                        </p>
+                      ) : null}
+                    </div>
 
-                  {/* Status */}
-                  <div className="col-span-2 flex justify-center">
-                    <button
-                      onClick={() => handleStatusChange(item.id, !item.status)}
-                      className={cn(
-                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
-                        item.status
-                          ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
-                          : "border-gray-400 bg-transparent text-transparent",
-                        isMobile
-                          ? "h-[20px] w-[20px] text-[10px]"
-                          : "h-[24px] w-[24px] text-[12px]"
-                      )}
-                    >
-                      {item.status && "✓"}
-                    </button>
-                  </div>
-
-                  {/* Ações - Excluir */}
-                  <div className="col-span-3 flex justify-end pr-4">
-                    {item.product.trim() !== "" && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <button className="text-destructive hover:text-red-700">
-                            <DynamicIcon name="Trash2" className="h-5 w-5" />
-                          </button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent 
-                          className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[400px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
-                          style={{
-                            background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
-                            backdropFilter: "blur(8px)"
-                          }}
+                    {/* COLUNA 3 — STATUS */}
+                    <div className="flex items-center justify-start w-[150px] shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleStatusChange(item.id, !item.status)}
+                        className="inline-flex items-center gap-2.5 cursor-pointer select-none py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-slate-50 transition-colors"
+                      >
+                        <span
+                          className={cn(
+                            "flex items-center justify-center rounded-full transition-all h-[20px] w-[20px] shrink-0",
+                            item.status
+                              ? "bg-[#25D366] border-2 border-[#25D366] text-white shadow-sm"
+                              : "bg-transparent border-2 border-[#FF8888]"
+                          )}
                         >
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
-                              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-                              Confirmar Exclusão
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="text-center text-gray-500 font-medium font-roboto">
-                              Deseja remover "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da sua lista?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between mt-4")}>
-                            <AlertDialogCancel className={cn(
-                              "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
-                              isMobile && "h-12 text-lg"
-                            )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeleteRow(item.id)}
-                              className={cn(
-                                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                                isMobile && "h-12 text-lg"
-                              )}
-                              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+                          {item.status && <Check className="w-[12px] h-[12px]" strokeWidth={3.5} />}
+                        </span>
+                        <span
+                          className={cn(
+                            "text-[12px] leading-none whitespace-nowrap",
+                            item.status
+                              ? "text-[#10B955] font-extrabold tracking-tight"
+                              : "text-[#EF4444]/85 font-semibold"
+                          )}
+                        >
+                          {item.status ? "COMPRADO" : "Pendente"}
+                        </span>
+                      </button>
+                    </div>
+
+                    {/* COLUNA 4 — AÇÕES */}
+                    <div className="flex items-center justify-end w-[110px] shrink-0">
+                      {item.product.trim() !== "" && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center h-[34px] w-[34px] rounded-[8px] text-red-400 hover:text-[#DC2626] hover:bg-[#FEF2F2] transition-all duration-200 cursor-pointer"
+                              title="Excluir item"
+                              aria-label="Excluir item"
                             >
-                              Excluir
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    )}
+                              <DynamicIcon name="Trash2" className="h-[19px] w-[19px]" />
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent
+                            className="sm:max-w-[400px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl"
+                            style={{
+                              background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+                              backdropFilter: "blur(8px)"
+                            }}
+                          >
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
+                                <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+                                Confirmar Exclusão
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="text-center text-gray-500 font-medium font-roboto">
+                                Deseja remover "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da sua lista?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="flex flex-row gap-2">
+                              <AlertDialogCancel
+                                className="flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0"
+                                style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+                              >
+                                Cancelar
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteRow(item.id)}
+                                className="flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11"
+                                style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+                              >
+                                Excluir
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                    </div>
                   </div>
                 </div>
               )
