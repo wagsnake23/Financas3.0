@@ -98,8 +98,8 @@ const DesktopMonthlyEvolutionSection: React.FC<{
         indexadores,
         investments,
         aportes,
-        alocacoesResgates,
-        resgatesInvestimentos,
+        alocacoes,
+        resgates,
         allSubcategories,
         indexadorMapCDI,
         indexadorMapIPCA,
@@ -112,8 +112,8 @@ const DesktopMonthlyEvolutionSection: React.FC<{
                 indexadores={indexadores}
                 investments={investments}
                 aportes={aportes}
-                alocacoes={alocacoesResgates}
-                resgates={resgatesInvestimentos}
+                alocacoes={alocacoes}
+                resgates={resgates}
                 allSubcategories={allSubcategories}
                 indexadorMapCDI={indexadorMapCDI}
                 indexadorMapIPCA={indexadorMapIPCA}
@@ -928,7 +928,7 @@ export default function Home() {
                                                              boxShadow: "0 2px 6px rgba(0,0,0,.04)"
                                                          }}
                                                     >
-                                                        {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                                        {dStats.expenseVar >= 0 ? "↑" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                     </div>
                                                     <span className="text-[10px] font-normal leading-tight" style={{ color: "#0F172A" }}>Mês anterior</span>
                                                 </div>
@@ -1048,7 +1048,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px] md:auto-rows-fr md:items-stretch">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="rounded-[24px] relative overflow-hidden card-saldo h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
+                            className="rounded-[24px] relative overflow-hidden card-saldo h-full flex flex-col justify-center home-desk-card md:px-6 md:py-[18px] md:flex md:flex-col md:justify-between"
                             style={{
                                 background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, rgba(37,99,235,0.11) 85%, rgba(37,99,235,0.15) 100%)",
                                 border: "1px solid rgba(255,255,255,0.85)",
@@ -1119,8 +1119,8 @@ export default function Home() {
                                         </div>
 
                                         {/* Sparkline Graph movido para baixo do Date Selector */}
-                                        <div className="w-full flex flex-col items-center mt-6">
-                                            <svg viewBox="0 0 160 45" className="w-full max-w-[210px] h-[75px] overflow-visible">
+                                        <div className="w-full flex flex-col items-center mt-5">
+                                            <svg viewBox="0 0 160 45" className="w-full max-w-[210px] h-[70px] overflow-visible">
                                                 <defs>
                                                     <linearGradient id="sparkline-grad-desk" x1="0" y1="0" x2="0" y2="1">
                                                         <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
@@ -1180,7 +1180,7 @@ export default function Home() {
                                 </div>
 
                                 {/* CONTENT/BASE: Saldo Mensal à esquerda e Sparkline à direita */}
-                                <div className="flex justify-between items-end w-full mt-auto mb-2">
+                                <div className="flex justify-between items-end w-full mt-auto mb-1">
                                     {/* Informações Secundárias e Ações */}
                                     <div className="flex flex-col items-start justify-center pb-0 z-10 mr-4 -mt-4">
                                         {/* Saldo Mensal agrupado com Ícone Azul */}
@@ -1221,7 +1221,7 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
+                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:px-6 md:py-[18px] md:flex md:flex-col md:justify-between"
                             style={{
                                 background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.07) 70%, rgba(239,68,68,.12) 85%, rgba(239,68,68,.16) 100%), #FFF5F5",
                                 border: "1px solid rgba(255,255,255,0.85)",
@@ -1275,7 +1275,7 @@ export default function Home() {
                                 </div>
 
                                 {/* CONTENT/BASE */}
-                                <div className="flex items-end justify-between w-full mt-4">
+                                <div className="flex items-end justify-between w-full mt-3">
                                     <div className="flex items-center gap-2">
                                         <Button
                                             onClick={() => setActiveTrendModal("despesas")}
@@ -1289,7 +1289,7 @@ export default function Home() {
                                                  "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
                                                  dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]"
                                             )} style={{ border: "1px solid rgba(255,255,255,.85)", backdropFilter: "blur(6px)", boxShadow: "0 2px 6px rgba(0,0,0,.04)" }}>
-                                                {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                                {dStats.expenseVar >= 0 ? "↑" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                             </div>
                                             <span className="text-[10px] font-normal leading-tight md:text-[12px]" style={{ color: "#0F172A" }}>Mês anterior</span>
                                         </div>
@@ -1310,7 +1310,7 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
+                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:px-6 md:py-[18px] md:flex md:flex-col md:justify-between"
                             style={{
                                 background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.07) 70%, rgba(34,197,94,.12) 85%, rgba(34,197,94,.16) 100%), #F3FFF7",
                                 border: "1px solid rgba(255,255,255,0.85)",
@@ -1364,7 +1364,7 @@ export default function Home() {
                                 </div>
 
                                 {/* CONTENT/BASE */}
-                                <div className="flex items-end justify-between w-full mt-4">
+                                <div className="flex items-end justify-between w-full mt-3">
                                     <div className="flex items-center gap-2">
                                         <Button
                                             onClick={() => setActiveTrendModal("receitas")}
@@ -1549,7 +1549,7 @@ export default function Home() {
                                 <div className="flex justify-between items-end w-full">
                                     <div className="flex flex-col items-start gap-0.5">
                                         <div className={cn("flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none", dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]")}>
-                                            {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                            {dStats.expenseVar >= 0 ? "↑" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
                                         <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
                                     </div>

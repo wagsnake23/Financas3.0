@@ -217,7 +217,7 @@ export const MobileCreditCardExpenses: React.FC<
   if (isLoading || !cartoes) {
     return (
       <Card
-        className={cn("home-mobile-card rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center md:p-6 md:flex md:flex-col md:justify-between")}
+        className={cn("home-mobile-card rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center md:px-6 md:py-[18px] md:flex md:flex-col md:justify-between")}
         style={{
           borderRadius: "22px",
           background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.11) 85%, rgba(124,58,237,.15) 100%), #F7F2FF",
@@ -305,7 +305,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("home-mobile-card rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center md:p-6 md:flex md:flex-col md:justify-between cursor-pointer transition-transform active:scale-[0.99]")}
+      className={cn("home-mobile-card rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center md:px-6 md:py-[18px] md:flex md:flex-col md:justify-between cursor-pointer transition-transform active:scale-[0.99]")}
       onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "22px",
@@ -370,7 +370,7 @@ export const MobileCreditCardExpenses: React.FC<
           <div className="flex justify-between items-end w-full relative z-20 -translate-y-[2px]">
             {/* Lado esquerdo: Gráfico de tendência roxo */}
             <div className="flex-1 min-w-0 flex flex-col items-start justify-end -ml-1">
-              <svg viewBox="0 0 160 45" className={`w-full overflow-visible ${isMobile ? "max-w-[170px] h-[var(--home-chart-h,64px)]" : "max-w-[210px] h-[75px]"}`}>
+              <svg viewBox="0 0 160 45" className={`w-full overflow-visible ${isMobile ? "max-w-[170px] h-[var(--home-chart-h,64px)]" : "max-w-[210px] h-[70px]"}`}>
                 <defs>
                   <linearGradient id="card-sparkline-grad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={gradColor} stopOpacity="0.25" />

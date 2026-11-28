@@ -1159,7 +1159,46 @@ body {
    na Home Mobile, sem afetar desktop nem os botões quadrados de ícone */
 @media (max-width: 767px) {
 
-  
+  /* Refinamento visual Home Mobile: intensidade temática (+5% a +8%) sem afetar desktop */
+  .home-mobile-card.card-saldo {
+    background:
+      radial-gradient(circle at 82% 16%, rgba(145, 198, 255, 0.42) 0%, transparent 55%),
+      linear-gradient(105deg, #ADCFF7 0%, #C5E0FB 42%, #DFEEFE 76%, #F0F7FF 100%) !important;
+  }
+
+  .home-mobile-card.card-despesas {
+    background:
+      radial-gradient(circle at 82% 16%, rgba(252, 162, 175, 0.36) 0%, transparent 55%),
+      linear-gradient(105deg, #F6AEB8 0%, #FAC7CE 42%, #FDE0E5 76%, #FFF8F9 100%) !important;
+  }
+
+  .home-mobile-card.card-receitas {
+    background:
+      radial-gradient(circle at 82% 16%, rgba(134, 232, 170, 0.38) 0%, transparent 55%),
+      linear-gradient(105deg, #A4E6C2 0%, #C0EED3 42%, #DCF5E7 76%, #F7FDF9 100%) !important;
+  }
+
+  .home-mobile-card.card-cartoes {
+    background:
+      radial-gradient(circle at 82% 16%, rgba(190, 136, 252, 0.36) 0%, transparent 55%),
+      linear-gradient(105deg, #C2A8F2 0%, #D4C1F7 42%, #E8DCFC 76%, #F4EEFE 100%) !important;
+  }
+
+  /* Efeito sutil de alto-relevo nos títulos e valores financeiros dos 4 minicards mobile */
+  .home-mobile-card.card-saldo h2,
+  .home-mobile-card.card-despesas h2,
+  .home-mobile-card.card-receitas h2,
+  .home-mobile-card.card-cartoes h2 {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.78), 0 1.5px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  .home-mobile-card.card-saldo p.leading-none,
+  .home-mobile-card.card-despesas p.leading-none,
+  .home-mobile-card.card-receitas p.leading-none,
+  .home-mobile-card.card-cartoes p.leading-none {
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+
   /* Botões removidos para usarem o btn-3d nativo diretamente */
   
   /* Card Cartões: Ajuste de agrupamento visual e espaçamento vertical do mês/ano */
